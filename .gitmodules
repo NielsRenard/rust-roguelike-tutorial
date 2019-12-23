@@ -1,0 +1,3 @@
+[submodule "rustrogueliketutorial"]
+	path = rustrogueliketutorial
+	url = https://github.com/thebracket/rustrogueliketutorial
