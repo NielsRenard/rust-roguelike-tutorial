@@ -1,5 +1,6 @@
 # 1. Section 1 - Hello Rust
-## ✓ 1.1. Entities and Components
+
+* [ ] 1.1. Entities and Components
 ## ✓ 1.2. Walking A Map
 ## 1.3. A More Interesting Map
 ## 1.4. Field of View
