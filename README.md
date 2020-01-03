@@ -1,4 +1,4 @@
-# 1. Section 1 - Hello Rust
+# Section 1 - Hello Rust
 * [ ] 1.1. Entities and Components
 * [ ] 1.2. Walking A Map
 * [ ] 1.3. A More Interesting Map
@@ -12,7 +12,7 @@
 * [ ] 1.11. Delving Deeper
 * [ ] 1.12. Difficulty
 * [ ] 1.13. Equipment
-# 2. Section 2 - Stretch Goals
+# Section 2 - Stretch Goals
 * [ ]  2.1. Nice Walls with Bitsets
 * [ ] 2.2. Bloodstains
 * [ ] 2.3. Particle Effects
@@ -20,7 +20,7 @@
 * [ ] 2.5. Magic Mapping
 * [ ] 2.6. REX Paint Menu
 * [ ] 2.7. Simple Traps
-# 3. Section 3 - Generating Maps
+# Section 3 - Generating Maps
 * [ ] 3.1. Refactor Map Building
 * [ ] 3.2. Map Building Test Harness
 * [ ] 3.3. BSP Room Dungeons
@@ -41,7 +41,7 @@
 * [ ] 3.18. Doors
 * [ ] 3.19. Decouple map size from screen size
 * [ ] 3.20. Section 3 Conclusion
-# 4. Section 4 - Making A Game
+# Section 4 - Making A Game
 * [ ] 4.1. Design Document
 * [ ] 4.2. Raw Files, Data-Driven Design
 * [ ] 4.3. Data-Driven Spawn Tables
