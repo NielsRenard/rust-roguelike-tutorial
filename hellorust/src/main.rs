@@ -45,18 +45,24 @@ impl State {
 fn main() {
     let context = Rltk::init_simple8x8(80, 50, "Hello Rust World", "resources");
     let mut gs = State { ecs: World::new() };
-    // add a map to the world
-    gs.ecs.insert(new_map_rooms_and_corridors());
-
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<LeftMover>();
     gs.ecs.register::<Player>();
 
+    // add a map to the world
+    let (rooms, map) = new_map_rooms_and_corridors();
+    gs.ecs.insert(map);
+    // make sure the player doesn't get put inside wall
+    let (player_x, player_y) = rooms[0].center();
+
     // make our 'guy'
     gs.ecs
         .create_entity()
-        .with(Position { x: 40, y: 25 })
+        .with(Position {
+            x: player_x,
+            y: player_y,
+        })
         .with(Renderable {
             glyph: rltk::to_cp437('☺'),
             fg: RGB::named(rltk::YELLOW),

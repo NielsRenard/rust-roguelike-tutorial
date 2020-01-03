@@ -14,9 +14,11 @@ pub fn xy_idx(x: i32, y: i32) -> usize {
     // This guarantees one tile per location
     // and efficiently maps it in memory for left-to-right reading.
     return (y as usize * 80) + x as usize;
+    // TODO: when player moves 'left' off of the map
+    // thread 'main' panicked at 'attempt to add with overflow', src/map.rs:16:12
 }
 
-pub fn new_map_rooms_and_corridors() -> Vec<TileType> {
+pub fn new_map_rooms_and_corridors() -> (Vec<Rect>, Vec<TileType>) {
     let mut map = vec![TileType::Wall; 80 * 50];
 
     let mut rooms: Vec<Rect> = Vec::new();
@@ -52,11 +54,11 @@ pub fn new_map_rooms_and_corridors() -> Vec<TileType> {
                     apply_vertical_tunnel(&mut map, prev_y, new_y, prev_x);
                     apply_horizontal_tunnel(&mut map, prev_x, new_x, new_y);
                 }
-                rooms.push(new_room);
             }
+            rooms.push(new_room);
         }
     }
-    map
+    (rooms, map)
 }
 
 pub fn apply_horizontal_tunnel(map: &mut [TileType], x1: i32, x2: i32, y: i32) {
