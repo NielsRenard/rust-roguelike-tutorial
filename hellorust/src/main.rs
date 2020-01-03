@@ -9,13 +9,12 @@ mod components;
 pub use components::*;
 mod player;
 use player::*;
-//mod rect;
-//pub use rect::Rect;
+mod rect;
+pub use rect::Rect;
 
 pub struct State {
     ecs: World,
 }
-
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut Rltk) {
@@ -47,7 +46,7 @@ fn main() {
     let context = Rltk::init_simple8x8(80, 50, "Hello Rust World", "resources");
     let mut gs = State { ecs: World::new() };
     // add a map to the world
-    gs.ecs.insert(new_map());
+    gs.ecs.insert(new_map_rooms_and_corridors());
 
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
@@ -82,8 +81,3 @@ fn main() {
 
     rltk::main_loop(context, gs);
 }
-
-
-
-
-

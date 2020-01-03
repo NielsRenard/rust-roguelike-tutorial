@@ -1,5 +1,5 @@
+use rltk::RGB;
 use specs::prelude::*;
-use rltk::{RGB};
 
 #[derive(Component, Debug)]
 pub struct Player {}
