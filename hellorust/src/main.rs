@@ -22,8 +22,8 @@ impl GameState for State {
 
         player_input(self, ctx);
         self.run_systems();
-        let map = self.ecs.fetch::<Vec<TileType>>();
-        draw_map(&map, ctx);
+//        let map = self.ecs.fetch::<Map>();
+        draw_map(&self.ecs, ctx);
 
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
@@ -36,8 +36,10 @@ impl GameState for State {
 
 impl State {
     fn run_systems(&mut self) {
-        let mut lw = LeftWalker {};
-        lw.run_now(&self.ecs);
+	//        let mut lw = LeftWalker {};
+	//        lw.run_now(&self.ecs);
+//        let mut vis = VisibilitySystem{};
+//        vis.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -51,10 +53,11 @@ fn main() {
     gs.ecs.register::<Player>();
 
     // add a map to the world
-    let (rooms, map) = new_map_rooms_and_corridors();
-    gs.ecs.insert(map);
+    let map : Map = Map::new_map_rooms_and_corridors();
     // make sure the player doesn't get put inside wall
-    let (player_x, player_y) = rooms[0].center();
+    let (player_x, player_y) = map.rooms[0].center();
+
+    gs.ecs.insert(map);
 
     // make our 'guy'
     gs.ecs
