@@ -1,6 +1,6 @@
 extern crate rltk;
-use super::{Rect, Viewshed, Player};
-use rltk::{Console, RandomNumberGenerator, Rltk, RGB, Algorithm2D, BaseMap, Point};
+use super::Rect;
+use rltk::{Algorithm2D, BaseMap, Console, Point, RandomNumberGenerator, Rltk, RGB};
 use std::cmp::{max, min};
 extern crate specs;
 use specs::prelude::*;
@@ -11,11 +11,14 @@ pub enum TileType {
     Floor,
 }
 
+#[derive(Default)]
 pub struct Map {
     pub tiles: Vec<TileType>,
     pub rooms: Vec<Rect>,
     pub width: i32,
     pub height: i32,
+    pub revealed_tiles: Vec<bool>,
+    pub visible_tiles: Vec<bool>,
 }
 
 impl Map {
@@ -62,6 +65,8 @@ impl Map {
             rooms: Vec::new(),
             width: 80,
             height: 50,
+            revealed_tiles: vec![false; 80 * 50],
+            visible_tiles: vec![false; 80 * 50],
         };
 
         //    let mut rooms: Vec<Rect> = Vec::new();
@@ -106,76 +111,67 @@ impl Map {
 }
 
 impl Algorithm2D for Map {
-    fn in_bounds(&self, pos : Point) -> bool {
-        pos.x > 0 && pos.x < self.width-1 && pos.y > 0 && pos.y < self.height-1
+    fn in_bounds(&self, pos: Point) -> bool {
+        pos.x > 0 && pos.x < self.width - 1 && pos.y > 0 && pos.y < self.height - 1
     }
 
     fn point2d_to_index(&self, pt: Point) -> i32 {
-	(pt.y * self.width) + pt.x
+        (pt.y * self.width) + pt.x
     }
 
-    fn index_to_point2d(&self, idx:i32) -> Point {
-        Point{ x: idx % self.width, y: idx / self.width }
+    fn index_to_point2d(&self, idx: i32) -> Point {
+        Point {
+            x: idx % self.width,
+            y: idx / self.width,
+        }
     }
 }
 
 impl BaseMap for Map {
-    fn is_opaque(&self, idx:i32) -> bool {
+    fn is_opaque(&self, idx: i32) -> bool {
         self.tiles[idx as usize] == TileType::Wall
     }
 
-    fn get_available_exits(&self, _idx:i32) -> Vec<(i32, f32)> {
+    fn get_available_exits(&self, _idx: i32) -> Vec<(i32, f32)> {
         Vec::new()
     }
 
-    fn get_pathing_distance(&self, idx1: i32, idx2: i32) -> f32{
-	let p1 = Point::new(idx1 % self.width, idx1 / self.width);
+    fn get_pathing_distance(&self, idx1: i32, idx2: i32) -> f32 {
+        let p1 = Point::new(idx1 % self.width, idx1 / self.width);
         let p2 = Point::new(idx2 % self.width, idx2 / self.width);
         rltk::DistanceAlg::Pythagoras.distance2d(p1, p2)
     }
 }
 
 pub fn draw_map(ecs: &World, ctx: &mut Rltk) {
-    let mut viewsheds = ecs.write_storage::<Viewshed>();
-    let mut players = ecs.write_storage::<Player>();
     let map = ecs.fetch::<Map>();
 
-
-    for (_player, viewshed) in (&mut players, &mut viewsheds).join() {
-	let mut y = 0;
-	let mut x = 0;
-	for tile in map.tiles.iter() {
-            // Render a tile depending upon the tile type
-            let pt = Point::new(x,y);
-	    if viewshed.visible_tiles.contains(&pt) {
-		match tile {
-		    TileType::Floor => {
-			ctx.set(
-			    x,
-			    y,
-			    RGB::from_f32(0.5, 0.5, 0.5),
-			    RGB::from_f32(0., 0., 0.),
-			    rltk::to_cp437('.'),
-			);
-		    }
-		    TileType::Wall => {
-			ctx.set(
-			    x,
-			    y,
-			    RGB::from_f32(0.0, 1.0, 0.0),
-			    RGB::from_f32(0., 0., 0.),
-			    rltk::to_cp437('#'),
-			);
-		    }
-		}
-	    }
-	    
-            // Move the coordinates
-            x += 1;
-            if x > 79 {
-		x = 0;
-		y += 1;
+    let mut y = 0;
+    let mut x = 0;
+    for (idx, tile) in map.tiles.iter().enumerate() {
+        if map.revealed_tiles[idx] {
+            let glyph;
+            let mut fg;
+            match tile {
+                TileType::Floor => {
+                    glyph = rltk::to_cp437('.');
+                    fg = RGB::from_f32(0.0, 0.5, 0.5);
+                }
+                TileType::Wall => {
+                    glyph = rltk::to_cp437('#');
+                    fg = RGB::from_f32(0., 1.0, 0.);
+                }
             }
-	}
+            if !map.visible_tiles[idx] {
+                fg = fg.to_greyscale()
+            }
+            ctx.set(x, y, fg, RGB::from_f32(0., 0., 0.), glyph);
+        }
+        // Move the coordinates
+        x += 1;
+        if x > 79 {
+            x = 0;
+            y += 1;
+        }
     }
 }
