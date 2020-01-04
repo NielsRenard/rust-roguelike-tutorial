@@ -10,7 +10,7 @@ pub struct Position {
     pub y: i32,
 }
 
-/// "viewshed": What you see from a specific place.
+/// What you see from a specific place.
 #[derive(Component)]
 pub struct Viewshed {
     pub visible_tiles: Vec<rltk::Point>,
