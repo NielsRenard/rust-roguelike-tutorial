@@ -11,6 +11,8 @@ mod player;
 use player::*;
 mod rect;
 pub use rect::Rect;
+mod visibility_system;
+use visibility_system::VisibilitySystem;
 
 pub struct State {
     ecs: World,
@@ -38,8 +40,8 @@ impl State {
     fn run_systems(&mut self) {
         //        let mut lw = LeftWalker {};
         //        lw.run_now(&self.ecs);
-        //        let mut vis = VisibilitySystem{};
-        //        vis.run_now(&self.ecs);
+        let mut vis = VisibilitySystem {};
+        vis.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
