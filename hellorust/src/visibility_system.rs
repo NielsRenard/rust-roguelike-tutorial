@@ -30,31 +30,29 @@ impl<'a> System<'a> for VisibilitySystem {
 
                 // If this is the player, reveal what they can see
                 let _p: Option<&Player> = player.get(ent);
-                if let Some(_p) = _p {
-                    for t in map.visible_tiles.iter_mut() {
-                        *t = false
+                match _p {
+                    Some(_p) => {
+                        for t in map.visible_tiles.iter_mut() {
+                            *t = false
+                        }
+                        for tile in viewshed.visible_tiles.iter() {
+                            let idx = map.xy_idx(tile.x, tile.y);
+                            map.revealed_tiles[idx] = true;
+                            map.visible_tiles[idx] = true;
+                        }
                     }
-                    for vis in viewshed.visible_tiles.iter() {
-                        let idx = map.xy_idx(vis.x, vis.y);
-                        map.revealed_tiles[idx] = true;
-                        map.visible_tiles[idx] = true;
-                    }
+                    None => (),
                 }
+                // rewrote the code below with a match statement, up here^
                 // if let Some(_p) = _p {
-                //     for vis in viewshed.visible_tiles.iter() {
-                // 	let idx = map.xy_idx(vis.x, vis.y);
-                // 	map.revealed_tiles[idx] = true;
-                // 	map.visible_tiles[idx] = true;
+                //     for t in map.visible_tiles.iter_mut() {
+                //         *t = false
                 //     }
-                // }
-                // match p {
-                // 	Some(_p) => {
-                // 	    for tile in viewshed.visible_tiles.iter() {
-                // 		let idx = map.xy_idx(tile.x, tile.y);
-                // 		map.revealed_tiles[idx] = true;
-                // 	    }
-                // 	},
-                // 	None => ()
+                //     for vis in viewshed.visible_tiles.iter() {
+                //         let idx = map.xy_idx(vis.x, vis.y);
+                //         map.revealed_tiles[idx] = true;
+                //         map.visible_tiles[idx] = true;
+                //     }
                 // }
             }
         }
