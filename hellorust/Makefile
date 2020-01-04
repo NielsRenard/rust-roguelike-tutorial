@@ -8,4 +8,4 @@ build:
 
 format:
 	@cd $(ROOT) && \
-	find src -name '*.rs' -exec ormolu --mode inplace {} \;
+	find src -name '*.rs' -exec rustfmt {} \;
