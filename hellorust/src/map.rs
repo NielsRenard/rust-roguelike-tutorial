@@ -19,6 +19,7 @@ pub struct Map {
     pub height: i32,
     pub revealed_tiles: Vec<bool>,
     pub visible_tiles: Vec<bool>,
+    pub blocked_tiles: Vec<bool>,
 }
 
 impl Map {
@@ -67,6 +68,7 @@ impl Map {
             height: 50,
             revealed_tiles: vec![false; 80 * 50],
             visible_tiles: vec![false; 80 * 50],
+            blocked_tiles: vec![false; 80 * 50],
         };
 
         //    let mut rooms: Vec<Rect> = Vec::new();
@@ -110,12 +112,20 @@ impl Map {
     }
 
     fn is_exit_valid(&self, x: i32, y: i32) -> bool {
-        //if out of bounds return false
+        // "this type of bounds checking is worth doing,
+        // prevents program from crashing because you tried to read outside of the the valid memory area."
         if x < 1 || x > self.width - 1 || y < 1 || y > self.height - 1 {
             return false;
         }
         let idx = self.xy_idx(x, y);
-        self.tiles[idx as usize] != TileType::Wall
+        !self.blocked_tiles[idx]
+    }
+
+    /// "sets blocked for a tile to true if its a wall, false otherwise"
+    pub fn populate_blocked(&mut self) {
+        for (i, tile) in self.tiles.iter_mut().enumerate() {
+            self.blocked_tiles[i] = *tile == TileType::Wall;
+        }
     }
 }
 

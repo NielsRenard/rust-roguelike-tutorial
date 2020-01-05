@@ -15,6 +15,8 @@ mod visibility_system;
 use visibility_system::VisibilitySystem;
 mod monster_ai_system;
 use monster_ai_system::MonsterAI;
+mod map_indexing_system;
+use map_indexing_system::MapIndexingSystem;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -61,6 +63,8 @@ impl State {
         vis.run_now(&self.ecs);
         let mut mob = MonsterAI {};
         mob.run_now(&self.ecs);
+        let mut mapindex = MapIndexingSystem {};
+        mapindex.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -78,6 +82,7 @@ fn main() {
     gs.ecs.register::<Viewshed>();
     gs.ecs.register::<Monster>();
     gs.ecs.register::<Name>();
+    gs.ecs.register::<BlocksTile>();
 
     // add a map to the world
     let map: Map = Map::new_map_rooms_and_corridors();
@@ -104,6 +109,7 @@ fn main() {
                 name = "Orc".to_string();
             }
         }
+
         gs.ecs
             .create_entity()
             .with(Position { x, y })
@@ -121,6 +127,7 @@ fn main() {
             .with(Name {
                 name: format!("{} #{}", &name, i),
             })
+            .with(BlocksTile {})
             .build();
     }
 

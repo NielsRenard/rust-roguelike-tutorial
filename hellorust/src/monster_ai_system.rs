@@ -26,8 +26,15 @@ impl<'a> System<'a> for MonsterAI {
         for (viewshed, _monster, name, mut pos) in
             (&mut viewshed, &monster, &name, &mut position).join()
         {
+            let distance =
+                rltk::DistanceAlg::Pythagoras.distance2d(Point::new(pos.x, pos.y), *player_pos);
+            if distance < 1.5 {
+                // Attack goes here
+                rltk::console::log(&format!("{} shouts insults", name.name));
+                return;
+            }
             // TODO don't understand why book dereferences player_pos here
-            if viewshed.visible_tiles.contains(&*player_pos) {
+            else if viewshed.visible_tiles.contains(&*player_pos) {
                 // (for WASM, this logs to browser console)
                 rltk::console::log(format!("{:?} {}", name.name, "winks"));
                 let path = rltk::a_star_search(
