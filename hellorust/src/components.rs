@@ -4,6 +4,9 @@ use specs::prelude::*;
 #[derive(Component, Debug)]
 pub struct Player {}
 
+#[derive(Component, Debug)]
+pub struct Monster {}
+
 #[derive(Component)]
 pub struct Position {
     pub x: i32,

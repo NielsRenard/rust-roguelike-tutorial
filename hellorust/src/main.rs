@@ -57,7 +57,7 @@ fn main() {
     gs.ecs.register::<LeftMover>();
     gs.ecs.register::<Player>();
     gs.ecs.register::<Viewshed>();
-
+    gs.ecs.register::<Monster>();
     // add a map to the world
     let map: Map = Map::new_map_rooms_and_corridors();
     // make sure the player doesn't get put inside wall
@@ -86,6 +86,7 @@ fn main() {
                 range: 8,
                 dirty: true,
             })
+            .with(Monster {})
             .build();
     }
 
