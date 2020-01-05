@@ -156,19 +156,5 @@ fn main() {
         })
         .build();
 
-    // make ten enemies
-    //    for i in 0..10 {
-    //        gs.ecs
-    //            .create_entity()
-    //            .with(Position { x: i * 7, y: 20 })
-    //            .with(Renderable {
-    //                glyph: rltk::to_cp437('☻'),
-    //                fg: RGB::named(rltk::RED),
-    //                bg: RGB::named(rltk::BLACK),
-    //            })
-    //            .with(LeftMover {})
-    //            .build();
-    //    }
-
     rltk::main_loop(context, gs);
 }
