@@ -1,5 +1,5 @@
 extern crate specs;
-use super::{Map, Monster, Name, Point, Position, Viewshed};
+use super::{WantsToMelee, Map, Monster, Name, Point, Position, Viewshed};
 use specs::prelude::*;
 extern crate rltk;
 
@@ -10,26 +10,30 @@ impl<'a> System<'a> for MonsterAI {
     type SystemData = (
         WriteExpect<'a, Map>,
         ReadExpect<'a, Point>,
+        ReadExpect<'a, Entity>,
+        Entities<'a>,	
         WriteStorage<'a, Viewshed>,
         ReadStorage<'a, Monster>,
         ReadStorage<'a, Name>,
         WriteStorage<'a, Position>,
+        WriteStorage<'a, WantsToMelee>	
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut map, player_pos, mut viewshed, monster, name, mut position) = data;
+        let (mut map, player_pos, player_entity, entities, mut viewshed, monster, name, mut position, mut wants_to_melee) = data;
 
         // "We also need to give the player a name;
         // we've explicitly included names in the AI's join, so we better be sure that the player has one!
         // Otherwise, the AI will ignore the player altogether." - Chapter 6
 
-        for (viewshed, _monster, name, mut pos) in
-            (&mut viewshed, &monster, &name, &mut position).join()
+        for (entity, mut viewshed, _monster, name, mut pos) in
+            (&entities, &mut viewshed, &monster, &name, &mut position).join()
         {
             let distance =
                 rltk::DistanceAlg::Pythagoras.distance2d(Point::new(pos.x, pos.y), *player_pos);
             if distance < 1.5 {
                 // Attack goes here
+                wants_to_melee.insert(entity, WantsToMelee{ target: *player_entity }).expect("Unable to insert attack");		
                 rltk::console::log(&format!("{} shouts insults", name.name));
                 return;
             }

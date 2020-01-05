@@ -77,20 +77,32 @@ fn main() {
     };
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
-    gs.ecs.register::<LeftMover>();
     gs.ecs.register::<Player>();
     gs.ecs.register::<Viewshed>();
     gs.ecs.register::<Monster>();
     gs.ecs.register::<Name>();
     gs.ecs.register::<BlocksTile>();
     gs.ecs.register::<CombatStats>();
+    gs.ecs.register::<WantsToMelee>();
+    gs.ecs.register::<SufferDamage>();        
 
     // add a map to the world
     let map: Map = Map::new_map_rooms_and_corridors();
     // make sure the player doesn't get put inside wall
     let (player_x, player_y) = map.rooms[0].center();
-    // add player position resource
-    gs.ecs.insert(Point::new(player_x, player_y));
+    let player_entity = gs.ecs
+        .create_entity()
+        .with(Position { x: player_x, y: player_y })
+        .with(Renderable {
+            glyph: rltk::to_cp437('@'),
+            fg: RGB::named(rltk::YELLOW),
+            bg: RGB::named(rltk::BLACK),
+        })
+        .with(Player{})
+        .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
+        .with(Name{name: "Player".to_string() })
+        .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, strength: 5 })
+        .build();
 
     // every room -except the first one- gets a monster
     let mut rng = RandomNumberGenerator::new();
@@ -138,8 +150,6 @@ fn main() {
             .build();
     }
 
-    gs.ecs.insert(map);
-
     // make our 'guy'
     gs.ecs
         .create_entity()
@@ -169,5 +179,10 @@ fn main() {
         })
         .build();
 
+    // add player position resource
+    gs.ecs.insert(map);
+    gs.ecs.insert(Point::new(player_x, player_y));
+    gs.ecs.insert(player_entity);
+    
     rltk::main_loop(context, gs);
 }

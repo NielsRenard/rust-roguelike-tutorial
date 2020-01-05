@@ -12,6 +12,17 @@ pub struct Name {
     pub name: String,
 }
 
+// ConvertSaveload was in the derive list, but didn't compile
+#[derive(Component, Debug, Clone)]
+pub struct WantsToMelee {
+    pub target : Entity
+}
+
+#[derive(Component, Debug)]
+pub struct SufferDamage {
+    pub amount : i32
+}
+
 #[derive(Component, Debug)]
 pub struct CombatStats {
     pub max_hp: i32,
