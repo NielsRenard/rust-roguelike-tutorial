@@ -69,7 +69,7 @@ fn main() {
     let context = Rltk::init_simple8x8(80, 50, "Hello Rust World", "resources");
     let mut gs = State {
         ecs: World::new(),
-        runstate: RunState::Waiting,
+        runstate: RunState::Running,
     };
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
