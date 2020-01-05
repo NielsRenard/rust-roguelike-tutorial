@@ -28,14 +28,22 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
     match ctx.key {
         None => return RunState::Waiting, // Nothing happened, don't Tick yet.
         Some(key) => match key {
-            VirtualKeyCode::Left => try_move_player(-1, 0, &mut gs.ecs),
-            VirtualKeyCode::Right => try_move_player(1, 0, &mut gs.ecs),
-            VirtualKeyCode::Up => try_move_player(0, -1, &mut gs.ecs),
-            VirtualKeyCode::Down => try_move_player(0, 1, &mut gs.ecs),
-            VirtualKeyCode::A => try_move_player(-1, 0, &mut gs.ecs),
-            VirtualKeyCode::D => try_move_player(1, 0, &mut gs.ecs),
-            VirtualKeyCode::W => try_move_player(0, -1, &mut gs.ecs),
-            VirtualKeyCode::S => try_move_player(0, 1, &mut gs.ecs),
+            VirtualKeyCode::Left | VirtualKeyCode::A | VirtualKeyCode::Numpad4 => {
+                try_move_player(-1, 0, &mut gs.ecs)
+            }
+            VirtualKeyCode::Right | VirtualKeyCode::D | VirtualKeyCode::Numpad6 => {
+                try_move_player(1, 0, &mut gs.ecs)
+            }
+            VirtualKeyCode::Up | VirtualKeyCode::W | VirtualKeyCode::Numpad8 => {
+                try_move_player(0, -1, &mut gs.ecs)
+            }
+            VirtualKeyCode::Down | VirtualKeyCode::S | VirtualKeyCode::Numpad2 => {
+                try_move_player(0, 1, &mut gs.ecs)
+            }
+            VirtualKeyCode::Q | VirtualKeyCode::Numpad7 => try_move_player(-1, -1, &mut gs.ecs),
+            VirtualKeyCode::E | VirtualKeyCode::Numpad9 => try_move_player(1, -1, &mut gs.ecs),
+            VirtualKeyCode::Z | VirtualKeyCode::Numpad1 => try_move_player(-1, 1, &mut gs.ecs),
+            VirtualKeyCode::C | VirtualKeyCode::Numpad3 => try_move_player(1, 1, &mut gs.ecs),
             _ => return RunState::Waiting,
         },
     }
