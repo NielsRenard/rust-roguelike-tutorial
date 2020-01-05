@@ -1,4 +1,4 @@
-use super::{Map, Player, Point, Position, RunState, State, TileType, Viewshed};
+use super::{Map, Player, Point, Position, RunState, State, Viewshed};
 use rltk::{Rltk, VirtualKeyCode};
 use specs::prelude::*;
 use std::cmp::{max, min};
@@ -28,7 +28,7 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
     match ctx.key {
         None => return RunState::Waiting, // Nothing happened, don't Tick yet.
         Some(key) => match key {
-	    // Cardinal movement
+            // Cardinal movement
             VirtualKeyCode::Left | VirtualKeyCode::A | VirtualKeyCode::Numpad4 => {
                 try_move_player(-1, 0, &mut gs.ecs)
             }
@@ -41,7 +41,7 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::Down | VirtualKeyCode::S | VirtualKeyCode::Numpad2 => {
                 try_move_player(0, 1, &mut gs.ecs)
             }
-	    // Diagonal movement
+            // Diagonal movement
             VirtualKeyCode::Q | VirtualKeyCode::Numpad7 => try_move_player(-1, -1, &mut gs.ecs),
             VirtualKeyCode::E | VirtualKeyCode::Numpad9 => try_move_player(1, -1, &mut gs.ecs),
             VirtualKeyCode::Z | VirtualKeyCode::Numpad1 => try_move_player(-1, 1, &mut gs.ecs),

@@ -83,6 +83,7 @@ fn main() {
     gs.ecs.register::<Monster>();
     gs.ecs.register::<Name>();
     gs.ecs.register::<BlocksTile>();
+    gs.ecs.register::<CombatStats>();
 
     // add a map to the world
     let map: Map = Map::new_map_rooms_and_corridors();
@@ -128,6 +129,12 @@ fn main() {
                 name: format!("{} #{}", &name, i),
             })
             .with(BlocksTile {})
+            .with(CombatStats {
+                max_hp: 16,
+                hp: 16,
+                defense: 1,
+                strength: 4,
+            })
             .build();
     }
 
@@ -153,6 +160,12 @@ fn main() {
         })
         .with(Name {
             name: "Player".to_string(),
+        })
+        .with(CombatStats {
+            max_hp: 30,
+            hp: 30,
+            defense: 2,
+            strength: 5,
         })
         .build();
 
