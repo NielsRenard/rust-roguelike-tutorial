@@ -1,5 +1,5 @@
 rltk::add_wasm_support!();
-use rltk::{Console, GameState, RandomNumberGenerator, Rltk, RGB};
+use rltk::{Console, GameState, Point, RandomNumberGenerator, Rltk, RGB};
 use specs::prelude::*;
 #[macro_use]
 extern crate specs_derive;
@@ -17,26 +17,27 @@ mod monster_ai_system;
 use monster_ai_system::MonsterAI;
 
 #[derive(PartialEq, Copy, Clone)]
-pub enum RunState { Waiting, Running }
+pub enum RunState {
+    Waiting,
+    Running,
+}
 
 pub struct State {
     pub ecs: World,
-    pub runstate: RunState
+    pub runstate: RunState,
 }
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut Rltk) {
         ctx.cls();
 
+        if self.runstate == RunState::Running {
+            self.run_systems();
+            self.runstate = RunState::Waiting;
+        } else {
+            self.runstate = player_input(self, ctx);
+        }
 
-
-	if self.runstate == RunState::Running {
-	    self.run_systems();
-	    self.runstate = RunState::Waiting;
-	} else {
-	    self.runstate = player_input(self, ctx);
-	}
-	
         //        let map = self.ecs.fetch::<Map>();
         draw_map(&self.ecs, ctx);
 
@@ -58,15 +59,18 @@ impl State {
         //        lw.run_now(&self.ecs);
         let mut vis = VisibilitySystem {};
         vis.run_now(&self.ecs);
-	let mut mob = MonsterAI{};
-	mob.run_now(&self.ecs);
+        let mut mob = MonsterAI {};
+        mob.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
 
 fn main() {
     let context = Rltk::init_simple8x8(80, 50, "Hello Rust World", "resources");
-    let mut gs = State { ecs: World::new(), runstate: RunState::Waiting };
+    let mut gs = State {
+        ecs: World::new(),
+        runstate: RunState::Waiting,
+    };
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<LeftMover>();
@@ -77,6 +81,8 @@ fn main() {
     let map: Map = Map::new_map_rooms_and_corridors();
     // make sure the player doesn't get put inside wall
     let (player_x, player_y) = map.rooms[0].center();
+    // add player position resource
+    gs.ecs.insert(Point::new(player_x, player_y));
 
     // every room -except the first one- gets a monster
     let mut rng = RandomNumberGenerator::new();

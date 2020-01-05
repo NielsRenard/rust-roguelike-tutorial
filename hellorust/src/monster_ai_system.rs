@@ -1,27 +1,28 @@
 extern crate specs;
-use super::{Monster, Position, Viewshed};
+use super::{Monster, Point, Viewshed};
 use specs::prelude::*;
-use std::time::{SystemTime};
+use std::time::SystemTime;
 extern crate rltk;
 
 pub struct MonsterAI {}
 
 impl<'a> System<'a> for MonsterAI {
     type SystemData = (
+        ReadExpect<'a, Point>,
         ReadStorage<'a, Viewshed>,
-        ReadStorage<'a, Position>,
         ReadStorage<'a, Monster>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (viewshed, pos, monster) = data;
+        let (player_pos, viewshed, monster) = data;
 
-        for (_viewshed, _pos, _monster) in (&viewshed, &pos, &monster).join() {
-	    let now = SystemTime::now();
-	    let thought = "Monster considers their own existence";
-	    let message = format!("{:?}{}", now, thought);
-	    // println! to console, or when in WASM -> log to browser console
-	    rltk::console::log(message);
+        for (viewshed, _monster) in (&viewshed, &monster).join() {
+            // TODO don't understand why book dereferences player_pos here
+            if viewshed.visible_tiles.contains(&*player_pos) {
+                let thought = "Monster winks";
+                rltk::console::log(format!("{:?}{}", SystemTime::now(), thought));
+                // for WASM logs to browser console
+            }
         }
     }
 }
