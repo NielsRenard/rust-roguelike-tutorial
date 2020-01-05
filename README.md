@@ -68,3 +68,5 @@
 * [ ] 4.24. Enter the Dragon
 * [ ] 4.25. Mushrooms
 * [ ] 4.26. More Shrooms
+
+[Supported glyphs (for fn to_cp437)](https://docs.rs/rltk/0.5.15/src/rltk/codepage437.rs.html#2-276)
