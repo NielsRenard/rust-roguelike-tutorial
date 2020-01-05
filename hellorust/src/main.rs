@@ -77,6 +77,8 @@ fn main() {
     gs.ecs.register::<Player>();
     gs.ecs.register::<Viewshed>();
     gs.ecs.register::<Monster>();
+    gs.ecs.register::<Name>();
+
     // add a map to the world
     let map: Map = Map::new_map_rooms_and_corridors();
     // make sure the player doesn't get put inside wall
@@ -86,13 +88,21 @@ fn main() {
 
     // every room -except the first one- gets a monster
     let mut rng = RandomNumberGenerator::new();
-    for room in map.rooms.iter().skip(1) {
+    for (i, room) in map.rooms.iter().skip(1).enumerate() {
         let (x, y) = room.center();
+
         let glyph: u8;
         let roll = rng.roll_dice(1, 2);
+        let name: String;
         match roll {
-            1 => glyph = rltk::to_cp437('g'),
-            _ => glyph = rltk::to_cp437('o'),
+            1 => {
+                glyph = rltk::to_cp437('g');
+                name = "Goblin".to_string();
+            }
+            _ => {
+                glyph = rltk::to_cp437('o');
+                name = "Orc".to_string();
+            }
         }
         gs.ecs
             .create_entity()
@@ -108,6 +118,9 @@ fn main() {
                 dirty: true,
             })
             .with(Monster {})
+            .with(Name {
+                name: format!("{} #{}", &name, i),
+            })
             .build();
     }
 
@@ -130,6 +143,9 @@ fn main() {
             visible_tiles: Vec::new(),
             range: 8,
             dirty: true,
+        })
+        .with(Name {
+            name: "Player".to_string(),
         })
         .build();
 
