@@ -13,7 +13,7 @@
 * [ ] 1.12. Difficulty
 * [ ] 1.13. Equipment
 # Section 2 - Stretch Goals
-* [ ]  2.1. Nice Walls with Bitsets
+* [ ] 2.1. Nice Walls with Bitsets
 * [ ] 2.2. Bloodstains
 * [ ] 2.3. Particle Effects
 * [ ] 2.4. Hunger Clock
