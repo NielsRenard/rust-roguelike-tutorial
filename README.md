@@ -4,7 +4,7 @@
 * [x] 1.3. A More Interesting Map
 * [x] 1.4. Field of View
 * [x] 1.5. Monsters
-* [ ] 1.6. Dealing Damage
+* [x] 1.6. Dealing Damage
 * [ ] 1.7. User Interface
 * [ ] 1.8. Items and Inventory
 * [ ] 1.9. Ranged Scrolls/Targeting
