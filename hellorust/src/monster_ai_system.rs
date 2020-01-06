@@ -58,13 +58,12 @@ impl<'a> System<'a> for MonsterAI {
                         },
                     )
                     .expect("Unable to insert attack");
-                rltk::console::log(&format!("{} shouts insults", name.name));
                 return;
             }
             // TODO don't understand why book dereferences player_pos here
             else if viewshed.visible_tiles.contains(&*player_pos) {
                 // (for WASM, this logs to browser console)
-                rltk::console::log(format!("{:?} {}", name.name, "winks"));
+                rltk::console::log(format!("{:?} {}", name.name, "chases you"));
                 let path = rltk::a_star_search(
                     map.xy_idx(pos.x, pos.y) as i32,
                     map.xy_idx(player_pos.x, player_pos.y) as i32,

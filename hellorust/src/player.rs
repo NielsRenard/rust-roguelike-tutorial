@@ -26,7 +26,6 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
                 None => {}
                 Some(_target) => {
                     // Attack it
-                    rltk::console::log("Take THAT!");
                     wants_to_melee
                         .insert(
                             entity,
