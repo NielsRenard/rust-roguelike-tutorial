@@ -1,5 +1,5 @@
 extern crate specs;
-use super::{Map, Monster, Name, Point, Position, Viewshed, WantsToMelee};
+use super::{Map, Monster, Name, Point, Position, RunState, Viewshed, WantsToMelee};
 use specs::prelude::*;
 extern crate rltk;
 
@@ -11,6 +11,7 @@ impl<'a> System<'a> for MonsterAI {
         WriteExpect<'a, Map>,
         ReadExpect<'a, Point>,
         ReadExpect<'a, Entity>,
+        ReadExpect<'a, RunState>,
         Entities<'a>,
         WriteStorage<'a, Viewshed>,
         ReadStorage<'a, Monster>,
@@ -24,6 +25,7 @@ impl<'a> System<'a> for MonsterAI {
             mut map,
             player_pos,
             player_entity,
+            runstate,
             entities,
             mut viewshed,
             monster,
@@ -31,6 +33,11 @@ impl<'a> System<'a> for MonsterAI {
             mut position,
             mut wants_to_melee,
         ) = data;
+
+        // only run system if the state is MonsterTurn
+        if *runstate != RunState::MonsterTurn {
+            return;
+        }
 
         // "We also need to give the player a name;
         // we've explicitly included names in the AI's join, so we better be sure that the player has one!

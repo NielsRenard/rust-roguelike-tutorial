@@ -56,7 +56,7 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
 pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
     // Player movement
     match ctx.key {
-        None => return RunState::Waiting, // Nothing happened, don't Tick yet.
+        None => return RunState::AwaitingInput, // Nothing happened, don't Tick yet.
         Some(key) => match key {
             // Cardinal movement
             VirtualKeyCode::Left | VirtualKeyCode::A | VirtualKeyCode::Numpad4 => {
@@ -76,9 +76,9 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::E | VirtualKeyCode::Numpad9 => try_move_player(1, -1, &mut gs.ecs),
             VirtualKeyCode::Z | VirtualKeyCode::Numpad1 => try_move_player(-1, 1, &mut gs.ecs),
             VirtualKeyCode::C | VirtualKeyCode::Numpad3 => try_move_player(1, 1, &mut gs.ecs),
-            _ => return RunState::Waiting,
+            _ => return RunState::AwaitingInput,
         },
     }
     // If a button was pressed, the next Tick may occur.
-    return RunState::Running;
+    return RunState::PlayerTurn;
 }
