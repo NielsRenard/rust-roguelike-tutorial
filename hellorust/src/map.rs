@@ -58,8 +58,8 @@ impl Map {
     }
 
     fn apply_room_to_map(&mut self, room: &Rect) {
-        for y in room.y1 + 1..=room.y2 {
-            for x in room.x1 + 1..=room.x2 {
+        for y in (room.y1 + 1)..=room.y2 {
+            for x in (room.x1 + 1)..=room.x2 {
                 let idx = self.xy_idx(x, y);
                 self.tiles[idx] = TileType::Floor;
             }
@@ -88,8 +88,9 @@ impl Map {
         for _i in 0..MAX_ROOMS {
             let w = rng.range(MIN_SIZE, MAX_SIZE);
             let h = rng.range(MIN_SIZE, MAX_SIZE);
-            let x = rng.roll_dice(1, MAP_WIDTH as i32 - w - 1) - 1;
-            let y = rng.roll_dice(1, MAP_HEIGHT as i32 - h - 1) - 1;
+	    //(↓ e.g. max) x = [1..(80-10-1-1)] = [1..68]
+            let x = rng.roll_dice(1, map.width as i32 - w - 1) - 1;
+            let y = rng.roll_dice(1, map.height as i32 - h - 1) - 1;
             let new_room = Rect::new(x, y, w, h);
             let mut ok = true;
             for other_room in map.rooms.iter() {
@@ -232,7 +233,7 @@ pub fn draw_map(ecs: &World, ctx: &mut Rltk) {
         }
         // Move the coordinates
         x += 1;
-        if x > 79 {
+        if x > MAP_WIDTH as i32 - 1 {
             x = 0;
             y += 1;
         }

@@ -197,8 +197,8 @@ fn main() {
     }
 
     gs.ecs.insert(map);
-    // add player position resource
     gs.ecs.insert(Point::new(player_x, player_y));
+    println!("player initial position (x:{},y:{})", player_x, player_y);
     gs.ecs.insert(player_entity);
     gs.ecs.insert(RunState::PreRun);
 
