@@ -17,6 +17,10 @@ mod monster_ai_system;
 use monster_ai_system::MonsterAI;
 mod map_indexing_system;
 use map_indexing_system::MapIndexingSystem;
+mod melee_combat_system;
+use melee_combat_system::MeleeCombatSystem;
+mod damage_system;
+use damage_system::DamageSystem;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -40,7 +44,7 @@ impl GameState for State {
             self.runstate = player_input(self, ctx);
         }
 
-        //        let map = self.ecs.fetch::<Map>();
+        damage_system::delete_the_dead(&mut self.ecs);
         draw_map(&self.ecs, ctx);
 
         let positions = self.ecs.read_storage::<Position>();
@@ -65,6 +69,10 @@ impl State {
         mob.run_now(&self.ecs);
         let mut mapindex = MapIndexingSystem {};
         mapindex.run_now(&self.ecs);
+        let mut melee = MeleeCombatSystem {};
+        melee.run_now(&self.ecs);
+        let mut damage = DamageSystem {};
+        damage.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -84,24 +92,41 @@ fn main() {
     gs.ecs.register::<BlocksTile>();
     gs.ecs.register::<CombatStats>();
     gs.ecs.register::<WantsToMelee>();
-    gs.ecs.register::<SufferDamage>();        
+    gs.ecs.register::<SufferDamage>();
 
     // add a map to the world
     let map: Map = Map::new_map_rooms_and_corridors();
     // make sure the player doesn't get put inside wall
     let (player_x, player_y) = map.rooms[0].center();
-    let player_entity = gs.ecs
+
+    // make our 'guy'
+    let player_entity = gs
+        .ecs
         .create_entity()
-        .with(Position { x: player_x, y: player_y })
+        .with(Position {
+            x: player_x,
+            y: player_y,
+        })
         .with(Renderable {
-            glyph: rltk::to_cp437('@'),
+            glyph: rltk::to_cp437('☺'),
             fg: RGB::named(rltk::YELLOW),
             bg: RGB::named(rltk::BLACK),
         })
-        .with(Player{})
-        .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
-        .with(Name{name: "Player".to_string() })
-        .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, strength: 5 })
+        .with(Player {})
+        .with(Viewshed {
+            visible_tiles: Vec::new(),
+            range: 8,
+            dirty: true,
+        })
+        .with(Name {
+            name: "Player".to_string(),
+        })
+        .with(CombatStats {
+            max_hp: 30,
+            hp: 30,
+            defense: 2,
+            strength: 5,
+        })
         .build();
 
     // every room -except the first one- gets a monster
@@ -150,39 +175,10 @@ fn main() {
             .build();
     }
 
-    // make our 'guy'
-    gs.ecs
-        .create_entity()
-        .with(Position {
-            x: player_x,
-            y: player_y,
-        })
-        .with(Renderable {
-            glyph: rltk::to_cp437('☺'),
-            fg: RGB::named(rltk::YELLOW),
-            bg: RGB::named(rltk::BLACK),
-        })
-        .with(Player {})
-        .with(Viewshed {
-            visible_tiles: Vec::new(),
-            range: 8,
-            dirty: true,
-        })
-        .with(Name {
-            name: "Player".to_string(),
-        })
-        .with(CombatStats {
-            max_hp: 30,
-            hp: 30,
-            defense: 2,
-            strength: 5,
-        })
-        .build();
-
-    // add player position resource
     gs.ecs.insert(map);
+    // add player position resource
     gs.ecs.insert(Point::new(player_x, player_y));
     gs.ecs.insert(player_entity);
-    
+
     rltk::main_loop(context, gs);
 }

@@ -15,12 +15,12 @@ pub struct Name {
 // ConvertSaveload was in the derive list, but didn't compile
 #[derive(Component, Debug, Clone)]
 pub struct WantsToMelee {
-    pub target : Entity
+    pub target: Entity,
 }
 
 #[derive(Component, Debug)]
 pub struct SufferDamage {
-    pub amount : i32
+    pub amount: i32,
 }
 
 #[derive(Component, Debug)]

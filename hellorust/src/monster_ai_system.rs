@@ -1,5 +1,5 @@
 extern crate specs;
-use super::{WantsToMelee, Map, Monster, Name, Point, Position, Viewshed};
+use super::{Map, Monster, Name, Point, Position, Viewshed, WantsToMelee};
 use specs::prelude::*;
 extern crate rltk;
 
@@ -11,16 +11,26 @@ impl<'a> System<'a> for MonsterAI {
         WriteExpect<'a, Map>,
         ReadExpect<'a, Point>,
         ReadExpect<'a, Entity>,
-        Entities<'a>,	
+        Entities<'a>,
         WriteStorage<'a, Viewshed>,
         ReadStorage<'a, Monster>,
         ReadStorage<'a, Name>,
         WriteStorage<'a, Position>,
-        WriteStorage<'a, WantsToMelee>	
+        WriteStorage<'a, WantsToMelee>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut map, player_pos, player_entity, entities, mut viewshed, monster, name, mut position, mut wants_to_melee) = data;
+        let (
+            mut map,
+            player_pos,
+            player_entity,
+            entities,
+            mut viewshed,
+            monster,
+            name,
+            mut position,
+            mut wants_to_melee,
+        ) = data;
 
         // "We also need to give the player a name;
         // we've explicitly included names in the AI's join, so we better be sure that the player has one!
@@ -33,7 +43,14 @@ impl<'a> System<'a> for MonsterAI {
                 rltk::DistanceAlg::Pythagoras.distance2d(Point::new(pos.x, pos.y), *player_pos);
             if distance < 1.5 {
                 // Attack goes here
-                wants_to_melee.insert(entity, WantsToMelee{ target: *player_entity }).expect("Unable to insert attack");		
+                wants_to_melee
+                    .insert(
+                        entity,
+                        WantsToMelee {
+                            target: *player_entity,
+                        },
+                    )
+                    .expect("Unable to insert attack");
                 rltk::console::log(&format!("{} shouts insults", name.name));
                 return;
             }
@@ -48,8 +65,12 @@ impl<'a> System<'a> for MonsterAI {
                 );
 
                 if path.success && path.steps.len() > 1 {
+                    let mut idx = map.xy_idx(pos.x, pos.y);
+                    map.blocked_tiles[idx] = false;
                     pos.x = path.steps[1] % map.width;
                     pos.y = path.steps[1] / map.width;
+                    idx = map.xy_idx(pos.x, pos.y);
+                    map.blocked_tiles[idx] = true;
                     viewshed.dirty = true;
                 }
             }
