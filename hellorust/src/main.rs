@@ -6,6 +6,7 @@ extern crate specs_derive;
 mod map;
 pub use map::*;
 mod components;
+mod gui;
 pub use components::*;
 mod player;
 use player::*;
@@ -82,6 +83,7 @@ impl GameState for State {
                 ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
             }
         }
+	gui::draw_ui(&self.ecs, ctx)
     }
 }
 

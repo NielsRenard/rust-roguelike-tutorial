@@ -7,7 +7,7 @@ use specs::prelude::*;
 
 // "Use usize and isize when it’s related to memory size"
 const MAP_WIDTH : usize = 80;
-const MAP_HEIGHT : usize = 50;
+const MAP_HEIGHT : usize = 43;
 const MAP_COUNT : usize = MAP_HEIGHT * MAP_WIDTH;
 
 #[derive(PartialEq, Copy, Clone)]
