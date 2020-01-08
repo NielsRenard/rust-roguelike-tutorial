@@ -60,7 +60,7 @@ impl<'a> System<'a> for MonsterAI {
                     .expect("Unable to insert attack");
                 return;
             }
-            // TODO don't understand why book dereferences player_pos here
+            // TODO: don't understand why book dereferences player_pos here
             else if viewshed.visible_tiles.contains(&*player_pos) {
                 // (for WASM, this logs to browser console)
                 rltk::console::log(format!("{:?} {}", name.name, "chases you"));

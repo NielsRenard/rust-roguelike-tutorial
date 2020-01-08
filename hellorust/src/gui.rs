@@ -5,7 +5,7 @@ use super::{CombatStats, Player};
 use crate::gamelog::GameLog;
 use specs::prelude::*;
 
-//TODO: replace 43 and 79 with const's (maybe directly couple to the ones in map.rs)
+// TODO: replace 43 and 79 with const's (maybe directly couple to the ones in map.rs)
 
 pub fn draw_ui(ecs: &World, ctx: &mut Rltk) {
     ctx.draw_box(
