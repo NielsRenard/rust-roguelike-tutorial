@@ -6,9 +6,9 @@ extern crate specs;
 use specs::prelude::*;
 
 // "Use usize and isize when it’s related to memory size"
-const MAP_WIDTH : usize = 80;
-const MAP_HEIGHT : usize = 43;
-const MAP_COUNT : usize = MAP_HEIGHT * MAP_WIDTH;
+const MAP_WIDTH: usize = 80;
+const MAP_HEIGHT: usize = 43;
+const MAP_COUNT: usize = MAP_HEIGHT * MAP_WIDTH;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum TileType {
@@ -88,7 +88,7 @@ impl Map {
         for _i in 0..MAX_ROOMS {
             let w = rng.range(MIN_SIZE, MAX_SIZE);
             let h = rng.range(MIN_SIZE, MAX_SIZE);
-	    //(↓ e.g. max) x = [1..(80-10-1-1)] = [1..68]
+            //(↓ e.g. max) x = [1..(80-10-1-1)] = [1..68]
             let x = rng.roll_dice(1, map.width as i32 - w - 1) - 1;
             let y = rng.roll_dice(1, map.height as i32 - h - 1) - 1;
             let new_room = Rect::new(x, y, w, h);

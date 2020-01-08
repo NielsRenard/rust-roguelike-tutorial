@@ -20,6 +20,6 @@ impl Rect {
         self.x1 <= other.x2 && self.x2 >= other.x1 && self.y1 <= other.y2 && self.y2 >= other.y1
     }
     pub fn center(&self) -> (i32, i32) {
-	((self.x1 + self.x2) / 2, ((self.y1 + self.y2) / 2))
+        ((self.x1 + self.x2) / 2, ((self.y1 + self.y2) / 2))
     }
 }
