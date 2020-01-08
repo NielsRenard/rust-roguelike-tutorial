@@ -1,5 +1,6 @@
 extern crate specs;
-use super::{gamelog::GameLog, CombatStats, Player, SufferDamage};
+use super::{CombatStats, Player, SufferDamage};
+use crate::gamelog::GameLog;
 use specs::prelude::*;
 
 pub struct DamageSystem {}
