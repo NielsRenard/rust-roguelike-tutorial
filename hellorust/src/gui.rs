@@ -1,5 +1,5 @@
 extern crate rltk;
-use rltk::{Console, Rltk, BLACK, GREY, RED, RGB, WHITE};
+use rltk::{Console, Rltk, BLACK, GREY, RED, RGB, WHITE, MAGENTA};
 extern crate specs;
 use super::{CombatStats, Map, Name, Player, Point, Position};
 use crate::gamelog::GameLog;

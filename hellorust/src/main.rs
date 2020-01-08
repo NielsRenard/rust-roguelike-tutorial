@@ -106,6 +106,7 @@ impl State {
 
 fn main() {
     let context = Rltk::init_simple8x8(80, 50, "Hello Rust World", "resources");
+//    context.with_post_scanlines(true); // ↑ requires changing context to mut
     let mut gs = State { ecs: World::new() };
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
