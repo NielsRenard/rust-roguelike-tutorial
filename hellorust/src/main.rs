@@ -1,10 +1,12 @@
 rltk::add_wasm_support!();
-use rltk::{Console, GameState, Point, RandomNumberGenerator, Rltk, RGB};
+use rltk::{Console, GameState, Point, RandomNumberGenerator, Rltk};
 use specs::prelude::*;
 #[macro_use]
 extern crate specs_derive;
 mod map;
 pub use map::*;
+mod color;
+use color::{black, red, yellow};
 mod components;
 mod gamelog;
 mod gui;
@@ -106,7 +108,7 @@ impl State {
 
 fn main() {
     let context = Rltk::init_simple8x8(80, 50, "Hello Rust World", "resources");
-//    context.with_post_scanlines(true); // ↑ requires changing context to mut
+    //    context.with_post_scanlines(true); // ↑ requires changing context to mut
     let mut gs = State { ecs: World::new() };
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
@@ -134,8 +136,8 @@ fn main() {
         })
         .with(Renderable {
             glyph: rltk::to_cp437('☺'),
-            fg: RGB::named(rltk::YELLOW),
-            bg: RGB::named(rltk::BLACK),
+            fg: yellow(),
+            bg: black(),
         })
         .with(Player {})
         .with(Viewshed {
@@ -178,8 +180,8 @@ fn main() {
             .with(Position { x, y })
             .with(Renderable {
                 glyph: glyph,
-                fg: RGB::named(rltk::RED),
-                bg: RGB::named(rltk::BLACK),
+                fg: red(),
+                bg: black(),
             })
             .with(Viewshed {
                 visible_tiles: Vec::new(),
