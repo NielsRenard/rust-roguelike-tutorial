@@ -5,7 +5,7 @@
 ** DONE 1.4. Field of View
 ** DONE 1.5. Monsters
 ** DONE 1.6. Dealing Damage
-** TODO 1.7. User Interface
+** DONE 1.7. User Interface
 ** TODO 1.8. Items and Inventory
 ** TODO 1.9. Ranged Scrolls/Targeting
 ** TODO 1.10. Saving and Loading

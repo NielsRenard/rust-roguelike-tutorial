@@ -5,7 +5,7 @@
 * [x] 1.4. Field of View
 * [x] 1.5. Monsters
 * [x] 1.6. Dealing Damage
-* [ ] 1.7. User Interface
+* [x] 1.7. User Interface
 * [ ] 1.8. Items and Inventory
 * [ ] 1.9. Ranged Scrolls/Targeting
 * [ ] 1.10. Saving and Loading
