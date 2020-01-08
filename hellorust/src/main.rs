@@ -6,6 +6,7 @@ extern crate specs_derive;
 mod map;
 pub use map::*;
 mod components;
+mod gamelog;
 mod gui;
 pub use components::*;
 mod player;
@@ -202,6 +203,9 @@ fn main() {
     gs.ecs.insert(Point::new(player_x, player_y));
     println!("player initial position (x:{},y:{})", player_x, player_y);
     gs.ecs.insert(player_entity);
+    gs.ecs.insert(gamelog::GameLog {
+        entries: vec!["Good luck...".to_string()],
+    });
     gs.ecs.insert(RunState::PreRun);
 
     rltk::main_loop(context, gs);
