@@ -9,8 +9,10 @@ mod color;
 mod components;
 mod gamelog;
 mod gui;
+mod inventory_system;
 mod spawner;
 pub use components::*;
+use inventory_system::ItemCollectionSystem;
 mod player;
 use player::*;
 mod rect;
@@ -102,6 +104,8 @@ impl State {
         melee.run_now(&self.ecs);
         let mut damage = DamageSystem {};
         damage.run_now(&self.ecs);
+        let mut pickup = ItemCollectionSystem {};
+        pickup.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -122,6 +126,8 @@ fn main() {
     gs.ecs.register::<SufferDamage>();
     gs.ecs.register::<Item>();
     gs.ecs.register::<Potion>();
+    gs.ecs.register::<InBackpack>();
+    gs.ecs.register::<WantsToPickupItem>();
 
     // add a map to the world
     let map: Map = Map::new_map_rooms_and_corridors();
