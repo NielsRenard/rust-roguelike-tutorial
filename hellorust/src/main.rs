@@ -6,10 +6,11 @@ extern crate specs_derive;
 mod map;
 pub use map::*;
 mod color;
-use color::{black, red, yellow};
+use color::{black, red};
 mod components;
 mod gamelog;
 mod gui;
+mod spawner;
 pub use components::*;
 mod player;
 use player::*;
@@ -127,34 +128,7 @@ fn main() {
     let (player_x, player_y) = map.rooms[0].center();
 
     // make our 'guy'
-    let player_entity = gs
-        .ecs
-        .create_entity()
-        .with(Position {
-            x: player_x,
-            y: player_y,
-        })
-        .with(Renderable {
-            glyph: rltk::to_cp437('☺'),
-            fg: yellow(),
-            bg: black(),
-        })
-        .with(Player {})
-        .with(Viewshed {
-            visible_tiles: Vec::new(),
-            range: 8,
-            dirty: true,
-        })
-        .with(Name {
-            name: "Player".to_string(),
-        })
-        .with(CombatStats {
-            max_hp: 30,
-            hp: 30,
-            defense: 2,
-            strength: 5,
-        })
-        .build();
+    let player_entity = spawner::player(&mut gs.ecs, player_x, player_y);
 
     // every room -except the first one- gets a monster
     let mut rng = RandomNumberGenerator::new();
@@ -202,6 +176,7 @@ fn main() {
             .build();
     }
 
+    gs.ecs.insert(RandomNumberGenerator::new());
     gs.ecs.insert(map);
     gs.ecs.insert(Point::new(player_x, player_y));
     println!("player initial position (x:{},y:{})", player_x, player_y);
