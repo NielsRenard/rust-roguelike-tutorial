@@ -53,3 +53,11 @@ pub struct Renderable {
     pub fg: RGB,
     pub bg: RGB,
 }
+
+#[derive(Component)]
+pub struct Item {}
+
+#[derive(Component)]
+pub struct Potion {
+    pub heal_amount: i32,
+}
