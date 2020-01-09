@@ -7,6 +7,11 @@
 ** DONE 1.6. Dealing Damage
 ** DONE 1.7. User Interface
 ** TODO 1.8. Items and Inventory
+*** TODO 1.8.1) "It has a Renderable - a way to draw it."
+*** TODO 1.8.2) "If its on the ground, awaiting pickup - it has a Position."
+*** TODO 1.8.3) "If its NOT on the ground - say in a backpack, it needs a way to indicate that it it is stored. We'll start with InPack"
+*** TODO 1.8.4) "It's an item, which implies that it can be picked up. So it'll need an Item component of some sort."
+*** TODO 1.8.5) "If it can be used, it will need some way to indicate that it can be used - and what to do with it."
 ** TODO 1.9. Ranged Scrolls/Targeting
 ** TODO 1.10. Saving and Loading
 ** TODO 1.11. Delving Deeper
