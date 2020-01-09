@@ -1,11 +1,14 @@
 extern crate rltk;
 extern crate specs;
+use super::color::{black, red, yellow};
+use super::map::MAP_WIDTH;
 use super::{
-    BlocksTile, CombatStats, Monster, Name, Player, Position, RandomNumberGenerator, Renderable,
-    Viewshed,
+    BlocksTile, CombatStats, Monster, Name, Player, Position, RandomNumberGenerator, Rect,
+    Renderable, Viewshed,
 };
-use crate::color::{black, red, yellow};
 use specs::prelude::*;
+
+const MAX_MONSTERS: i32 = 4;
 
 /// Spawns the player and returns its entity object.
 pub fn player(ecs: &mut World, player_x: i32, player_y: i32) -> Entity {
@@ -86,4 +89,35 @@ pub fn monster<S: ToString>(ecs: &mut World, x: i32, y: i32, glyph: u8, name: S)
             strength: 4,
         })
         .build();
+}
+
+pub fn spawn_room(ecs: &mut World, room: &Rect) {
+    let mut monster_spawn_points: Vec<usize> = Vec::new();
+
+    // "Scope to keep the borrow checker happy"
+    {
+        let mut rng = ecs.write_resource::<RandomNumberGenerator>();
+        let num_monsters = rng.roll_dice(1, MAX_MONSTERS + 2) - 3;
+
+        for _i in 0..num_monsters {
+            let mut added = false;
+            // "keep trying to add random positions that aren't already occupied
+            // until sufficient monsters have been created"
+            while !added {
+                let x = (room.x1 + rng.roll_dice(1, i32::abs(room.x2 - room.x1))) as usize;
+                let y = (room.y1 + rng.roll_dice(1, i32::abs(room.y2 - room.y1))) as usize;
+                let idx = (y * MAP_WIDTH) + x;
+                if !monster_spawn_points.contains(&idx) {
+                    monster_spawn_points.push(idx);
+                    added = true;
+                }
+            }
+        }
+    }
+    // "Actually spawn the monsters"
+    for idx in monster_spawn_points.iter() {
+        let x = *idx % MAP_WIDTH;
+        let y = *idx / MAP_WIDTH;
+        random_monster(ecs, x as i32, y as i32);
+    }
 }
