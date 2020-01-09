@@ -36,7 +36,7 @@ impl<'a> System<'a> for MeleeCombatSystem {
                         log.entries.insert(
                             0,
                             format!(
-                                "{} hits {}, for {} hp.",
+                                "{} hits {} for {} hp.",
                                 &name.name, &target_name.name, damage
                             ),
                         );
