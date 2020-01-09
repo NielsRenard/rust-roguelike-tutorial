@@ -137,10 +137,10 @@ fn main() {
         let roll = rng.roll_dice(1, 2);
         match roll {
             1 => {
-                spawner::monster(&mut gs.ecs, x, y, rltk::to_cp437('g'), "Goblin");
+                spawner::goblin(&mut gs.ecs, x, y);
             }
             _ => {
-                spawner::monster(&mut gs.ecs, x, y, rltk::to_cp437('g'), "Orc");
+                spawner::orc(&mut gs.ecs, x, y);
             }
         }
     }

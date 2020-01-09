@@ -39,6 +39,13 @@ pub fn random_monster(ecs: &mut World, x: i32, y: i32) {
     //undefined
 }
 
+pub fn orc(ecs: &mut World, x: i32, y: i32) {
+    monster(ecs, x, y, rltk::to_cp437('o'), "Orc");
+}
+pub fn goblin(ecs: &mut World, x: i32, y: i32) {
+    monster(ecs, x, y, rltk::to_cp437('g'), "Goblin");
+}
+
 pub fn monster<S: ToString>(ecs: &mut World, x: i32, y: i32, glyph: u8, name: S) {
     ecs.create_entity()
         .with(Position { x, y })
