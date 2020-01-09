@@ -129,23 +129,14 @@ fn main() {
     // make our 'guy'
     let player_entity = spawner::player(&mut gs.ecs, player_x, player_y);
 
-    // every room -except the first one- gets a monster
-    let mut rng = RandomNumberGenerator::new();
-    for (_i, room) in map.rooms.iter().skip(1).enumerate() {
-        let (x, y) = room.center();
+    gs.ecs.insert(RandomNumberGenerator::new());
 
-        let roll = rng.roll_dice(1, 2);
-        match roll {
-            1 => {
-                spawner::goblin(&mut gs.ecs, x, y);
-            }
-            _ => {
-                spawner::orc(&mut gs.ecs, x, y);
-            }
-        }
+    // every room -except the first one- gets a monster
+    for room in map.rooms.iter().skip(1) {
+        let (x, y) = room.center();
+        spawner::random_monster(&mut gs.ecs, x, y)
     }
 
-    gs.ecs.insert(RandomNumberGenerator::new());
     gs.ecs.insert(map);
     gs.ecs.insert(Point::new(player_x, player_y));
     println!("player initial position (x:{},y:{})", player_x, player_y);

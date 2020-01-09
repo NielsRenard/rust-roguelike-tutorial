@@ -1,6 +1,9 @@
 extern crate rltk;
 extern crate specs;
-use super::{BlocksTile, CombatStats, Monster, Name, Player, Position, Renderable, Viewshed};
+use super::{
+    BlocksTile, CombatStats, Monster, Name, Player, Position, RandomNumberGenerator, Renderable,
+    Viewshed,
+};
 use crate::color::{black, red, yellow};
 use specs::prelude::*;
 
@@ -36,7 +39,19 @@ pub fn player(ecs: &mut World, player_x: i32, player_y: i32) -> Entity {
 
 /// Spawns a random monster at a given location
 pub fn random_monster(ecs: &mut World, x: i32, y: i32) {
-    //undefined
+    let roll: i32;
+    {
+        let mut rng = ecs.write_resource::<RandomNumberGenerator>();
+        roll = rng.roll_dice(1, 2);
+    }
+    match roll {
+        1 => {
+            goblin(ecs, x, y);
+        }
+        _ => {
+            orc(ecs, x, y);
+        }
+    }
 }
 
 pub fn orc(ecs: &mut World, x: i32, y: i32) {
