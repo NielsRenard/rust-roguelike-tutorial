@@ -103,6 +103,7 @@ pub fn show_inventory(gs: &mut State, ctx: &mut Rltk) -> ItemMenuResult {
     let player_entity = gs.ecs.fetch::<Entity>();
     let names = gs.ecs.read_storage::<Name>();
     let backpack = gs.ecs.read_storage::<InBackpack>();
+    let entities = gs.ecs.entities();
 
     // all the items in the player_entity's inventory
     let inventory = (&backpack, &names)
@@ -110,6 +111,7 @@ pub fn show_inventory(gs: &mut State, ctx: &mut Rltk) -> ItemMenuResult {
         .filter(|item| item.0.owner == *player_entity);
     let count = inventory.count() as i32;
 
+    let mut equippable: Vec<Entity> = Vec::new();
     let mut y = 25 - (count / 2);
     ctx.draw_box(15, y - 2, 31, count + 3, white(), black());
     let title = "Inventory";
@@ -118,15 +120,16 @@ pub fn show_inventory(gs: &mut State, ctx: &mut Rltk) -> ItemMenuResult {
     ctx.print_color(18, y + count + 1, yellow(), black(), close_msg);
 
     let mut j = 0;
-    for (_backpack, name) in (&backpack, &names)
+    for (entity, _backpack, name) in (&entities, &backpack, &names)
         .join()
-        .filter(|item| item.0.owner == *player_entity)
+        .filter(|item| item.1.owner == *player_entity)
     {
         ctx.set(17, y, white(), black(), rltk::to_cp437('('));
         ctx.set(18, y, yellow(), black(), 97 + j as u8); //ASCII code 97 = a
         ctx.set(19, y, white(), black(), rltk::to_cp437(')'));
 
         ctx.print(21, y, &name.name.to_string());
+        equippable.push(entity);
         y += 1;
         j += 1;
     }
