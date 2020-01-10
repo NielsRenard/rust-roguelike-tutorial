@@ -123,7 +123,7 @@ pub fn show_inventory(gs: &mut State, ctx: &mut Rltk) -> ItemMenuResult {
         .filter(|item| item.0.owner == *player_entity)
     {
         ctx.set(17, y, white(), black(), rltk::to_cp437('('));
-        ctx.set(18, y, yellow(), black(), 97 + j as u8);
+        ctx.set(18, y, yellow(), black(), 97 + j as u8); //ASCII code 97 = a
         ctx.set(19, y, white(), black(), rltk::to_cp437(')'));
 
         ctx.print(21, y, &name.name.to_string());
