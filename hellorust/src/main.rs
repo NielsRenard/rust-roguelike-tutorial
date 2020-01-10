@@ -34,6 +34,7 @@ pub enum RunState {
     PreRun,
     PlayerTurn,
     MonsterTurn,
+    ShowInventory,
 }
 
 pub struct State {
@@ -43,7 +44,7 @@ pub struct State {
 impl GameState for State {
     fn tick(&mut self, ctx: &mut Rltk) {
         ctx.cls();
-	draw_map(&self.ecs, ctx);
+        draw_map(&self.ecs, ctx);
 
         let mut new_runstate;
 
@@ -67,6 +68,11 @@ impl GameState for State {
             RunState::MonsterTurn => {
                 self.run_systems();
                 new_runstate = RunState::AwaitingInput;
+            }
+            RunState::ShowInventory => {
+                if gui::show_inventory(self, ctx) == gui::ItemMenuResult::Cancel {
+                    new_runstate = RunState::AwaitingInput;
+                }
             }
         }
 

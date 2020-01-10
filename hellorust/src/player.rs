@@ -94,6 +94,7 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
     match ctx.key {
         None => return RunState::AwaitingInput, // Nothing happened, don't Tick yet.
         Some(key) => match key {
+            VirtualKeyCode::I => return RunState::ShowInventory,
             VirtualKeyCode::G => get_item(&mut gs.ecs),
             // Cardinal movement
             VirtualKeyCode::Left | VirtualKeyCode::A | VirtualKeyCode::Numpad4 => {
