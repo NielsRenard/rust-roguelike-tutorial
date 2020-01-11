@@ -35,8 +35,6 @@ impl Map {
         // This guarantees one tile per location
         // and efficiently maps it in memory for left-to-right reading.
         (y as usize * self.width as usize) + x as usize
-        // TODO: when player moves 'left' off of the map
-        // thread 'main' panicked at 'attempt to add with overflow', src/map.rs:16:12
     }
 
     fn apply_horizontal_tunnel(&mut self, x1: i32, x2: i32, y: i32) {
