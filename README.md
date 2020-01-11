@@ -6,7 +6,7 @@
 * [x] 1.5. Monsters
 * [x] 1.6. Dealing Damage
 * [x] 1.7. User Interface
-* [ ] 1.8. Items and Inventory
+* [x] 1.8. Items and Inventory
 * [ ] 1.9. Ranged Scrolls/Targeting
 * [ ] 1.10. Saving and Loading
 * [ ] 1.11. Delving Deeper
