@@ -58,11 +58,6 @@ pub struct Renderable {
 #[derive(Component)]
 pub struct Item {}
 
-#[derive(Component)]
-pub struct Potion {
-    pub heal_amount: i32,
-}
-
 #[derive(Component, Debug, Clone)]
 pub struct InBackpack {
     pub owner: Entity,
@@ -80,6 +75,14 @@ pub struct WantsToDropItem {
 }
 
 #[derive(Component, Debug)]
-pub struct WantsToDrinkPotion {
-    pub potion: Entity,
+pub struct WantsToUseItem {
+    pub item: Entity,
+}
+
+#[derive(Component, Debug)]
+pub struct Consumable {}
+
+#[derive(Component, Debug)]
+pub struct ProvidesHealing {
+    pub heal_amount: i32,
 }
