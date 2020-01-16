@@ -130,7 +130,6 @@ impl<'a> System<'a> for ItemUseSystem {
             match item_heals {
                 None => {}
                 Some(healer) => {
-                    //TODO why does tut use i32::max here instead of min?
                     stats.hp = i32::min(stats.max_hp, stats.hp + healer.heal_amount);
                     if entity == *player_entity {
                         gamelog.entries.insert(
