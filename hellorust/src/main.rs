@@ -36,6 +36,7 @@ pub enum RunState {
     MonsterTurn,
     ShowInventory,
     ShowDropItem,
+    ShowTargeting { range: i32, item: Entity },
 }
 
 pub struct State {
@@ -80,14 +81,28 @@ impl GameState for State {
                     gui::ItemMenuResult::NoResponse => {}
                     gui::ItemMenuResult::Selected => {
                         let item_entity = result.1.unwrap();
-                        let mut intent = self.ecs.write_storage::<WantsToUseItem>();
-                        intent
-                            .insert(
-                                *self.ecs.fetch::<Entity>(),
-                                WantsToUseItem { item: item_entity },
-                            )
-                            .expect("Unable to insert use item intent");
-                        new_runstate = RunState::PlayerTurn;
+                        let is_ranged = self.ecs.read_storage::<Ranged>();
+                        let is_item_ranged = is_ranged.get(item_entity);
+
+                        // "handle items that are ranged and induce a mode switch"
+                        match is_item_ranged {
+                            Some(ranged_item) => {
+                                new_runstate = RunState::ShowTargeting {
+                                    range: ranged_item.range,
+                                    item: item_entity,
+                                }
+                            }
+                            None => {
+                                let mut intent = self.ecs.write_storage::<WantsToUseItem>();
+                                intent
+                                    .insert(
+                                        *self.ecs.fetch::<Entity>(),
+                                        WantsToUseItem { item: item_entity },
+                                    )
+                                    .expect("Unable to insert use item intent");
+                                new_runstate = RunState::PlayerTurn;
+                            }
+                        }
                     }
                 }
             }
@@ -108,6 +123,9 @@ impl GameState for State {
                         new_runstate = RunState::PlayerTurn;
                     }
                 }
+            }
+            RunState::ShowTargeting { range, item } => {
+                new_runstate = RunState::MonsterTurn;
             }
         }
         // "if you declare and use a variable inside a scope, it is dropped on scope exit
