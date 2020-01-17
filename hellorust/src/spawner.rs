@@ -137,8 +137,8 @@ pub fn spawn_room(ecs: &mut World, room: &Rect) {
         let y = *idx / MAP_WIDTH;
         random_monster(ecs, x as i32, y as i32);
     }
-    // "Actually spawn the potions"
-    for idx in monster_spawn_points.iter() {
+    // "Actually spawn the items"
+    for idx in item_spawn_points.iter() {
         let x = *idx % MAP_WIDTH;
         let y = *idx / MAP_WIDTH;
         health_potion(ecs, x as i32, y as i32);
