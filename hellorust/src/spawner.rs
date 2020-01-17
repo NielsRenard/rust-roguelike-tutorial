@@ -1,10 +1,10 @@
 extern crate rltk;
 extern crate specs;
-use super::color::{black, magenta, red, yellow};
+use super::color::{black, cyan, magenta, red, yellow};
 use super::map::MAP_WIDTH;
 use super::{
-    BlocksTile, CombatStats, Consumable, Item, Monster, Name, Player, Position, ProvidesHealing,
-    RandomNumberGenerator, Rect, Renderable, Viewshed,
+    BlocksTile, CombatStats, Consumable, InflictsDamage, Item, Monster, Name, Player, Position,
+    ProvidesHealing, RandomNumberGenerator, Ranged, Rect, Renderable, Viewshed,
 };
 use specs::prelude::*;
 
@@ -40,6 +40,19 @@ pub fn player(ecs: &mut World, player_x: i32, player_y: i32) -> Entity {
             strength: 5,
         })
         .build()
+}
+
+// Spawns a random item at a given location
+pub fn random_item(ecs: &mut World, x: i32, y: i32) {
+    let roll: i32;
+    {
+        let mut rng = ecs.write_resource::<RandomNumberGenerator>();
+        roll = rng.roll_dice(1, 2);
+    }
+    match roll {
+        1 => health_potion(ecs, x, y),
+        _ => magic_missile_scroll(ecs, x, y),
+    }
 }
 
 /// Spawns a random monster at a given location
@@ -141,7 +154,7 @@ pub fn spawn_room(ecs: &mut World, room: &Rect) {
     for idx in item_spawn_points.iter() {
         let x = *idx % MAP_WIDTH;
         let y = *idx / MAP_WIDTH;
-        health_potion(ecs, x as i32, y as i32);
+        random_item(ecs, x as i32, y as i32);
     }
 }
 
@@ -160,6 +173,26 @@ pub fn health_potion(ecs: &mut World, x: i32, y: i32) {
         })
         .with(Item {})
         .with(ProvidesHealing { heal_amount: 8 })
+        .with(Consumable {})
+        .build();
+}
+
+pub fn magic_missile_scroll(ecs: &mut World, x: i32, y: i32) {
+    let glyph = rltk::to_cp437(')');
+    ecs.create_entity()
+        .with(Position { x, y })
+        .with(Renderable {
+            glyph: glyph,
+            fg: cyan(),
+            bg: black(),
+            render_order: 2,
+        })
+        .with(Name {
+            name: "Magic Missile Scroll".to_string(),
+        })
+        .with(Item {})
+        .with(Ranged { range: 6 })
+        .with(InflictsDamage { damage: 8 })
         .with(Consumable {})
         .build();
 }

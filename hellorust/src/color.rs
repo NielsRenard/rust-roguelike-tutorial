@@ -1,3 +1,6 @@
+pub fn cyan() -> rltk::RGB {
+    rltk::RGB::named(rltk::CYAN)
+}
 pub fn white() -> rltk::RGB {
     rltk::RGB::named(rltk::WHITE)
 }

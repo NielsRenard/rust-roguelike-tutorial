@@ -181,6 +181,8 @@ fn main() {
     gs.ecs.register::<WantsToDropItem>();
     gs.ecs.register::<Consumable>();
     gs.ecs.register::<ProvidesHealing>();
+    gs.ecs.register::<Ranged>();
+    gs.ecs.register::<InflictsDamage>();
     let map: Map = Map::new_map_rooms_and_corridors();
     let (player_x, player_y) = map.rooms[0].center();
 
