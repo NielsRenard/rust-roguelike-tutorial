@@ -77,6 +77,7 @@ pub struct WantsToDropItem {
 #[derive(Component, Debug)]
 pub struct WantsToUseItem {
     pub item: Entity,
+    pub target: Option<rltk::Point>,
 }
 
 #[derive(Component, Debug)]

@@ -97,7 +97,10 @@ impl GameState for State {
                                 intent
                                     .insert(
                                         *self.ecs.fetch::<Entity>(),
-                                        WantsToUseItem { item: item_entity },
+                                        WantsToUseItem {
+                                            item: item_entity,
+                                            target: None,
+                                        },
                                     )
                                     .expect("Unable to insert use item intent");
                                 new_runstate = RunState::PlayerTurn;
@@ -125,7 +128,24 @@ impl GameState for State {
                 }
             }
             RunState::ShowTargeting { range, item } => {
-                new_runstate = RunState::MonsterTurn;
+                let result = gui::ranged_target(self, ctx, range);
+                match result.0 {
+                    gui::ItemMenuResult::Cancel => new_runstate = RunState::AwaitingInput,
+                    gui::ItemMenuResult::NoResponse => {}
+                    gui::ItemMenuResult::Selected => {
+                        let mut intent = self.ecs.write_storage::<WantsToUseItem>();
+                        intent
+                            .insert(
+                                *self.ecs.fetch::<Entity>(),
+                                WantsToUseItem {
+                                    item: item,
+                                    target: result.1,
+                                },
+                            )
+                            .expect("Unable to insert intent");
+                        new_runstate = RunState::PlayerTurn;
+                    }
+                }
             }
         }
         // "if you declare and use a variable inside a scope, it is dropped on scope exit
