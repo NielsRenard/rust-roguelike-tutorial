@@ -1,5 +1,5 @@
 extern crate specs;
-use super::{Map, Monster, Name, Point, Position, RunState, Viewshed, WantsToMelee};
+use super::{Confusion, Map, Monster, Name, Point, Position, RunState, Viewshed, WantsToMelee};
 use specs::prelude::*;
 extern crate rltk;
 
@@ -18,6 +18,7 @@ impl<'a> System<'a> for MonsterAI {
         ReadStorage<'a, Name>,
         WriteStorage<'a, Position>,
         WriteStorage<'a, WantsToMelee>,
+        WriteStorage<'a, Confusion>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -32,6 +33,7 @@ impl<'a> System<'a> for MonsterAI {
             name,
             mut position,
             mut wants_to_melee,
+            mut confused,
         ) = data;
 
         // only run system if the state is MonsterTurn
@@ -46,38 +48,54 @@ impl<'a> System<'a> for MonsterAI {
         for (entity, mut viewshed, _monster, name, mut pos) in
             (&entities, &mut viewshed, &monster, &name, &mut position).join()
         {
-            let distance =
-                rltk::DistanceAlg::Pythagoras.distance2d(Point::new(pos.x, pos.y), *player_pos);
-            if distance < 1.5 {
-                // Attack goes here
-                wants_to_melee
-                    .insert(
-                        entity,
-                        WantsToMelee {
-                            target: *player_entity,
-                        },
-                    )
-                    .expect("Unable to insert attack");
-                return;
-            }
-            // TODO: don't understand why book dereferences player_pos here
-            else if viewshed.visible_tiles.contains(&*player_pos) {
-                // (for WASM, this logs to browser console)
-                rltk::console::log(format!("{:?} {}", name.name, "chases you"));
-                let path = rltk::a_star_search(
-                    map.xy_idx(pos.x, pos.y) as i32,
-                    map.xy_idx(player_pos.x, player_pos.y) as i32,
-                    &mut *map,
-                );
+            let mut can_act = true;
+            let is_confused = confused.get_mut(entity);
 
-                if path.success && path.steps.len() > 1 {
-                    let mut idx = map.xy_idx(pos.x, pos.y);
-                    map.blocked_tiles[idx] = false;
-                    pos.x = path.steps[1] % map.width;
-                    pos.y = path.steps[1] / map.width;
-                    idx = map.xy_idx(pos.x, pos.y);
-                    map.blocked_tiles[idx] = true;
-                    viewshed.dirty = true;
+            match is_confused {
+                None => {}
+                Some(i_am_confused) => {
+                    i_am_confused.turns -= 1;
+                    // count down until no longer confused
+                    if i_am_confused.turns < 1 {
+                        confused.remove(entity);
+                    }
+                    can_act = false;
+                }
+            }
+            if can_act {
+                let distance =
+                    rltk::DistanceAlg::Pythagoras.distance2d(Point::new(pos.x, pos.y), *player_pos);
+                if distance < 1.5 {
+                    // Attack goes here
+                    wants_to_melee
+                        .insert(
+                            entity,
+                            WantsToMelee {
+                                target: *player_entity,
+                            },
+                        )
+                        .expect("Unable to insert attack");
+                    return;
+                }
+                // TODO: don't understand why book dereferences player_pos here
+                else if viewshed.visible_tiles.contains(&*player_pos) {
+                    // (for WASM, this logs to browser console)
+                    rltk::console::log(format!("{:?} {}", name.name, "chases you"));
+                    let path = rltk::a_star_search(
+                        map.xy_idx(pos.x, pos.y) as i32,
+                        map.xy_idx(player_pos.x, player_pos.y) as i32,
+                        &mut *map,
+                    );
+
+                    if path.success && path.steps.len() > 1 {
+                        let mut idx = map.xy_idx(pos.x, pos.y);
+                        map.blocked_tiles[idx] = false;
+                        pos.x = path.steps[1] % map.width;
+                        pos.y = path.steps[1] / map.width;
+                        idx = map.xy_idx(pos.x, pos.y);
+                        map.blocked_tiles[idx] = true;
+                        viewshed.dirty = true;
+                    }
                 }
             }
         }
