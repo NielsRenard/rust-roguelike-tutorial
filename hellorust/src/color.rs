@@ -22,6 +22,10 @@ pub fn orange() -> rltk::RGB {
     rltk::RGB::named(rltk::ORANGE)
 }
 
+pub fn pink() -> rltk::RGB {
+    rltk::RGB::named(rltk::PINK)
+}
+
 pub fn red() -> rltk::RGB {
     rltk::RGB::named(rltk::RED)
 }
