@@ -215,6 +215,6 @@ pub fn fireball_scroll(ecs: &mut World, x: i32, y: i32) {
         .with(Ranged { range: 6 })
         .with(InflictsDamage { damage: 20 })
         .with(AreaOfEffect { radius: 3 })
-        //        .with(Consumable {})
+        .with(Consumable {})
         .build();
 }

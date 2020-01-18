@@ -199,14 +199,13 @@ impl<'a> System<'a> for ItemUseSystem {
                 }
             }
 
+            // Damaging
             let item_damages = inflicts_damage.get(use_item.item);
             match item_damages {
                 None => {}
                 Some(damage) => {
-                    let target_point = use_item.target.unwrap();
-                    let idx = map.xy_idx(target_point.x, target_point.y);
                     used_item = false;
-                    for mob in map.tile_content[idx].iter() {
+                    for mob in targets.iter() {
                         suffer_damage
                             .insert(
                                 *mob,
@@ -230,16 +229,18 @@ impl<'a> System<'a> for ItemUseSystem {
                     }
                 }
             }
-
             // delete consumed items
             let consumable = consumables.get(use_item.item);
-            match consumable {
-                None => {}
-                Some(_) => {
-                    entities.delete(use_item.item).expect("Delete failed");
+            if used_item {
+                match consumable {
+                    None => {}
+                    Some(_) => {
+                        entities.delete(use_item.item).expect("Delete failed");
+                    }
                 }
             }
-        }
+        } // big for-loop ends here: (&entities, &wants_use).join
+
         wants_use.clear();
     }
 }
