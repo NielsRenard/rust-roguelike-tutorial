@@ -133,12 +133,11 @@ impl<'a> System<'a> for ItemUseSystem {
             mut suffer_damage,
         ) = data;
 
-        for (entity, use_item, stats) in (&entities, &wants_use, &mut combat_stats).join() {
+        for (entity, use_item) in (&entities, &wants_use).join() {
             let mut used_item = true;
 
             // Targeting
             let mut targets: Vec<Entity> = Vec::new();
-
             match use_item.target {
                 None => {
                     targets.push(*player_entity);
@@ -173,20 +172,29 @@ impl<'a> System<'a> for ItemUseSystem {
                 }
             }
 
+            // Healing
             let item_heals = healing.get(use_item.item);
             match item_heals {
                 None => {}
                 Some(healer) => {
-                    stats.hp = i32::min(stats.max_hp, stats.hp + healer.heal_amount);
-                    if entity == *player_entity {
-                        gamelog.entries.insert(
-                            0,
-                            format!(
-                                "You use the {}, healing {} hp.",
-                                names.get(use_item.item).unwrap().name,
-                                healer.heal_amount
-                            ),
-                        );
+                    for target in targets.iter() {
+                        let stats = combat_stats.get_mut(*target);
+                        match stats {
+                            None => {}
+                            Some(stats) => {
+                                stats.hp = i32::min(stats.max_hp, stats.hp + healer.heal_amount);
+                                if entity == *player_entity {
+                                    gamelog.entries.insert(
+                                        0,
+                                        format!(
+                                            "You use the {}, healing {} hp.",
+                                            names.get(use_item.item).unwrap().name,
+                                            healer.heal_amount
+                                        ),
+                                    );
+                                }
+                            }
+                        }
                     }
                 }
             }
