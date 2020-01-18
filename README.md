@@ -8,7 +8,7 @@
 * [x] 1.6. Dealing Damage
 * [x] 1.7. User Interface
 * [x] 1.8. Items and Inventory
-* [ ] 1.9. Ranged Scrolls/Targeting
+* [x] 1.9. Ranged Scrolls/Targeting
 * [ ] 1.10. Saving and Loading
 * [ ] 1.11. Delving Deeper
 * [ ] 1.12. Difficulty
