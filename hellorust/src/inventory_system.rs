@@ -1,7 +1,7 @@
 extern crate specs;
 use super::{
-    gamelog::GameLog, CombatStats, Consumable, InBackpack, InflictsDamage, Map, Name, Position,
-    ProvidesHealing, SufferDamage, WantsToDropItem, WantsToPickupItem, WantsToUseItem,
+    gamelog::GameLog, AreaOfEffect, CombatStats, Consumable, InBackpack, InflictsDamage, Map, Name,
+    Position, ProvidesHealing, SufferDamage, WantsToDropItem, WantsToPickupItem, WantsToUseItem,
 };
 use specs::prelude::*;
 
@@ -112,6 +112,7 @@ impl<'a> System<'a> for ItemUseSystem {
         ReadStorage<'a, Consumable>,
         ReadStorage<'a, ProvidesHealing>,
         ReadStorage<'a, InflictsDamage>,
+        ReadStorage<'a, AreaOfEffect>,
         WriteStorage<'a, CombatStats>,
         WriteStorage<'a, SufferDamage>,
     );
@@ -127,12 +128,50 @@ impl<'a> System<'a> for ItemUseSystem {
             consumables,
             healing,
             inflicts_damage,
+            aoe,
             mut combat_stats,
             mut suffer_damage,
         ) = data;
 
         for (entity, use_item, stats) in (&entities, &wants_use, &mut combat_stats).join() {
             let mut used_item = true;
+
+            // Targeting
+            let mut targets: Vec<Entity> = Vec::new();
+
+            match use_item.target {
+                None => {
+                    targets.push(*player_entity);
+                }
+                Some(target) => {
+                    let area_of_effect = aoe.get(use_item.item);
+                    match area_of_effect {
+                        None => {
+                            //single target
+                            let idx = map.xy_idx(target.x, target.y);
+                            for mob in map.tile_content[idx].iter() {
+                                targets.push(*mob);
+                            }
+                        }
+                        Some(area_of_effect) => {
+                            let mut blast_tiles =
+                                rltk::field_of_view(target, area_of_effect.radius, &*map);
+                            // remove out of bounds tiles
+                            blast_tiles.retain(|p| {
+                                p.x > 0 && p.x < map.width - 1 && p.y > 0 && p.y < map.height - 1
+                            });
+                            // loop over remaining tiles...
+                            for tile_idx in blast_tiles.iter() {
+                                let idx = map.xy_idx(tile_idx.x, tile_idx.y);
+                                // ...loop over all entities on a tile
+                                for mob in map.tile_content[idx].iter() {
+                                    targets.push(*mob);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             let item_heals = healing.get(use_item.item);
             match item_heals {
