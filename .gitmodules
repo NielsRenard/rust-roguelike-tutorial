@@ -1,3 +1,6 @@
 [submodule "rustrogueliketutorial"]
 	path = rustrogueliketutorial
 	url = https://github.com/thebracket/rustrogueliketutorial
+[submodule "rltk_rs"]
+	path = rltk_rs
+	url = https://github.com/thebracket/rltk_rs.git
