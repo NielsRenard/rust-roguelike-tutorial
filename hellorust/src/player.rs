@@ -115,6 +115,9 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::E | VirtualKeyCode::Numpad9 => try_move_player(1, -1, &mut gs.ecs),
             VirtualKeyCode::Z | VirtualKeyCode::Numpad1 => try_move_player(-1, 1, &mut gs.ecs),
             VirtualKeyCode::C | VirtualKeyCode::Numpad3 => try_move_player(1, 1, &mut gs.ecs),
+            // Saving
+            VirtualKeyCode::Escape => return RunState::SaveGame,
+            // Nothing pressed, do nothing
             _ => return RunState::AwaitingInput,
         },
     }
