@@ -1,6 +1,7 @@
 rltk::add_wasm_support!();
 use rltk::{Console, GameState, Point, RandomNumberGenerator, Rltk};
 use specs::prelude::*;
+use specs::saveload::{SimpleMarker, SimpleMarkerAllocator};
 #[macro_use]
 extern crate specs_derive;
 extern crate serde;
@@ -262,6 +263,10 @@ fn main() {
     gs.ecs.register::<InflictsDamage>();
     gs.ecs.register::<AreaOfEffect>();
     gs.ecs.register::<Confusion>();
+    gs.ecs.register::<SimpleMarker<SerializeMe>>();
+
+    gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
+
     let map: Map = Map::new_map_rooms_and_corridors();
     let (player_x, player_y) = map.rooms[0].center();
 

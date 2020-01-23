@@ -107,3 +107,8 @@ pub struct AreaOfEffect {
 pub struct Confusion {
     pub turns: i32,
 }
+
+// "Serialization helper code. We need to implement ConvertSaveload for each type that contains an
+// Entity."
+
+pub struct SerializeMe;
