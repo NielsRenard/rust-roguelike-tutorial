@@ -264,6 +264,7 @@ fn main() {
     gs.ecs.register::<AreaOfEffect>();
     gs.ecs.register::<Confusion>();
     gs.ecs.register::<SimpleMarker<SerializeMe>>();
+    gs.ecs.register::<SerializationHelper>();
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
