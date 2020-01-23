@@ -29,6 +29,7 @@ mod melee_combat_system;
 use melee_combat_system::MeleeCombatSystem;
 mod damage_system;
 use damage_system::DamageSystem;
+mod saveload_system;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -197,8 +198,7 @@ impl GameState for State {
                 }
             }
             RunState::SaveGame => {
-                let data = serde_json::to_string(&*self.ecs.fetch::<Map>()).unwrap();
-                println!("{}", data);
+                saveload_system::save_game(&mut self.ecs);
                 new_runstate = RunState::MainMenu {
                     menu_selection: gui::MainMenuSelection::LoadGame,
                 };
