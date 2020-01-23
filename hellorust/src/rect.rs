@@ -1,4 +1,7 @@
-#[derive(Debug)]
+use serde::{Deserialize, Serialize};
+
+// do we need Copy, Clone and PartialEq here?
+#[derive(PartialEq, Copy, Clone, Debug, Serialize, Deserialize)]
 pub struct Rect {
     pub x1: i32,
     pub x2: i32,

@@ -3,6 +3,7 @@ use rltk::{Console, GameState, Point, RandomNumberGenerator, Rltk};
 use specs::prelude::*;
 #[macro_use]
 extern crate specs_derive;
+extern crate serde;
 mod map;
 pub use map::*;
 mod color;
@@ -195,6 +196,8 @@ impl GameState for State {
                 }
             }
             RunState::SaveGame => {
+                let data = serde_json::to_string(&*self.ecs.fetch::<Map>()).unwrap();
+                println!("{}", data);
                 new_runstate = RunState::MainMenu {
                     menu_selection: gui::MainMenuSelection::LoadGame,
                 };
