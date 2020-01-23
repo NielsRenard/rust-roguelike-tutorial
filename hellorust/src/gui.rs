@@ -279,16 +279,16 @@ pub fn ranged_target(
 pub fn draw_main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
     let runstate = gs.ecs.fetch::<RunState>();
 
-    ctx.print_color_centered(15, yellow(), black(), "Rust Roguelike Tutorial");
+    ctx.print_color_centered(15, yellow(), black(), "Hello Rust World");
 
     if let RunState::MainMenu {
         menu_selection: selection,
     } = *runstate
     {
         if selection == MainMenuSelection::NewGame {
-            ctx.print_color_centered(24, magenta(), black(), "Begin New Game");
+            ctx.print_color_centered(24, magenta(), black(), "New Game");
         } else {
-            ctx.print_color_centered(24, white(), black(), "Begin New Game");
+            ctx.print_color_centered(24, white(), black(), "New Game");
         }
 
         if selection == MainMenuSelection::LoadGame {
