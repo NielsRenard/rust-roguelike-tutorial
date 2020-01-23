@@ -78,6 +78,7 @@ impl GameState for State {
                             ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
                         }
                     }
+
                     gui::draw_ui(&self.ecs, ctx);
                 }
             }
@@ -176,7 +177,7 @@ impl GameState for State {
                 }
             }
             RunState::MainMenu { .. } => {
-                let result = gui::main_menu(self, ctx);
+                let result = gui::draw_main_menu(self, ctx);
                 match result {
                     gui::MainMenuResult::NoSelection { selected } => {
                         new_runstate = RunState::MainMenu {
@@ -187,7 +188,7 @@ impl GameState for State {
                         gui::MainMenuSelection::NewGame => new_runstate = RunState::PreRun,
                         gui::MainMenuSelection::LoadGame => new_runstate = RunState::PreRun,
                         gui::MainMenuSelection::Quit => {
-                            ::std::process::exit(0);
+                            std::process::exit(0);
                         }
                     },
                 }
@@ -271,7 +272,9 @@ fn main() {
     gs.ecs.insert(gamelog::GameLog {
         entries: vec!["Good luck...".to_string()],
     });
-    gs.ecs.insert(RunState::PreRun);
-
+    // Set the main menu as the initial RunState
+    gs.ecs.insert(RunState::MainMenu {
+        menu_selection: gui::MainMenuSelection::NewGame,
+    });
     rltk::main_loop(context, gs);
 }

@@ -276,7 +276,7 @@ pub fn ranged_target(
     (ItemMenuResult::NoResponse, None)
 }
 
-pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
+pub fn draw_main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
     let runstate = gs.ecs.fetch::<RunState>();
 
     ctx.print_color_centered(15, yellow(), black(), "Rust Roguelike Tutorial");
@@ -315,7 +315,7 @@ pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
                         selected: MainMenuSelection::Quit,
                     }
                 }
-                VirtualKeyCode::Up => {
+                VirtualKeyCode::Up | VirtualKeyCode::W => {
                     let newselection;
                     match selection {
                         MainMenuSelection::NewGame => newselection = MainMenuSelection::Quit,
@@ -326,7 +326,7 @@ pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
                         selected: newselection,
                     };
                 }
-                VirtualKeyCode::Down => {
+                VirtualKeyCode::Down | VirtualKeyCode::S => {
                     let newselection;
                     match selection {
                         MainMenuSelection::NewGame => newselection = MainMenuSelection::LoadGame,
@@ -337,7 +337,7 @@ pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
                         selected: newselection,
                     };
                 }
-                VirtualKeyCode::Return => {
+                VirtualKeyCode::Return | VirtualKeyCode::Space => {
                     return MainMenuResult::Selected {
                         selected: selection,
                     }
