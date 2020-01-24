@@ -6,21 +6,6 @@ use specs::prelude::*;
 use specs::saveload::{MarkedBuilder, SerializeComponents, SimpleMarker};
 use std::fs::File;
 
-// https://doc.rust-lang.org/book/ch19-06-macros.html
-macro_rules! serialize_individually {
-    ($ecs:expr, $ser:expr, $data:expr, $( $type:ty),*) => {
-        $(
-        SerializeComponents::<NoError, SimpleMarker<SerializeMe>>::serialize(
-            &( $ecs.read_storage::<$type>(), ),
-            &$data.0,
-            &$data.1,
-            &mut $ser,
-        )
-        .unwrap();
-        )*
-    };
-}
-
 pub fn save_game(ecs: &mut World) {
     // Create helper
     let mapcopy = ecs.get_mut::<Map>().unwrap().clone();
@@ -70,4 +55,36 @@ pub fn save_game(ecs: &mut World) {
 
     // Clean up
     ecs.delete_entity(savehelper).expect("Crash on cleanup");
+}
+
+
+// https://doc.rust-lang.org/book/ch19-06-macros.html
+macro_rules! serialize_individually {
+    ($ecs:expr, $ser:expr, $data:expr, $( $type:ty),*) => {
+        $(
+        SerializeComponents::<NoError, SimpleMarker<SerializeMe>>::serialize(
+            &( $ecs.read_storage::<$type>(), ),
+            &$data.0,
+            &$data.1,
+            &mut $ser,
+        )
+        .unwrap();
+        )*
+    };
+}
+
+//This is pretty much the same as the serialize_individually macro - but reverses the process
+macro_rules! deserialize_individually {
+    ($ecs:expr, $de:expr, $data:expr, $( $type:ty),*) => {
+        $(
+        DeserializeComponents::<NoError, _>::deserialize(
+            &mut ( &mut $ecs.write_storage::<$type>(), ),
+            &mut $data.0, // entities
+            &mut $data.1, // marker
+            &mut $data.2, // allocater
+            &mut $de,
+        )
+        .unwrap();
+        )*
+    };
 }
