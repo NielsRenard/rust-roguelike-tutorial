@@ -298,9 +298,9 @@ pub fn draw_main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
         }
 
         if selection == MainMenuSelection::Quit {
-            ctx.print_color_centered(26, magenta(), black(), "Quit");
+            ctx.print_color_centered(26, magenta(), black(), "Save and quit");
         } else {
-            ctx.print_color_centered(26, white(), black(), "Quit");
+            ctx.print_color_centered(26, white(), black(), "Save and quit");
         }
 
         match ctx.key {
