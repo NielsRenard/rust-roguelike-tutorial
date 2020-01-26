@@ -13,7 +13,7 @@
 * [ ] 1.11. [Delving Deeper](https://bfnightly.bracketproductions.com/rustbook/chapter_12.html)
 * [ ] 1.12. [Difficulty](https://bfnightly.bracketproductions.com/rustbook/chapter_13.html)
 * [ ] 1.13. [Equipment](https://bfnightly.bracketproductions.com/rustbook/chapter_14.html)
-## [Section 2 - Stretch Goals](https://bfnightly.bracketproductions.com/rustbook/chapter_15.html)
+## Section 2 - Stretch Goals
 * [ ] 2.1. [Nice Walls with Bitsets](https://bfnightly.bracketproductions.com/rustbook/chapter_16.html)
 * [ ] 2.2. [Bloodstains](https://bfnightly.bracketproductions.com/rustbook/chapter_17.html)
 * [ ] 2.3. [Particle Effects](https://bfnightly.bracketproductions.com/rustbook/chapter_18.html)
@@ -21,7 +21,7 @@
 * [ ] 2.5. [Magic Mapping](https://bfnightly.bracketproductions.com/rustbook/chapter_20.html)
 * [ ] 2.6. [REX Paint Menu](https://bfnightly.bracketproductions.com/rustbook/chapter_21.html)
 * [ ] 2.7. [Simple Traps](https://bfnightly.bracketproductions.com/rustbook/chapter_22.html)
-## [Section 3 - Generating Maps](https://bfnightly.bracketproductions.com/rustbook/chapter23-prefix.html)
+## Section 3 - Generating Maps
 * [ ] 3.1. [Refactor Map Building](https://bfnightly.bracketproductions.com/rustbook/chapter_23.html)
 * [ ] 3.2. [Map Building Test Harness](https://bfnightly.bracketproductions.com/rustbook/chapter_24.html)
 * [ ] 3.3. [BSP Room Dungeons](https://bfnightly.bracketproductions.com/rustbook/chapter_25.html)
@@ -42,7 +42,7 @@
 * [ ] 3.18. [Doors](https://bfnightly.bracketproductions.com/rustbook/chapter_40.html)
 * [ ] 3.19. [Decouple map size from screen size](https://bfnightly.bracketproductions.com/rustbook/chapter_41.html)
 * [ ] 3.20. [Section 3 Conclusion](https://bfnightly.bracketproductions.com/rustbook/chapter_42.html)
-## [Section 4 - Making A Game](https://bfnightly.bracketproductions.com/rustbook/chapter_43.html)
+## Section 4 - Making A Game
 * [ ] 4.1. [Design Document](https://bfnightly.bracketproductions.com/rustbook/chapter_44.html)
 * [ ] 4.2. [Raw Files, Data-Driven Design](https://bfnightly.bracketproductions.com/rustbook/chapter_45.html)
 * [ ] 4.3. [Data-Driven Spawn Tables](https://bfnightly.bracketproductions.com/rustbook/chapter_46.html)
