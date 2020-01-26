@@ -181,7 +181,7 @@ impl GameState for State {
                 }
             }
             RunState::MainMenu { .. } => {
-                let result = gui::draw_main_menu(self, ctx);
+                let result = gui::main_menu(self, ctx);
                 match result {
                     gui::MainMenuResult::NoSelection { selected } => {
                         new_runstate = RunState::MainMenu {

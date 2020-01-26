@@ -276,9 +276,8 @@ pub fn ranged_target(
     (ItemMenuResult::NoResponse, None)
 }
 
-pub fn draw_main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
+pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
     let runstate = gs.ecs.fetch::<RunState>();
-
     ctx.print_color_centered(15, yellow(), black(), "Hello Rust World");
 
     if let RunState::MainMenu {
