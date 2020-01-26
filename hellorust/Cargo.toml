@@ -1,7 +1,7 @@
 [package]
 name = "hellorust"
-version = "0.8.0"
-authors = ["niels <place@holder.com>"]
+version = "0.9.0"
+authors = ["niels <code.i.pushed@gmail.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

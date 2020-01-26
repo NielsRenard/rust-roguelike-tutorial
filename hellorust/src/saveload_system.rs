@@ -50,6 +50,18 @@ macro_rules! deserialize_individually {
         )*
     };
 }
+
+// "only compile this for web assembly". We've kept the function
+// signature the same, but added a _ before _ecs - telling the
+// compiler that we intend not to use that variable. Then we keep the
+// function empty.
+#[cfg(target_arch = "wasm32")]
+pub fn save_game(_ecs: &mut World) {
+    // stub function for wasm because wasm is sandboxed.
+    // future RLTK will use browser LocalStorage for savegames
+}
+
+#[cfg(not(target_arch = "wasm32"))]
 pub fn save_game(ecs: &mut World) {
     // Create helper
     let mapcopy = ecs.get_mut::<Map>().unwrap().clone();

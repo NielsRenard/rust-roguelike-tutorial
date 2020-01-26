@@ -13,7 +13,7 @@
 *** DONE 1.8.4) "It's an item, which implies that it can be picked up. So it'll need an Item component of some sort."
 *** DONE 1.8.5) "If it can be used, it will need some way to indicate that it can be used - and what to do with it."
 ** DONE 1.9. Ranged Scrolls/Targeting
-** TODO 1.10. Saving and Loading
+** DONE 1.10. Saving and Loading
 ** TODO 1.11. Delving Deeper
 ** TODO 1.12. Difficulty
 ** TODO 1.13. Equipment
