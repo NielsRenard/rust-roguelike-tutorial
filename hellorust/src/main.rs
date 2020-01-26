@@ -189,7 +189,10 @@ impl GameState for State {
                         }
                     }
                     gui::MainMenuResult::Selected { selected } => match selected {
-                        gui::MainMenuSelection::NewGame => new_runstate = RunState::PreRun,
+                        gui::MainMenuSelection::NewGame => {
+                            saveload_system::delete_save();
+                            new_runstate = RunState::PreRun
+                        }
                         gui::MainMenuSelection::LoadGame => {
                             saveload_system::load_game(&mut self.ecs);
                             new_runstate = RunState::PreRun;
@@ -273,9 +276,9 @@ fn main() {
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     let map: Map = Map::new_map_rooms_and_corridors();
-    let (player_x, player_y) = map.rooms[0].center();
 
     // make our 'guy'
+    let (player_x, player_y) = map.rooms[0].center();
     let player_entity = spawner::player(&mut gs.ecs, player_x, player_y);
 
     gs.ecs.insert(RandomNumberGenerator::new());
