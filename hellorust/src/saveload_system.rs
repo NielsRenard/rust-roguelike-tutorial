@@ -9,6 +9,12 @@ use specs::saveload::{
 };
 use std::fs::File;
 
+pub fn delete_save() {
+    if std::path::Path::new("./savegame.json").exists() {
+        std::fs::remove_file("./savegame.json").expect("Unable to delete file");
+    }
+}
+
 // https://doc.rust-lang.org/book/ch19-06-macros.html
 macro_rules! serialize_individually {
     ($ecs:expr, $ser:expr, $data:expr, $( $type:ty),*) => {
