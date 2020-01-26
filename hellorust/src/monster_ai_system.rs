@@ -45,7 +45,7 @@ impl<'a> System<'a> for MonsterAI {
         // we've explicitly included names in the AI's join, so we better be sure that the player has one!
         // Otherwise, the AI will ignore the player altogether." - Chapter 6
 
-        for (entity, mut viewshed, _monster, name, mut pos) in
+        for (entity, mut viewshed, _monster, _name, mut pos) in
             (&entities, &mut viewshed, &monster, &name, &mut position).join()
         {
             let mut can_act = true;
