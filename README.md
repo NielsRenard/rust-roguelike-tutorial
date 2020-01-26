@@ -1,76 +1,77 @@
 # Progress
 ## Section 1 - Hello Rust
-* [x] 1.1. Entities and Components
-* [x] 1.2. Walking A Map
-* [x] 1.3. A More Interesting Map
-* [x] 1.4. Field of View
-* [x] 1.5. Monsters
-* [x] 1.6. Dealing Damage
-* [x] 1.7. User Interface
-* [x] 1.8. Items and Inventory
-* [x] 1.9. Ranged Scrolls/Targeting
-* [x] 1.10. Saving and Loading
-* [ ] 1.11. Delving Deeper
-* [ ] 1.12. Difficulty
-* [ ] 1.13. Equipment
+* [x] 1.1. [Entities and Components](https://bfnightly.bracketproductions.com/rustbook/chapter_2.html)
+* [x] 1.2. [Walking A Map](https://bfnightly.bracketproductions.com/rustbook/chapter_3.html)
+* [x] 1.3. [A More Interesting Map](https://bfnightly.bracketproductions.com/rustbook/chapter_4.html)
+* [x] 1.4. [Field of View](https://bfnightly.bracketproductions.com/rustbook/chapter_5.html)
+* [x] 1.5. [Monsters](https://bfnightly.bracketproductions.com/rustbook/chapter_6.html)
+* [x] 1.6. [Dealing Damage](https://bfnightly.bracketproductions.com/rustbook/chapter_7.html)
+* [x] 1.7. [User Interface](https://bfnightly.bracketproductions.com/rustbook/chapter_8.html)
+* [x] 1.8. [Items and Inventory](https://bfnightly.bracketproductions.com/rustbook/chapter_9.html)
+* [x] 1.9. [Ranged Scrolls/Targeting](https://bfnightly.bracketproductions.com/rustbook/chapter_10.html)
+* [x] 1.10. [Saving and Loading](https://bfnightly.bracketproductions.com/rustbook/chapter_11.html)
+* [ ] 1.11. [Delving Deeper](https://bfnightly.bracketproductions.com/rustbook/chapter_12.html)
+* [ ] 1.12. [Difficulty](https://bfnightly.bracketproductions.com/rustbook/chapter_13.html)
+* [ ] 1.13. [Equipment](https://bfnightly.bracketproductions.com/rustbook/chapter_14.html)
 ## Section 2 - Stretch Goals
-* [ ] 2.1. Nice Walls with Bitsets
-* [ ] 2.2. Bloodstains
-* [ ] 2.3. Particle Effects
-* [ ] 2.4. Hunger Clock
-* [ ] 2.5. Magic Mapping
-* [ ] 2.6. REX Paint Menu
-* [ ] 2.7. Simple Traps
+* [ ] 2.1. [Nice Walls with Bitsets](https://bfnightly.bracketproductions.com/rustbook/chapter_15.html)
+* [ ] 2.2. [Bloodstains](https://bfnightly.bracketproductions.com/rustbook/chapter_15.html)
+* [ ] 2.3. [Particle Effects](https://bfnightly.bracketproductions.com/rustbook/chapter_16.html)
+* [ ] 2.4. [Hunger Clock](https://bfnightly.bracketproductions.com/rustbook/chapter_17.html)
+* [ ] 2.5. [Magic Mapping](https://bfnightly.bracketproductions.com/rustbook/chapter_18.html)
+* [ ] 2.6. [REX Paint Menu](https://bfnightly.bracketproductions.com/rustbook/chapter_19.html)
+* [ ] 2.7. [Simple Traps](https://bfnightly.bracketproductions.com/rustbook/chapter_20.html)
 ## Section 3 - Generating Maps
-* [ ] 3.1. Refactor Map Building
-* [ ] 3.2. Map Building Test Harness
-* [ ] 3.3. BSP Room Dungeons
-* [ ] 3.4. BSP Interior Design
-* [ ] 3.5. Cellular Automata Maps
-* [ ] 3.6. Drunkard's Walk Maps
-* [ ] 3.7. Mazes and Labyrinths
-* [ ] 3.8. Diffusion-limited aggregation maps
-* [ ] 3.9. Add symmetry and brushes to the library
-* [ ] 3.10. Voronoi Hive Maps
-* [ ] 3.11. Wave Function Collapse
-* [ ] 3.12. Prefabs & Sectionals
-* [ ] 3.13. Room Vaults
-* [ ] 3.14. Layering/Builder Chaining
-* [ ] 3.15. Fun With Layers
-* [ ] 3.16. Room Builders
-* [ ] 3.17. Better Corridors
-* [ ] 3.18. Doors
-* [ ] 3.19. Decouple map size from screen size
-* [ ] 3.20. Section 3 Conclusion
+* [ ] 3.1. [Refactor Map Building](https://bfnightly.bracketproductions.com/rustbook/chapter_21.html)
+* [ ] 3.2. [Map Building Test Harness](https://bfnightly.bracketproductions.com/rustbook/chapter_22.html)
+* [ ] 3.3. [BSP Room Dungeons](https://bfnightly.bracketproductions.com/rustbook/chapter_23.html)
+* [ ] 3.4. [BSP Interior Design](https://bfnightly.bracketproductions.com/rustbook/chapter_24.html)
+* [ ] 3.5. [Cellular Automata Maps](https://bfnightly.bracketproductions.com/rustbook/chapter_25.html)
+* [ ] 3.6. [Drunkard's Walk Maps](https://bfnightly.bracketproductions.com/rustbook/chapter_26.html)
+* [ ] 3.7. [Mazes and Labyrinths](https://bfnightly.bracketproductions.com/rustbook/chapter_27.html)
+* [ ] 3.8. [Diffusion-limited aggregation maps](https://bfnightly.bracketproductions.com/rustbook/chapter_28.html)
+* [ ] 3.9. [Add symmetry and brushes to the library](https://bfnightly.bracketproductions.com/rustbook/chapter_29.html)
+* [ ] 3.10. [Voronoi Hive Maps](https://bfnightly.bracketproductions.com/rustbook/chapter_30.html)
+* [ ] 3.11. [Wave Function Collapse](https://bfnightly.bracketproductions.com/rustbook/chapter_31.html)
+* [ ] 3.12. [Prefabs & Sectionals](https://bfnightly.bracketproductions.com/rustbook/chapter_32.html)
+* [ ] 3.13. [Room Vaults](https://bfnightly.bracketproductions.com/rustbook/chapter_33.html)
+* [ ] 3.14. [Layering/Builder Chaining](https://bfnightly.bracketproductions.com/rustbook/chapter_34.html)
+* [ ] 3.15. [Fun With Layers](https://bfnightly.bracketproductions.com/rustbook/chapter_35.html)
+* [ ] 3.16. [Room Builders](https://bfnightly.bracketproductions.com/rustbook/chapter_36.html)
+* [ ] 3.17. [Better Corridors](https://bfnightly.bracketproductions.com/rustbook/chapter_37.html)
+* [ ] 3.18. [Doors](https://bfnightly.bracketproductions.com/rustbook/chapter_38.html)
+* [ ] 3.19. [Decouple map size from screen size](https://bfnightly.bracketproductions.com/rustbook/chapter_39.html)
+* [ ] 3.20. [Section 3 Conclusion](https://bfnightly.bracketproductions.com/rustbook/chapter_40.html)
 ## Section 4 - Making A Game
-* [ ] 4.1. Design Document
-* [ ] 4.2. Raw Files, Data-Driven Design
-* [ ] 4.3. Data-Driven Spawn Tables
-* [ ] 4.4. Making the town
-* [ ] 4.5. Populating the town
-* [ ] 4.6. Living bystanders
-* [ ] 4.7. Game Stats
-* [ ] 4.8. Equipment
-* [ ] 4.9. User Interface
-* [ ] 4.10. Into the Woods!
-* [ ] 4.11. XP
-* [ ] 4.12. Backtracking
-* [ ] 4.13. Into the caverns
-* [ ] 4.14. Better AI
-* [ ] 4.15. Item Stats and Vendors
-* [ ] 4.16. Deep caverns
-* [ ] 4.17. Cavern to Dwarf Fort
-* [ ] 4.18. Town Portals
-* [ ] 4.19. Magic Items
-* [ ] 4.20. Effects
-* [ ] 4.21. Cursed Items
-* [ ] 4.22. Even More Items
-* [ ] 4.23. Magic Spells
-* [ ] 4.24. Enter the Dragon
-* [ ] 4.25. Mushrooms
-* [ ] 4.26. More Shrooms
+* [ ] 4.1. [Design Document](https://bfnightly.bracketproductions.com/rustbook/chapter_44.html)
+* [ ] 4.2. [Raw Files, Data-Driven Design](https://bfnightly.bracketproductions.com/rustbook/chapter_45.html)
+* [ ] 4.3. [Data-Driven Spawn Tables](https://bfnightly.bracketproductions.com/rustbook/chapter_46.html)
+* [ ] 4.4. [Making the town](https://bfnightly.bracketproductions.com/rustbook/chapter_47.html)
+* [ ] 4.5. [Populating the town](https://bfnightly.bracketproductions.com/rustbook/chapter_48.html)
+* [ ] 4.6. [Living bystanders](https://bfnightly.bracketproductions.com/rustbook/chapter_49.html)
+* [ ] 4.7. [Game Stats](https://bfnightly.bracketproductions.com/rustbook/chapter_50.html)
+* [ ] 4.8. [Equipment](https://bfnightly.bracketproductions.com/rustbook/chapter_51.html)
+* [ ] 4.9. [User Interface](https://bfnightly.bracketproductions.com/rustbook/chapter_52.html)
+* [ ] 4.10. [Into the Woods!](https://bfnightly.bracketproductions.com/rustbook/chapter_53.html)
+* [ ] 4.11. [XP](https://bfnightly.bracketproductions.com/rustbook/chapter_54.html)
+* [ ] 4.12. [Backtracking](https://bfnightly.bracketproductions.com/rustbook/chapter_55.html)
+* [ ] 4.13. [Into the caverns](https://bfnightly.bracketproductions.com/rustbook/chapter_56.html)
+* [ ] 4.14. [Better AI](https://bfnightly.bracketproductions.com/rustbook/chapter_57.html)
+* [ ] 4.15. [Item Stats and Vendors](https://bfnightly.bracketproductions.com/rustbook/chapter_58.html)
+* [ ] 4.16. [Deep caverns](https://bfnightly.bracketproductions.com/rustbook/chapter_59.html)
+* [ ] 4.17. [Cavern to Dwarf Fort](https://bfnightly.bracketproductions.com/rustbook/chapter_60.html)
+* [ ] 4.18. [Town Portals](https://bfnightly.bracketproductions.com/rustbook/chapter_61.html)
+* [ ] 4.19. [Magic Items](https://bfnightly.bracketproductions.com/rustbook/chapter_62.html)
+* [ ] 4.20. [Effects](https://bfnightly.bracketproductions.com/rustbook/chapter_63.html)
+* [ ] 4.21. [Cursed Items](https://bfnightly.bracketproductions.com/rustbook/chapter_64.html)
+* [ ] 4.22. [Even More Items](https://bfnightly.bracketproductions.com/rustbook/chapter_65.html)
+* [ ] 4.23. [Magic Spells](https://bfnightly.bracketproductions.com/rustbook/chapter_66.html)
+* [ ] 4.24. [Enter the Dragon](https://bfnightly.bracketproductions.com/rustbook/chapter_67.html)
+* [ ] 4.25. [Mushrooms](https://bfnightly.bracketproductions.com/rustbook/chapter_68.html)
+* [ ] 4.26. [More Shrooms](https://bfnightly.bracketproductions.com/rustbook/chapter_69.html)
+* [ ] 4.27. [Ranged Combat](https://bfnightly.bracketproductions.com/rustbook/chapter_70.html)
 
 [Link to supported glyphs (for fn to_cp437)](https://docs.rs/rltk/0.5.15/src/rltk/codepage437.rs.html#2-276)
 
-["Use usize and isize when it’s related to memory size – the size of an object, or indexing a vector, for instance. It will be a 32-bit number on 32-bit platforms, as that’s the limit of memory they can address, and likewise for 64-bit.
+["Use usize and isize when it’s related to memory size – the size of an object, or indexing a vector, for instance. [It will be a 32-bit number on 32-bit platforms, as that’s the limit of memory they can address, and likewise for 64-bit.]((https://bfnightly.bracketproductions.com/rustbook/chapter_61.html)
 Use u32 and i32 when you just want numbers."](https://users.rust-lang.org/t/i32-vs-isize-u32-vs-usize/22657/3)
