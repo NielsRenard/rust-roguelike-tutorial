@@ -6,6 +6,7 @@ use super::{
 };
 use crate::color::{black, blue, cyan, grey, magenta, red, white, yellow};
 use crate::gamelog::GameLog;
+use crate::saveload_system::save_exists;
 use specs::prelude::*;
 
 // TODO: replace 43 and 79 with const's (maybe directly couple to the ones in map.rs)
@@ -285,21 +286,25 @@ pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
     } = *runstate
     {
         if selection == MainMenuSelection::NewGame {
-            ctx.print_color_centered(24, magenta(), black(), "New Game");
+            ctx.print_color_centered(20, magenta(), black(), "New Game");
         } else {
-            ctx.print_color_centered(24, white(), black(), "New Game");
+            ctx.print_color_centered(20, white(), black(), "New Game");
         }
 
         if selection == MainMenuSelection::LoadGame {
-            ctx.print_color_centered(25, magenta(), black(), "Load Game");
+            ctx.print_color_centered(22, magenta(), black(), "Load Game");
         } else {
-            ctx.print_color_centered(25, white(), black(), "Load Game");
+            if save_exists() {
+                ctx.print_color_centered(22, white(), black(), "Load Game");
+            } else {
+                ctx.print_color_centered(22, grey(), black(), "Load Game");
+            }
         }
 
         if selection == MainMenuSelection::Quit {
-            ctx.print_color_centered(26, magenta(), black(), "Save and quit");
+            ctx.print_color_centered(24, magenta(), black(), "Quit");
         } else {
-            ctx.print_color_centered(26, white(), black(), "Save and quit");
+            ctx.print_color_centered(24, white(), black(), "Quit");
         }
 
         match ctx.key {
@@ -319,7 +324,13 @@ pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
                     match selection {
                         MainMenuSelection::NewGame => newselection = MainMenuSelection::Quit,
                         MainMenuSelection::LoadGame => newselection = MainMenuSelection::NewGame,
-                        MainMenuSelection::Quit => newselection = MainMenuSelection::LoadGame,
+                        MainMenuSelection::Quit => {
+                            newselection = if save_exists() {
+                                MainMenuSelection::LoadGame
+                            } else {
+                                MainMenuSelection::NewGame
+                            }
+                        }
                     }
                     return MainMenuResult::NoSelection {
                         selected: newselection,
@@ -328,7 +339,13 @@ pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
                 VirtualKeyCode::Down | VirtualKeyCode::S => {
                     let newselection;
                     match selection {
-                        MainMenuSelection::NewGame => newselection = MainMenuSelection::LoadGame,
+                        MainMenuSelection::NewGame => {
+                            newselection = if save_exists() {
+                                MainMenuSelection::LoadGame
+                            } else {
+                                MainMenuSelection::Quit
+                            }
+                        }
                         MainMenuSelection::LoadGame => newselection = MainMenuSelection::Quit,
                         MainMenuSelection::Quit => newselection = MainMenuSelection::NewGame,
                     }

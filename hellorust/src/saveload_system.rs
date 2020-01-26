@@ -8,9 +8,14 @@ use specs::saveload::{
     DeserializeComponents, MarkedBuilder, SerializeComponents, SimpleMarker, SimpleMarkerAllocator,
 };
 use std::fs::File;
+use std::path::Path;
+
+pub fn save_exists() -> bool {
+    return Path::new("savegame.json").exists();
+}
 
 pub fn delete_save() {
-    if std::path::Path::new("./savegame.json").exists() {
+    if save_exists() {
         std::fs::remove_file("./savegame.json").expect("Unable to delete file");
     }
 }
