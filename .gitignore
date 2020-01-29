@@ -1,3 +1,5 @@
+hellorust/web/hellorust.js
+hellorust/web/hellorust_bg.wasm
 savegame.json
 
 # Created by https://www.gitignore.io/api/rust,linux,emacs
