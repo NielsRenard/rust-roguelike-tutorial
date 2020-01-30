@@ -7,7 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rltk = { path = "../rltk_rs", features = ["serialization"] }
+rltk = { path = "../rltk_rs", features = ["serde"] }
 specs = {version = "0.15.1", features = ["serde"]}
 specs-derive = "0.4.0"
 serde= { version = "1.0.104", features = ["derive"] }
