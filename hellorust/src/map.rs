@@ -1,4 +1,5 @@
 extern crate rltk;
+use super::color::*;
 use super::Rect;
 use rltk::{Algorithm2D, BaseMap, Console, Point, RandomNumberGenerator, Rltk, RGB};
 use std::cmp::{max, min};
@@ -228,8 +229,8 @@ pub fn draw_map(ecs: &World, ctx: &mut Rltk) {
                     fg = RGB::from_f32(0.0, 1.0, 0.0);
                 }
                 TileType::DownStairs => {
-                    glyph = rltk::to_cp437('>');
-                    fg = RGB::from_f32(0.0, 1.0, 1.0);
+                    glyph = rltk::to_cp437('H');
+                    fg = brown();
                 }
             }
             if !map.visible_tiles[idx] {

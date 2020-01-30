@@ -5,6 +5,9 @@ pub fn black() -> rltk::RGB {
 pub fn blue() -> rltk::RGB {
     rltk::RGB::named(rltk::BLUE)
 }
+pub fn brown() -> rltk::RGB {
+    rltk::RGB::named(rltk::BROWN_42)
+}
 
 pub fn cyan() -> rltk::RGB {
     rltk::RGB::named(rltk::CYAN)
