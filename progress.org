@@ -14,7 +14,7 @@
 *** DONE 1.8.5) "If it can be used, it will need some way to indicate that it can be used - and what to do with it."
 ** DONE 1.9. Ranged Scrolls/Targeting
 ** DONE 1.10. Saving and Loading
-** TODO 1.11. Delving Deeper
+** DONE 1.11. Delving Deeper
 ** TODO 1.12. Difficulty
 ** TODO 1.13. Equipment
 * 2. Section 2 - Stretch Goals
