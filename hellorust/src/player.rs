@@ -1,6 +1,6 @@
 use super::{
-    gamelog::GameLog, CombatStats, Item, Map, Player, Point, Position, RunState, State, Viewshed,
-    WantsToMelee, WantsToPickupItem,
+    gamelog::GameLog, CombatStats, Item, Map, Player, Point, Position, RunState, State, TileType,
+    Viewshed, WantsToMelee, WantsToPickupItem,
 };
 use rltk::{Rltk, VirtualKeyCode};
 use specs::prelude::*;
@@ -94,6 +94,11 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
     match ctx.key {
         None => return RunState::AwaitingInput, // Nothing happened, don't Tick yet.
         Some(key) => match key {
+            VirtualKeyCode::Period => {
+                if try_next_level(&mut gs.ecs) {
+                    return RunState::NextLevel;
+                }
+            }
             VirtualKeyCode::O => return RunState::ShowDropItem,
             VirtualKeyCode::I => return RunState::ShowInventory,
             VirtualKeyCode::G => get_item(&mut gs.ecs),
@@ -123,4 +128,19 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
     }
     // If a button was pressed, the next Tick may occur.
     return RunState::PlayerTurn;
+}
+
+pub fn try_next_level(ecs: &mut World) -> bool {
+    let player_pos = ecs.fetch::<Point>();
+    let map = ecs.fetch::<Map>();
+    let player_idx = map.xy_idx(player_pos.x, player_pos.y);
+    if map.tiles[player_idx] == TileType::DownStairs {
+        true
+    } else {
+        let mut gamelog = ecs.fetch_mut::<GameLog>();
+        gamelog
+            .entries
+            .insert(0, "There is no way down from here.".to_string());
+        false
+    }
 }
