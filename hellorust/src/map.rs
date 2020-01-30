@@ -26,6 +26,7 @@ pub struct Map {
     pub revealed_tiles: Vec<bool>,
     pub visible_tiles: Vec<bool>,
     pub blocked_tiles: Vec<bool>,
+    pub depth: i32,
 
     // tile_content data is rebuilt every frame
     // no need to serialize
@@ -70,7 +71,7 @@ impl Map {
         }
     }
 
-    pub fn new_map_rooms_and_corridors() -> Map {
+    pub fn new_map_rooms_and_corridors(new_depth: i32) -> Map {
         let mut map = Map {
             tiles: vec![TileType::Wall; MAP_COUNT],
             rooms: Vec::new(),
@@ -80,6 +81,7 @@ impl Map {
             visible_tiles: vec![false; MAP_COUNT],
             blocked_tiles: vec![false; MAP_COUNT],
             tile_content: vec![Vec::new(); MAP_COUNT],
+            depth: new_depth,
         };
 
         //    let mut rooms: Vec<Rect> = Vec::new();

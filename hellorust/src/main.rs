@@ -248,8 +248,8 @@ impl State {
 fn main() {
     let context = RltkBuilder::simple80x50()
         .with_title("Hello Rust World")
-	.with_fullscreen(true)
-        .build();    
+        .with_fullscreen(true)
+        .build();
     let mut gs = State { ecs: World::new() };
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
@@ -277,7 +277,7 @@ fn main() {
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
-    let map: Map = Map::new_map_rooms_and_corridors();
+    let map: Map = Map::new_map_rooms_and_corridors(1);
 
     // make our 'guy'
     let (player_x, player_y) = map.rooms[0].center();
