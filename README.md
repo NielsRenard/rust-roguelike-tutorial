@@ -11,7 +11,7 @@
 * [x] 1.9. [Ranged Scrolls/Targeting](https://bfnightly.bracketproductions.com/rustbook/chapter_10.html)
 * [x] 1.10. [Saving and Loading](https://bfnightly.bracketproductions.com/rustbook/chapter_11.html)
 * [x] 1.11. [Delving Deeper](https://bfnightly.bracketproductions.com/rustbook/chapter_12.html)
-* [ ] 1.12. [Difficulty](https://bfnightly.bracketproductions.com/rustbook/chapter_13.html)
+* [x] 1.12. [Difficulty](https://bfnightly.bracketproductions.com/rustbook/chapter_13.html)
 * [ ] 1.13. [Equipment](https://bfnightly.bracketproductions.com/rustbook/chapter_14.html)
 ## Section 2 - Stretch Goals
 * [ ] 2.1. [Nice Walls with Bitsets](https://bfnightly.bracketproductions.com/rustbook/chapter_16.html)
