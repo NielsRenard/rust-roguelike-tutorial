@@ -29,7 +29,9 @@ mod melee_combat_system;
 use melee_combat_system::MeleeCombatSystem;
 mod damage_system;
 use damage_system::DamageSystem;
+mod random_table;
 mod saveload_system;
+use random_table::{RandomEntry, RandomTable};
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
