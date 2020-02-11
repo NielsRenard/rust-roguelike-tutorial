@@ -3,9 +3,9 @@ extern crate specs;
 use super::color::*;
 use super::map::MAP_WIDTH;
 use super::{
-    AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, InflictsDamage, Item, Map,
-    Monster, Name, Player, Position, ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged,
-    Rect, Renderable, SerializeMe, Viewshed,
+    AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, InflictsDamage, Item, Monster,
+    Name, Player, Position, ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged, Rect,
+    Renderable, SerializeMe, Viewshed,
 };
 use specs::prelude::*;
 use specs::saveload::{MarkedBuilder, SimpleMarker};
@@ -45,14 +45,14 @@ pub fn player(ecs: &mut World, player_x: i32, player_y: i32) -> Entity {
         .build()
 }
 
-fn room_table() -> RandomTable {
+fn room_table(map_depth: i32) -> RandomTable {
     RandomTable::new()
-        .add("Confusion Scroll", 2)
-        .add("Fireball Scroll", 2)
+        .add("Confusion Scroll", 2 + map_depth)
+        .add("Fireball Scroll", 2 + map_depth)
         .add("Goblin", 10)
         .add("Health Potion", 7)
         .add("Magic Missile Scroll", 4)
-        .add("Orc", 1)
+        .add("Orc", 1 + map_depth)
 }
 
 pub fn orc(ecs: &mut World, x: i32, y: i32) {
@@ -92,7 +92,7 @@ pub fn monster<S: ToString>(ecs: &mut World, x: i32, y: i32, glyph: u8, name: S)
 }
 
 pub fn spawn_room(ecs: &mut World, room: &Rect, map_depth: i32) {
-    let spawn_table = room_table();
+    let spawn_table = room_table(map_depth);
     let mut spawn_points: HashMap<usize, String> = HashMap::new();
 
     // "Scope to keep the borrow checker happy"
