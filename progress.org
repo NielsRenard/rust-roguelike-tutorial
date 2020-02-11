@@ -15,7 +15,7 @@
 ** DONE 1.9. Ranged Scrolls/Targeting
 ** DONE 1.10. Saving and Loading
 ** DONE 1.11. Delving Deeper
-** TODO 1.12. Difficulty
+** DONE 1.12. Difficulty
 ** TODO 1.13. Equipment
 * 2. Section 2 - Stretch Goals
 ** TODO 2.1. Nice Walls with Bitsets
