@@ -3,16 +3,15 @@ extern crate specs;
 use super::color::*;
 use super::map::MAP_WIDTH;
 use super::{
-    AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, InflictsDamage, Item, Monster,
-    Name, Player, Position, ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged, Rect,
-    Renderable, SerializeMe, Viewshed,
+    AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, InflictsDamage, Item, Map,
+    Monster, Name, Player, Position, ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged,
+    Rect, Renderable, SerializeMe, Viewshed,
 };
 use specs::prelude::*;
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
 const MAX_MONSTERS: i32 = 4;
-const MAX_ITEMS: i32 = 2;
 
 /// Spawns the player and returns its entity object.
 pub fn player(ecs: &mut World, player_x: i32, player_y: i32) -> Entity {
@@ -92,14 +91,14 @@ pub fn monster<S: ToString>(ecs: &mut World, x: i32, y: i32, glyph: u8, name: S)
         .build();
 }
 
-pub fn spawn_room(ecs: &mut World, room: &Rect) {
+pub fn spawn_room(ecs: &mut World, room: &Rect, map_depth: i32) {
     let spawn_table = room_table();
     let mut spawn_points: HashMap<usize, String> = HashMap::new();
 
     // "Scope to keep the borrow checker happy"
     {
         let mut rng = ecs.write_resource::<RandomNumberGenerator>();
-        let num_spawns = rng.roll_dice(1, MAX_MONSTERS + 3) - 3;
+        let num_spawns = rng.roll_dice(1, MAX_MONSTERS + 3) + (map_depth - 1) - 3;
 
         for _i in 0..num_spawns {
             let mut added = false;

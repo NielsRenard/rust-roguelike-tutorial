@@ -31,7 +31,7 @@ mod damage_system;
 use damage_system::DamageSystem;
 mod random_table;
 mod saveload_system;
-use random_table::{RandomEntry, RandomTable};
+use random_table::RandomTable;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -293,18 +293,18 @@ impl State {
 
         // Build a new map
         let worldmap;
+        let current_depth;
         {
             let mut worldmap_resource = self.ecs.write_resource::<Map>();
-            let current_depth = worldmap_resource.depth;
+            current_depth = worldmap_resource.depth;
             *worldmap_resource = Map::new_map_rooms_and_corridors(current_depth + 1);
             // store a clone of the map in the outer variable
-            // and exit scope (to avoid any borrowing/lifetime issues).
             worldmap = worldmap_resource.clone();
+            // and exit scope (to avoid any borrowing/lifetime issues).
         }
-
-        // Spawn bad guys
+        // spawn enemies and items
         for room in worldmap.rooms.iter().skip(1) {
-            spawner::spawn_room(&mut self.ecs, room);
+            spawner::spawn_room(&mut self.ecs, room, current_depth);
         }
 
         // Place the player and update resources
@@ -383,7 +383,7 @@ fn main() {
 
     // every room -except the first one- might get monsters and potions
     for room in map.rooms.iter().skip(1) {
-        spawner::spawn_room(&mut gs.ecs, room)
+        spawner::spawn_room(&mut gs.ecs, room, 1)
     }
 
     gs.ecs.insert(map);
