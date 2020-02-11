@@ -1,6 +1,6 @@
 use super::{
-    gamelog::GameLog, CombatStats, Item, Map, Player, Point, Position, RunState, State, TileType,
-    Viewshed, WantsToMelee, WantsToPickupItem,
+    gamelog::GameLog, CombatStats, Item, Map, Monster, Player, Point, Position, RunState, State,
+    TileType, Viewshed, WantsToMelee, WantsToPickupItem,
 };
 use rltk::{Rltk, VirtualKeyCode};
 use specs::prelude::*;
@@ -102,6 +102,9 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::O => return RunState::ShowDropItem,
             VirtualKeyCode::I => return RunState::ShowInventory,
             VirtualKeyCode::G => get_item(&mut gs.ecs),
+            // Skip turn
+            VirtualKeyCode::Numpad5 => return skip_turn(&mut gs.ecs),
+            VirtualKeyCode::Space => return skip_turn(&mut gs.ecs),
             // Cardinal movement
             VirtualKeyCode::Left | VirtualKeyCode::A | VirtualKeyCode::Numpad4 => {
                 try_move_player(-1, 0, &mut gs.ecs)
@@ -127,6 +130,39 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
         },
     }
     // If a button was pressed, the next Tick may occur.
+    return RunState::PlayerTurn;
+}
+
+fn skip_turn(ecs: &mut World) -> RunState {
+    let player_entity = ecs.fetch::<Entity>();
+    let viewshed_components = ecs.read_storage::<Viewshed>();
+    let monsters = ecs.read_storage::<Monster>();
+
+    let worldmap_resource = ecs.fetch::<Map>();
+    let mut can_heal = true;
+    let viewshed = viewshed_components.get(*player_entity).unwrap();
+
+    for tile in viewshed.visible_tiles.iter() {
+        let idx = worldmap_resource.xy_idx(tile.x, tile.y);
+        for entity_id in worldmap_resource.tile_content[idx].iter() {
+            let mob = monsters.get(*entity_id);
+            // Check visible tiles for monsters, if present then can't heal
+            match mob {
+                None => {}
+                Some(_) => {
+                    can_heal = false;
+                }
+            }
+        }
+    }
+
+    if can_heal {
+        let mut health_components = ecs.write_storage::<CombatStats>();
+        let player_health = health_components.get_mut(*player_entity).unwrap();
+        // "makes the game really easy - but we're getting to that!"
+        player_health.hp = i32::min(player_health.hp + 1, player_health.max_hp);
+    }
+
     return RunState::PlayerTurn;
 }
 
