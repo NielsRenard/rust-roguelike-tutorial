@@ -53,6 +53,8 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Health Potion", 7)
         .add("Magic Missile Scroll", 4)
         .add("Orc", 1 + map_depth)
+        .add("Dagger", 30)
+        .add("Shield", 30)
 }
 
 pub fn orc(ecs: &mut World, x: i32, y: i32) {
@@ -128,6 +130,8 @@ pub fn spawn_room(ecs: &mut World, room: &Rect, map_depth: i32) {
             "Health Potion" => health_potion(ecs, x, y),
             "Magic Missile Scroll" => magic_missile_scroll(ecs, x, y),
             "Orc" => orc(ecs, x, y),
+            "Dagger" => dagger(ecs, x, y),
+            "Shield" => shield(ecs, x, y),
             _ => {}
         }
     }
@@ -213,6 +217,40 @@ pub fn confusion_scroll(ecs: &mut World, x: i32, y: i32) {
         .with(Ranged { range: 6 })
         .with(Confusion { turns: 4 })
         .with(Consumable {})
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn dagger(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position { x, y })
+        .with(Renderable {
+            glyph: rltk::to_cp437('/'),
+            fg: cyan(),
+            bg: black(),
+            render_order: 2,
+        })
+        .with(Name {
+            name: "Dagger".to_string(),
+        })
+        .with(Item {})
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn shield(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position { x, y })
+        .with(Renderable {
+            glyph: rltk::to_cp437('('),
+            fg: cyan(),
+            bg: black(),
+            render_order: 2,
+        })
+        .with(Name {
+            name: "Shield".to_string(),
+        })
+        .with(Item {})
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
