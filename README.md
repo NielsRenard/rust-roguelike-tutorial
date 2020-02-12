@@ -1,5 +1,5 @@
 # Progress
-## Section 1 - Hello Rust
+## ✓ Section 1 - Hello Rust
 * [x] 1.1. [Entities and Components](https://bfnightly.bracketproductions.com/rustbook/chapter_2.html)
 * [x] 1.2. [Walking A Map](https://bfnightly.bracketproductions.com/rustbook/chapter_3.html)
 * [x] 1.3. [A More Interesting Map](https://bfnightly.bracketproductions.com/rustbook/chapter_4.html)
@@ -12,7 +12,7 @@
 * [x] 1.10. [Saving and Loading](https://bfnightly.bracketproductions.com/rustbook/chapter_11.html)
 * [x] 1.11. [Delving Deeper](https://bfnightly.bracketproductions.com/rustbook/chapter_12.html)
 * [x] 1.12. [Difficulty](https://bfnightly.bracketproductions.com/rustbook/chapter_13.html)
-* [ ] 1.13. [Equipment](https://bfnightly.bracketproductions.com/rustbook/chapter_14.html)
+* [x] 1.13. [Equipment](https://bfnightly.bracketproductions.com/rustbook/chapter_14.html)
 ## Section 2 - Stretch Goals
 * [ ] 2.1. [Nice Walls with Bitsets](https://bfnightly.bracketproductions.com/rustbook/chapter_16.html)
 * [ ] 2.2. [Bloodstains](https://bfnightly.bracketproductions.com/rustbook/chapter_17.html)

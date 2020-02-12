@@ -1,6 +1,6 @@
 [package]
 name = "hellorust"
-version = "0.12.0"
+version = "2.0.0"
 authors = ["niels <code.i.pushed@gmail.com>"]
 edition = "2018"
 
