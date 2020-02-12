@@ -3,9 +3,10 @@ extern crate specs;
 use super::color::*;
 use super::map::MAP_WIDTH;
 use super::{
-    AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, EquipmentSlot, Equippable,
-    InflictsDamage, Item, Monster, Name, Player, Position, ProvidesHealing, RandomNumberGenerator,
-    RandomTable, Ranged, Rect, Renderable, SerializeMe, Viewshed,
+    AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, DefenseBonus, EquipmentSlot,
+    Equippable, InflictsDamage, Item, MeleePowerBonus, Monster, Name, Player, Position,
+    ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged, Rect, Renderable, SerializeMe,
+    Viewshed,
 };
 use specs::prelude::*;
 use specs::saveload::{MarkedBuilder, SimpleMarker};
@@ -239,6 +240,7 @@ fn dagger(ecs: &mut World, x: i32, y: i32) {
         .with(Equippable {
             slot: EquipmentSlot::Melee,
         })
+        .with(MeleePowerBonus { power: 2 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
@@ -259,6 +261,7 @@ fn shield(ecs: &mut World, x: i32, y: i32) {
         .with(Equippable {
             slot: EquipmentSlot::Shield,
         })
+        .with(DefenseBonus { defense: 1 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }

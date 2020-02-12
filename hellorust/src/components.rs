@@ -151,6 +151,16 @@ pub struct Equipped {
     pub slot: EquipmentSlot,
 }
 
+#[derive(Component, ConvertSaveload, Clone)]
+pub struct MeleePowerBonus {
+    pub power: i32,
+}
+
+#[derive(Component, ConvertSaveload, Clone)]
+pub struct DefenseBonus {
+    pub defense: i32,
+}
+
 // "Serialization helper code. We need to implement ConvertSaveload for each type that contains an
 // Entity."
 
