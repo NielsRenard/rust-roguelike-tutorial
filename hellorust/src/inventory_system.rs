@@ -2,7 +2,7 @@ extern crate specs;
 use super::{
     gamelog::GameLog, AreaOfEffect, CombatStats, Confusion, Consumable, Equippable, Equipped,
     InBackpack, InflictsDamage, Map, Name, Position, ProvidesHealing, SufferDamage,
-    WantsToDropItem, WantsToPickupItem, WantsToUseItem,
+    WantsToDropItem, WantsToPickupItem, WantsToRemoveEquipment, WantsToUseItem,
 };
 use specs::prelude::*;
 
@@ -41,6 +41,30 @@ impl<'a> System<'a> for ItemCollectionSystem {
             }
         }
         wants_pickup.clear();
+    }
+}
+
+pub struct EquipmentRemoveSystem {}
+
+impl<'a> System<'a> for EquipmentRemoveSystem {
+    type SystemData = (
+        Entities<'a>,
+        WriteStorage<'a, WantsToRemoveEquipment>,
+        WriteStorage<'a, Equipped>,
+        WriteStorage<'a, InBackpack>,
+    );
+
+    fn run(&mut self, data: Self::SystemData) {
+        let (entities, mut wants_to_remove, mut equipped, mut backpack) = data;
+
+        for (entity, to_remove) in (&entities, &wants_to_remove).join() {
+            equipped.remove(to_remove.item);
+            backpack
+                .insert(to_remove.item, InBackpack { owner: entity })
+                .expect("Unable to insert backpack");
+        }
+
+        wants_to_remove.clear();
     }
 }
 

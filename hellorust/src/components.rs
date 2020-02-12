@@ -107,6 +107,11 @@ pub struct WantsToUseItem {
     pub target: Option<rltk::Point>,
 }
 
+#[derive(Component, Debug, ConvertSaveload, Clone)]
+pub struct WantsToRemoveEquipment {
+    pub item: Entity,
+}
+
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct Consumable {}
 

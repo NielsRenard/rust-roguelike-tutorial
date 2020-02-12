@@ -102,6 +102,7 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::O => return RunState::ShowDropItem,
             VirtualKeyCode::I => return RunState::ShowInventory,
             VirtualKeyCode::G => get_item(&mut gs.ecs),
+            VirtualKeyCode::R => return RunState::ShowRemoveItem,
             // Skip turn
             VirtualKeyCode::Numpad5 => return skip_turn(&mut gs.ecs),
             VirtualKeyCode::Space => return skip_turn(&mut gs.ecs),

@@ -14,7 +14,9 @@ mod gui;
 mod inventory_system;
 mod spawner;
 pub use components::*;
-use inventory_system::{ItemCollectionSystem, ItemDropSystem, ItemUseSystem};
+use inventory_system::{
+    EquipmentRemoveSystem, ItemCollectionSystem, ItemDropSystem, ItemUseSystem,
+};
 mod player;
 use player::*;
 mod rect;
@@ -50,6 +52,7 @@ pub enum RunState {
     },
     SaveGame,
     NextLevel,
+    ShowRemoveItem,
 }
 
 pub struct State {
@@ -217,6 +220,24 @@ impl GameState for State {
                 self.goto_next_level();
                 new_runstate = RunState::PreRun;
             }
+            RunState::ShowRemoveItem => {
+                let result = gui::remove_equipment_menu(self, ctx);
+                match result.0 {
+                    gui::ItemMenuResult::Cancel => new_runstate = RunState::AwaitingInput,
+                    gui::ItemMenuResult::NoResponse => {}
+                    gui::ItemMenuResult::Selected => {
+                        let item_entity = result.1.unwrap();
+                        let mut intent = self.ecs.write_storage::<WantsToRemoveEquipment>();
+                        intent
+                            .insert(
+                                *self.ecs.fetch::<Entity>(),
+                                WantsToRemoveEquipment { item: item_entity },
+                            )
+                            .expect("Unable to insert intent");
+                        new_runstate = RunState::PlayerTurn;
+                    }
+                }
+            }
         }
 
         // "if you declare and use a variable inside a scope, it is dropped on scope exit
@@ -247,6 +268,8 @@ impl State {
         drop_items.run_now(&self.ecs);
         let mut use_items = ItemUseSystem {};
         use_items.run_now(&self.ecs);
+        let mut remove_equipment = EquipmentRemoveSystem {};
+        remove_equipment.run_now(&self.ecs);
         self.ecs.maintain();
     }
 
@@ -382,6 +405,7 @@ fn main() {
     gs.ecs.register::<Equipped>();
     gs.ecs.register::<MeleePowerBonus>();
     gs.ecs.register::<DefenseBonus>();
+    gs.ecs.register::<WantsToRemoveEquipment>();
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
