@@ -25,6 +25,12 @@ pub enum MainMenuResult {
     Selected { selected: MainMenuSelection },
 }
 
+#[derive(PartialEq, Copy, Clone)]
+pub enum GameOverResult {
+    NoSelection,
+    QuitToMenu,
+}
+
 pub fn draw_ui(ecs: &World, ctx: &mut Rltk) {
     ctx.draw_box(0, 43, 79, 6, white(), black());
 
@@ -431,5 +437,27 @@ pub fn remove_equipment_menu(gs: &mut State, ctx: &mut Rltk) -> (ItemMenuResult,
                 (ItemMenuResult::NoResponse, None)
             }
         },
+    }
+}
+
+pub fn game_over(ctx: &mut Rltk) -> GameOverResult {
+    ctx.print_color_centered(15, yellow(), black(), "GAME OVER");
+    ctx.print_color_centered(
+        40,
+        white(),
+        black(),
+        "Let us go out this evening for pleasure.",
+    );
+    ctx.print_color_centered(41, white(), black(), "The night is still young.");
+
+    ctx.print_color_centered(
+        43,
+        magenta(),
+        black(),
+        "Press any key to return to the Main Menu.",
+    );
+    match ctx.key {
+        None => GameOverResult::NoSelection,
+        Some(_) => GameOverResult::QuitToMenu,
     }
 }
