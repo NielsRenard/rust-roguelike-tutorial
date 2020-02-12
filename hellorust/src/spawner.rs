@@ -3,9 +3,9 @@ extern crate specs;
 use super::color::*;
 use super::map::MAP_WIDTH;
 use super::{
-    AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, InflictsDamage, Item, Monster,
-    Name, Player, Position, ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged, Rect,
-    Renderable, SerializeMe, Viewshed,
+    AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, EquipmentSlot, Equippable,
+    InflictsDamage, Item, Monster, Name, Player, Position, ProvidesHealing, RandomNumberGenerator,
+    RandomTable, Ranged, Rect, Renderable, SerializeMe, Viewshed,
 };
 use specs::prelude::*;
 use specs::saveload::{MarkedBuilder, SimpleMarker};
@@ -114,6 +114,8 @@ pub fn spawn_room(ecs: &mut World, room: &Rect, map_depth: i32) {
                 if !spawn_points.contains_key(&idx) {
                     spawn_points.insert(idx, spawn_table.roll(&mut rng));
                     added = true;
+                } else {
+                    tries += 1;
                 }
             }
         }
@@ -234,6 +236,9 @@ fn dagger(ecs: &mut World, x: i32, y: i32) {
             name: "Dagger".to_string(),
         })
         .with(Item {})
+        .with(Equippable {
+            slot: EquipmentSlot::Melee,
+        })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
@@ -251,6 +256,9 @@ fn shield(ecs: &mut World, x: i32, y: i32) {
             name: "Shield".to_string(),
         })
         .with(Item {})
+        .with(Equippable {
+            slot: EquipmentSlot::Shield,
+        })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }

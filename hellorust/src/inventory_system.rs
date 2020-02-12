@@ -262,7 +262,7 @@ impl<'a> System<'a> for ItemUseSystem {
                 confused
                     .insert(mob.0, Confusion { turns: mob.1 })
                     .expect("Unable to insert status");
-		used_item = true;
+                used_item = true;
             }
 
             // delete consumed items
