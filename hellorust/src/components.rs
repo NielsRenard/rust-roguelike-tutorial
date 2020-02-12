@@ -148,7 +148,7 @@ pub struct Equippable {
 #[derive(Component, ConvertSaveload, Clone)]
 pub struct Equipped {
     pub owner: Entity,
-    pub slot: Equippable,
+    pub slot: EquipmentSlot,
 }
 
 // "Serialization helper code. We need to implement ConvertSaveload for each type that contains an
