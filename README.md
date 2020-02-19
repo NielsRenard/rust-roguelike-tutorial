@@ -1,5 +1,5 @@
 # Progress
-## ✓ Section 1 - Hello Rust
+## Section 1 - Hello Rust
 * [x] 1.1. [Entities and Components](https://bfnightly.bracketproductions.com/rustbook/chapter_2.html)
 * [x] 1.2. [Walking A Map](https://bfnightly.bracketproductions.com/rustbook/chapter_3.html)
 * [x] 1.3. [A More Interesting Map](https://bfnightly.bracketproductions.com/rustbook/chapter_4.html)
