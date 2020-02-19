@@ -247,11 +247,34 @@ pub fn draw_map(ecs: &World, ctx: &mut Rltk) {
     }
 }
 
+// "Next, we check each of the 4 directions and add to the mask. We're
+// adding numbers corresponding to each of the first four bits in
+// binary - so 1,2,4,8. This means that our final number will store
+// whether or not we have each of the four possible neighbors. For
+// example, a value of 3 means that we have neighbors to the north and
+// south."
 pub fn wall_glyph(map: &Map, x: i32, y: i32) -> u8 {
     if x < 1 || x > map.width - 2 || y < 1 || y > map.height - 2 as i32 {
         return 35;
     }
     let mut mask: u8 = 0;
+
+    // ↑
+    if is_revealed_and_wall(map, x, y - 1) {
+        mask += 1;
+    }
+    // ↓
+    if is_revealed_and_wall(map, x, y + 1) {
+        mask += 2;
+    }
+    // ←
+    if is_revealed_and_wall(map, x - 1, y) {
+        mask += 4;
+    }
+    // →
+    if is_revealed_and_wall(map, x + 1, y) {
+        mask += 8;
+    }
 
     match mask {
         0 => 9,    //  '○' Pillar because we can't see neighbors
@@ -271,4 +294,9 @@ pub fn wall_glyph(map: &Map, x: i32, y: i32) -> u8 {
         14 => 203, //  '╦' Wall to the east, west, and north
         _ => 35,   //   '#' Missed something
     }
+}
+
+pub fn is_revealed_and_wall(map: &Map, x: i32, y: i32) -> bool {
+    let idx = map.xy_idx(x, y);
+    return map.tiles[idx] == TileType::Wall && map.revealed_tiles[idx];
 }
