@@ -18,7 +18,7 @@
 ** DONE 1.12. Difficulty
 ** DONE 1.13. Equipment
 * 2. Section 2 - Stretch Goals
-** TODO 2.1. Nice Walls with Bitsets
+** DONE 2.1. Nice Walls with Bitsets
 ** TODO 2.2. Bloodstains
 ** TODO 2.3. Particle Effects
 ** TODO 2.4. Hunger Clock
