@@ -236,7 +236,7 @@ pub fn draw_map(ecs: &World, ctx: &mut Rltk) {
             if !map.visible_tiles[idx] {
                 fg = fg.to_greyscale()
             }
-            ctx.set(x, y, fg, RGB::from_f32(0., 0., 0.), glyph);
+            ctx.set(x, y, fg, RGB::from_f32(0.0, 0.0, 0.0), glyph);
         }
         // Move the coordinates
         x += 1;
@@ -292,11 +292,17 @@ pub fn wall_glyph(map: &Map, x: i32, y: i32) -> u8 {
         12 => 205, //  '═' Wall to the east and west
         13 => 202, //  '╩' Wall to the east, west, and south
         14 => 203, //  '╦' Wall to the east, west, and north
-        _ => 35,   //   '#' Missed something
+        15 => 206, //  '╬' walls all around
+        _ => 35,   //  '#' Missed something
     }
 }
 
 pub fn is_revealed_and_wall(map: &Map, x: i32, y: i32) -> bool {
     let idx = map.xy_idx(x, y);
+    // TODO: Figure out how to not render pillars before revealing
+    // adjectent walls removing && map.revealed_tiles fixes the
+    // pillars, but introduces ugly walls using only ╠╩╦╣ because most
+    // walls have walls behind them since the rooms are 'sliced' out
+    // of a solid block
     return map.tiles[idx] == TileType::Wall && map.revealed_tiles[idx];
 }
