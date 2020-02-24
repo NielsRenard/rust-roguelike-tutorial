@@ -28,3 +28,6 @@ web: wasm-build
 run: ##Run the game natively
 	@cargo run
 
+run-debug: ##Run the game natively with map fully revealed
+	@MAP_HACK=true cargo run
+

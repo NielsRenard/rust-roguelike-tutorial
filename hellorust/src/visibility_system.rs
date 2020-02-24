@@ -3,6 +3,7 @@ use super::{Map, Player, Position, Viewshed};
 use specs::prelude::*;
 extern crate rltk;
 use rltk::{field_of_view, Point};
+use std::env;
 
 pub struct VisibilitySystem {}
 
@@ -16,6 +17,7 @@ impl<'a> System<'a> for VisibilitySystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
+        let map_hack = env::var("MAP_HACK").is_ok();
         let (mut map, entities, mut viewshed, pos, player) = data;
 
         for (ent, viewshed, pos) in (&entities, &mut viewshed, &pos).join() {
@@ -32,7 +34,18 @@ impl<'a> System<'a> for VisibilitySystem {
                 match _p {
                     Some(_p) => {
                         for t in map.visible_tiles.iter_mut() {
-                            *t = false
+                            if map_hack {
+                                *t = true;
+                            } else {
+                                *t = false;
+                            }
+                        }
+                        for t in map.revealed_tiles.iter_mut() {
+                            if map_hack {
+                                *t = true;
+                            } else {
+                                *t = false;
+                            }
                         }
                         for tile in viewshed.visible_tiles.iter() {
                             let idx = map.xy_idx(tile.x, tile.y);
