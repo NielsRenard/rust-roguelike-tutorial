@@ -116,7 +116,9 @@ pub fn spawn_room(ecs: &mut World, room: &Rect, map_depth: i32) {
                 let x = (room.x1 + rng.roll_dice(1, i32::abs(room.x2 - room.x1))) as usize;
                 let y = (room.y1 + rng.roll_dice(1, i32::abs(room.y2 - room.y1))) as usize;
                 let idx = (y * MAP_WIDTH) + x;
-                if !spawn_points.contains_key(&idx) {
+                // 1/2 don't let entities spawn in same spot
+                // 2/2 don't let entities spawn in center of room (hacky fix for items hiding ladder)
+                if !spawn_points.contains_key(&idx) && !((x as i32, y as i32) == room.center()) {
                     spawn_points.insert(idx, spawn_table.roll(&mut rng));
                     added = true;
                 } else {
