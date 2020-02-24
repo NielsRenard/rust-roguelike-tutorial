@@ -1,6 +1,7 @@
 hellorust/web/hellorust.js
 hellorust/web/hellorust_bg.wasm
 savegame.json
+rustrogueliketutorial/
 
 # Created by https://www.gitignore.io/api/rust,linux,emacs
 # Edit at https://www.gitignore.io/?templates=rust,linux,emacs
