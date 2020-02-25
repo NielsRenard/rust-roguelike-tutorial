@@ -19,6 +19,7 @@ impl<'a> System<'a> for VisibilitySystem {
     fn run(&mut self, data: Self::SystemData) {
         let (mut map, entities, mut viewshed, pos, player) = data;
 
+        // set all tiles visible and revealed and return early
         if env::var("MAP_HACK").is_ok() {
             map.visible_tiles.iter_mut().for_each(|t| *t = true);
             map.revealed_tiles.iter_mut().for_each(|t| *t = true);
