@@ -20,6 +20,16 @@ impl<'a> System<'a> for VisibilitySystem {
         let map_hack = env::var("MAP_HACK").is_ok();
         let (mut map, entities, mut viewshed, pos, player) = data;
 
+        if map_hack {
+            // set all tiles visible and revealed and return early
+            for t in map.visible_tiles.iter_mut() {
+                *t = true
+            }
+            for t in map.revealed_tiles.iter_mut() {
+                *t = true
+            }
+            return ();
+        }
         for (ent, viewshed, pos) in (&entities, &mut viewshed, &pos).join() {
             if viewshed.dirty {
                 viewshed.visible_tiles.clear();
@@ -34,19 +44,9 @@ impl<'a> System<'a> for VisibilitySystem {
                 match _p {
                     Some(_p) => {
                         for t in map.visible_tiles.iter_mut() {
-                            if map_hack {
-                                *t = true;
-                            } else {
-                                *t = false;
-                            }
+                            *t = false;
                         }
-                        for t in map.revealed_tiles.iter_mut() {
-                            if map_hack {
-                                *t = true;
-                            } else {
-                                *t = false;
-                            }
-                        }
+
                         for tile in viewshed.visible_tiles.iter() {
                             let idx = map.xy_idx(tile.x, tile.y);
                             map.revealed_tiles[idx] = true;
