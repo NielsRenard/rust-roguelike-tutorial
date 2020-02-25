@@ -6,6 +6,7 @@ use std::cmp::{max, min};
 extern crate specs;
 use serde::{Deserialize, Serialize};
 use specs::prelude::*;
+use std::collections::HashSet;
 
 // "Use usize and isize when it’s related to memory size"
 pub const MAP_WIDTH: usize = 80;
@@ -29,6 +30,7 @@ pub struct Map {
     pub visible_tiles: Vec<bool>,
     pub blocked_tiles: Vec<bool>,
     pub depth: i32,
+    pub bloodstains : HashSet<usize>,
 
     // tile_content data is rebuilt every frame
     // no need to serialize
@@ -84,6 +86,7 @@ impl Map {
             blocked_tiles: vec![false; MAP_COUNT],
             tile_content: vec![Vec::new(); MAP_COUNT],
             depth: new_depth,
+            bloodstains: HashSet::new(),
         };
 
         //    let mut rooms: Vec<Rect> = Vec::new();
@@ -219,6 +222,7 @@ pub fn draw_map(ecs: &World, ctx: &mut Rltk) {
         if map.revealed_tiles[idx] {
             let glyph;
             let mut fg;
+            let mut bg = RGB::from_f32(0.0, 0.0, 0.0);            
             match tile {
                 TileType::Floor => {
                     glyph = rltk::to_cp437('.');
@@ -233,10 +237,13 @@ pub fn draw_map(ecs: &World, ctx: &mut Rltk) {
                     fg = brown();
                 }
             }
+            if map.bloodstains.contains(&idx){
+                bg = RGB::from_f32(0.75, 0.0, 0.0);                
+            }
             if !map.visible_tiles[idx] {
                 fg = fg.to_greyscale()
             }
-            ctx.set(x, y, fg, RGB::from_f32(0.0, 0.0, 0.0), glyph);
+            ctx.set(x, y, fg, bg, glyph);
         }
         // Move the coordinates
         x += 1;
