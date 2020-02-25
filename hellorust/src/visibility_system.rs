@@ -17,17 +17,11 @@ impl<'a> System<'a> for VisibilitySystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let map_hack = env::var("MAP_HACK").is_ok();
         let (mut map, entities, mut viewshed, pos, player) = data;
 
-        if map_hack {
-            // set all tiles visible and revealed and return early
-            for t in map.visible_tiles.iter_mut() {
-                *t = true
-            }
-            for t in map.revealed_tiles.iter_mut() {
-                *t = true
-            }
+        if env::var("MAP_HACK").is_ok() {
+            map.visible_tiles.iter_mut().for_each(|t| *t = true);
+            map.revealed_tiles.iter_mut().for_each(|t| *t = true);
             return ();
         }
         for (ent, viewshed, pos) in (&entities, &mut viewshed, &pos).join() {
