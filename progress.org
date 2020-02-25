@@ -73,3 +73,13 @@
 ** TODO 4.24. Enter the Dragon
 ** TODO 4.25. Mushrooms
 ** TODO 4.26. More Shrooms
+
+* Bonus
+** TODO limited backpack capacity
+** TODO 'stack' items in backpack ui
+   (a) 5 health potion
+** TODO  in-game dev console
+*** TODO level stats
+    no. items, monsters & rooms
+    distance from ladder
+*** TODO toggle map_hack
