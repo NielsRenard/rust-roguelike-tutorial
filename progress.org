@@ -83,6 +83,7 @@
     - no. items, monsters & rooms
     - distance from ladder
 *** TODO toggle map_hack
+** TODO opening/closing inventory should be same button
 ** DONE maphack mode for debugging
 ** DONE items should be destructable
 * Bugs [1/2]
