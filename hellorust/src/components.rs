@@ -50,6 +50,11 @@ pub struct SufferDamage {
 }
 
 #[derive(Component, Debug, ConvertSaveload, Clone)]
+pub struct Destructable {
+    pub broken: bool,
+}
+
+#[derive(Component, Debug, ConvertSaveload, Clone)]
 pub struct CombatStats {
     pub max_hp: i32,
     pub hp: i32,

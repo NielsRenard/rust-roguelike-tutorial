@@ -3,10 +3,10 @@ extern crate specs;
 use super::color::*;
 use super::map::MAP_WIDTH;
 use super::{
-    AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, DefenseBonus, EquipmentSlot,
-    Equippable, InflictsDamage, Item, MeleePowerBonus, Monster, Name, Player, Position,
-    ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged, Rect, Renderable, SerializeMe,
-    Viewshed,
+    AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, DefenseBonus, Destructable,
+    EquipmentSlot, Equippable, InflictsDamage, Item, MeleePowerBonus, Monster, Name, Player,
+    Position, ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged, Rect, Renderable,
+    SerializeMe, Viewshed,
 };
 use specs::prelude::*;
 use specs::saveload::{MarkedBuilder, SimpleMarker};
@@ -162,6 +162,7 @@ pub fn health_potion(ecs: &mut World, x: i32, y: i32) {
             name: "Health Potion".to_string(),
         })
         .with(Item {})
+        .with(Destructable { broken: false })
         .with(ProvidesHealing { heal_amount: 8 })
         .with(Consumable {})
         .marked::<SimpleMarker<SerializeMe>>()
@@ -182,6 +183,7 @@ pub fn magic_missile_scroll(ecs: &mut World, x: i32, y: i32) {
             name: "Magic Missile Scroll".to_string(),
         })
         .with(Item {})
+        .with(Destructable { broken: false })
         .with(Ranged { range: 6 })
         .with(InflictsDamage { damage: 8 })
         .with(Consumable {})
@@ -203,6 +205,7 @@ pub fn fireball_scroll(ecs: &mut World, x: i32, y: i32) {
             name: "Fireball scroll".to_string(),
         })
         .with(Item {})
+        .with(Destructable { broken: false })
         .with(Ranged { range: 6 })
         .with(InflictsDamage { damage: 20 })
         .with(AreaOfEffect { radius: 3 })
@@ -225,6 +228,7 @@ pub fn confusion_scroll(ecs: &mut World, x: i32, y: i32) {
             name: "Confusion scroll".to_string(),
         })
         .with(Item {})
+        .with(Destructable { broken: false })
         .with(Ranged { range: 6 })
         .with(Confusion { turns: 4 })
         .with(Consumable {})
@@ -245,6 +249,7 @@ fn dagger(ecs: &mut World, x: i32, y: i32) {
             name: "Dagger".to_string(),
         })
         .with(Item {})
+        .with(Destructable { broken: false })
         .with(Equippable {
             slot: EquipmentSlot::Melee,
         })
@@ -287,6 +292,7 @@ fn longsword(ecs: &mut World, x: i32, y: i32) {
             name: "Longsword".to_string(),
         })
         .with(Item {})
+        .with(Destructable { broken: false })
         .with(Equippable {
             slot: EquipmentSlot::Melee,
         })

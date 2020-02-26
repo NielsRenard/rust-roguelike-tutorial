@@ -75,14 +75,16 @@
 ** TODO 4.26. More Shrooms
 
 * Bonus
-** TODO limited backpack capacity
-** TODO 'stack' items in backpack ui
-   (a) 5 health potion
-** TODO  in-game dev console
-*** TODO level stats
-    no. items, monsters & rooms
-    distance from ladder
+** TODO backpack capacity should be limited
+** TODO items in ui should stack
+   (a) health potion [5]
+** TODO in-game dev console
+*** TODO level stats/difficulty
+    - no. items, monsters & rooms
+    - distance from ladder
 *** TODO toggle map_hack
+** DONE maphack mode for debugging
+** DONE items should be destructable
 * Bugs
 ** GameLog shows Player and Items taking damage from ranged items
 *** TODO GameLog shows Player taking AOE damage when secondary target, but HP doesn't go down

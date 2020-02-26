@@ -464,6 +464,7 @@ fn main() {
     gs.ecs.register::<MeleePowerBonus>();
     gs.ecs.register::<DefenseBonus>();
     gs.ecs.register::<WantsToRemoveEquipment>();
+    gs.ecs.register::<Destructable>();
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 

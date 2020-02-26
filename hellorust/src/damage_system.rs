@@ -1,5 +1,5 @@
 extern crate specs;
-use super::{CombatStats, Map, Name, Player, Position, RunState, SufferDamage};
+use super::{CombatStats, Destructable, Map, Name, Player, Position, RunState, SufferDamage};
 use crate::gamelog::GameLog;
 use specs::prelude::*;
 
@@ -40,7 +40,16 @@ pub fn delete_the_dead(ecs: &mut World) {
         let names = ecs.read_storage::<Name>();
         let players = ecs.read_storage::<Player>();
         let entities = ecs.entities();
+        let destructables = ecs.read_storage::<Destructable>();
         let mut log = ecs.write_resource::<GameLog>();
+
+        for (entity, destructable) in (&entities, &destructables).join() {
+            if destructable.broken {
+                dead.push(entity);
+                log.entries
+                    .insert(0, format!("{} broke", names.get(entity).unwrap().name));
+            }
+        }
 
         for (entity, stats) in (&entities, &combat_stats).join() {
             if stats.hp < 1 {
