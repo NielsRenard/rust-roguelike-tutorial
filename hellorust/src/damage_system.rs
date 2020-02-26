@@ -22,7 +22,6 @@ impl<'a> System<'a> for DamageSystem {
             let pos = positions.get(entity);
 
             // Bloodstains appear where an entity takes damage
-            // TODO: fix items being able to take AOE damage / or let them break
             if let Some(stain_pos) = pos {
                 let idx = map.xy_idx(stain_pos.x, stain_pos.y);
                 map.bloodstains.insert(idx);
