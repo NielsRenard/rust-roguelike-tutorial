@@ -86,8 +86,9 @@
 ** TODO opening/closing inventory should be same button
 ** DONE maphack mode for debugging
 ** DONE items should be destructable
-* Bugs [1/2]
-** TODO GameLog shows Player taking AOE damage when secondary target, but HP doesn't go down
+* Bugs [2/3]
+** TODO GameLog doesn't flush on "new game" after dying
+** DONE GameLog shows Player taking AOE damage when secondary target, but HP doesn't go down
    - when targeting self, player doesn't take damage, aoe kills monsters
    - when targeting floor, both player and monsters take aoe damage
    - when targeting monster, player doesn't take damage, monsters take damage
