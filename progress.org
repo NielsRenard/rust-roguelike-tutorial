@@ -87,4 +87,7 @@
 ** DONE items should be destructable
 * Bugs [1/2]
 ** TODO GameLog shows Player taking AOE damage when secondary target, but HP doesn't go down
+   - when targeting self, player doesn't take damage, aoe kills monsters
+   - when targeting floor, both player and monsters take aoe damage
+   - when targeting monster, player doesn't take damage, monsters take damage
 ** DONE GameLog shows Health Potion confusing Player
