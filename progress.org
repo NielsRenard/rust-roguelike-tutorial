@@ -19,7 +19,7 @@
 ** DONE 1.13. Equipment
 * 2. Section 2 - Stretch Goals
 ** DONE 2.1. Nice Walls with Bitsets
-** TODO 2.2. Bloodstains
+** DONE 2.2. Bloodstains
 ** TODO 2.3. Particle Effects
 ** TODO 2.4. Hunger Clock
 ** TODO 2.5. Magic Mapping
