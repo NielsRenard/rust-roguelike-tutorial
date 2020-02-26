@@ -1,7 +1,7 @@
 extern crate specs;
 use super::{
-    gamelog::GameLog, AreaOfEffect, CombatStats, Confusion, Consumable, Equippable, Equipped,
-    InBackpack, InflictsDamage, Map, Name, Position, ProvidesHealing, SufferDamage,
+    gamelog::GameLog, AreaOfEffect, CombatStats, Confusion, Consumable, Destructable, Equippable,
+    Equipped, InBackpack, InflictsDamage, Map, Name, Position, ProvidesHealing, SufferDamage,
     WantsToDropItem, WantsToPickupItem, WantsToRemoveEquipment, WantsToUseItem,
 };
 use specs::prelude::*;
@@ -144,6 +144,7 @@ impl<'a> System<'a> for ItemUseSystem {
         ReadStorage<'a, Equippable>,
         WriteStorage<'a, Equipped>,
         WriteStorage<'a, InBackpack>,
+        WriteStorage<'a, Destructable>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -164,6 +165,7 @@ impl<'a> System<'a> for ItemUseSystem {
             equippable,
             mut equipped,
             mut in_backpack,
+            mut destructable,
         ) = data;
 
         for (entity, use_item) in (&entities, &wants_use).join() {
@@ -290,23 +292,32 @@ impl<'a> System<'a> for ItemUseSystem {
                 None => {}
                 Some(damage) => {
                     used_item = false;
-                    for mob in targets.iter() {
+                    for target in targets.iter() {
+                        match destructable.get(*target) {
+                            None => {}
+                            Some(_destructable) => {
+                                destructable
+                                    .insert(*target, Destructable { broken: true })
+                                    .expect("Unable to insert");
+                            }
+                        }
+
                         suffer_damage
                             .insert(
-                                *mob,
+                                *target,
                                 SufferDamage {
                                     amount: damage.damage,
                                 },
                             )
                             .expect("Unable to insert");
                         if entity == *player_entity {
-                            let mob_name = names.get(*mob).unwrap();
+                            let target_name = names.get(*target).unwrap();
                             let item_name = names.get(use_item.item).unwrap();
                             gamelog.entries.insert(
                                 0,
                                 format!(
                                     "You use {} on {}, inflicting {} damage.",
-                                    item_name.name, mob_name.name, damage.damage
+                                    item_name.name, target_name.name, damage.damage
                                 ),
                             );
                         }

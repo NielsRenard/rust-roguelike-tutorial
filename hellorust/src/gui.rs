@@ -304,12 +304,12 @@ pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
         }
 
         if selection == MainMenuSelection::LoadGame {
-            ctx.print_color_centered(22, magenta(), black(), "Load Game");
+            ctx.print_color_centered(22, magenta(), black(), "Continue Game");
         } else {
             if save_exists() {
-                ctx.print_color_centered(22, white(), black(), "Load Game");
+                ctx.print_color_centered(22, white(), black(), "Continue Game");
             } else {
-                ctx.print_color_centered(22, grey(), black(), "Load Game");
+                ctx.print_color_centered(22, grey(), black(), "Continue Game");
             }
         }
 
