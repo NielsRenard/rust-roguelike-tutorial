@@ -1,5 +1,5 @@
 extern crate specs;
-use super::{CombatStats, Name, Player, RunState, SufferDamage};
+use super::{CombatStats, Map, Name, Player, Position, RunState, SufferDamage};
 use crate::gamelog::GameLog;
 use specs::prelude::*;
 
@@ -9,13 +9,24 @@ impl<'a> System<'a> for DamageSystem {
     type SystemData = (
         WriteStorage<'a, CombatStats>,
         WriteStorage<'a, SufferDamage>,
+        ReadStorage<'a, Position>,
+        WriteExpect<'a, Map>,
+        Entities<'a>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut stats, mut damage) = data;
+        let (mut stats, mut damage, positions, mut map, entities) = data;
 
-        for (mut stats, damage) in (&mut stats, &damage).join() {
+        for (entity, mut stats, damage) in (&entities, &mut stats, &damage).join() {
             stats.hp -= damage.amount;
+            let pos = positions.get(entity);
+
+            // Bloodstains appear where an entity takes damage
+            // TODO: fix items being able to take AOE damage / or let them break
+            if let Some(stain_pos) = pos {
+                let idx = map.xy_idx(stain_pos.x, stain_pos.y);
+                map.bloodstains.insert(idx);
+            }
         }
 
         damage.clear();

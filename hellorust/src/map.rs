@@ -30,7 +30,7 @@ pub struct Map {
     pub visible_tiles: Vec<bool>,
     pub blocked_tiles: Vec<bool>,
     pub depth: i32,
-    pub bloodstains : HashSet<usize>,
+    pub bloodstains: HashSet<usize>,
 
     // tile_content data is rebuilt every frame
     // no need to serialize
@@ -222,7 +222,7 @@ pub fn draw_map(ecs: &World, ctx: &mut Rltk) {
         if map.revealed_tiles[idx] {
             let glyph;
             let mut fg;
-            let mut bg = RGB::from_f32(0.0, 0.0, 0.0);            
+            let mut bg = RGB::from_f32(0.0, 0.0, 0.0);
             match tile {
                 TileType::Floor => {
                     glyph = rltk::to_cp437('.');
@@ -237,8 +237,8 @@ pub fn draw_map(ecs: &World, ctx: &mut Rltk) {
                     fg = brown();
                 }
             }
-            if map.bloodstains.contains(&idx){
-                bg = RGB::from_f32(0.75, 0.0, 0.0);                
+            if map.bloodstains.contains(&idx) {
+                bg = RGB::from_f32(0.75, 0.0, 0.0);
             }
             if !map.visible_tiles[idx] {
                 fg = fg.to_greyscale()
