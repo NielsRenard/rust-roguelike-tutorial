@@ -83,3 +83,7 @@
     no. items, monsters & rooms
     distance from ladder
 *** TODO toggle map_hack
+* Bugs
+** GameLog shows Player and Items taking damage from ranged items
+*** TODO GameLog shows Player taking AOE damage when secondary target, but HP doesn't go down
+*** TODO GameLog shows Health Potion confusing Player
