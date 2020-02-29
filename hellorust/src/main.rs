@@ -35,6 +35,7 @@ mod random_table;
 mod saveload_system;
 use random_table::RandomTable;
 mod particle_system;
+use particle_system::ParticleSpawnSystem;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -286,6 +287,12 @@ impl State {
         use_items.run_now(&self.ecs);
         let mut remove_equipment = EquipmentRemoveSystem {};
         remove_equipment.run_now(&self.ecs);
+        let mut particle_system = ParticleSpawnSystem {};
+        particle_system.run_now(&self.ecs);
+        // "We've made the particle system depend upon likely particle
+        // spawners. We'll have to be a little careful to avoid
+        // accidentally making it concurrent with anything that might
+        // add to it."
         self.ecs.maintain();
     }
 
@@ -486,6 +493,7 @@ fn main() {
     gs.ecs.insert(map);
     gs.ecs.insert(Point::new(player_x, player_y));
     gs.ecs.insert(player_entity);
+    gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(gamelog::GameLog {
         entries: vec!["Good luck...".to_string()],
     });
