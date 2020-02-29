@@ -34,6 +34,7 @@ use damage_system::DamageSystem;
 mod random_table;
 mod saveload_system;
 use random_table::RandomTable;
+mod particle_system;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -68,6 +69,7 @@ impl GameState for State {
             new_runstate = *runstate;
         }
         ctx.cls();
+        particle_system::cull_dead_particles(&mut self.ecs, ctx);
 
         match new_runstate {
             RunState::MainMenu { .. } => {}
@@ -465,7 +467,7 @@ fn main() {
     gs.ecs.register::<DefenseBonus>();
     gs.ecs.register::<WantsToRemoveEquipment>();
     gs.ecs.register::<Destructable>();
-
+    gs.ecs.register::<ParticleLifetime>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     let map: Map = Map::new_map_rooms_and_corridors(1);
