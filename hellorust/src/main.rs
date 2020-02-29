@@ -35,7 +35,7 @@ mod random_table;
 mod saveload_system;
 use random_table::RandomTable;
 mod particle_system;
-use particle_system::ParticleSpawnSystem;
+use particle_system::{ParticleBuilder, ParticleSpawnSystem};
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -499,7 +499,7 @@ fn main() {
     });
     // Set the main menu as the initial RunState
     gs.ecs.insert(RunState::MainMenu {
-        menu_selection: gui::MainMenuSelection::NewGame,
+        menu_selection: gui::MainMenuSelection::LoadGame,
     });
     rltk::main_loop(context, gs);
 }

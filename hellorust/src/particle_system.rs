@@ -70,7 +70,7 @@ impl ParticleBuilder {
         }
     }
 
-    pub fn requests(
+    pub fn request(
         &mut self,
         x: i32,
         y: i32,

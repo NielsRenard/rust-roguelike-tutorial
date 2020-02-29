@@ -1,8 +1,9 @@
 extern crate specs;
 use super::{
-    gamelog::GameLog, CombatStats, DefenseBonus, Equipped, MeleePowerBonus, Name, SufferDamage,
-    WantsToMelee,
+    gamelog::GameLog, CombatStats, DefenseBonus, Equipped, MeleePowerBonus, Name, ParticleBuilder,
+    Position, SufferDamage, WantsToMelee,
 };
+use crate::color::*;
 use specs::prelude::*;
 
 pub struct MeleeCombatSystem {}
@@ -18,6 +19,8 @@ impl<'a> System<'a> for MeleeCombatSystem {
         ReadStorage<'a, MeleePowerBonus>,
         ReadStorage<'a, DefenseBonus>,
         ReadStorage<'a, Equipped>,
+        WriteExpect<'a, ParticleBuilder>,
+        ReadStorage<'a, Position>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -31,6 +34,8 @@ impl<'a> System<'a> for MeleeCombatSystem {
             melee_power_bonuses,
             defense_bonuses,
             equipped,
+            mut particle_builder,
+            positions,
         ) = data;
 
         for (entity, wants_melee, name, stats) in
@@ -57,6 +62,19 @@ impl<'a> System<'a> for MeleeCombatSystem {
                         if wants_melee.target == equipped_by.owner {
                             defensive_bonus += defense_bonus.defense;
                         }
+                    }
+
+                    // spawn 'fighting' particle
+                    let pos = positions.get(wants_melee.target);
+                    if let Some(pos) = pos {
+                        particle_builder.request(
+                            pos.x,
+                            pos.y,
+                            orange(),
+                            black(),
+                            rltk::to_cp437('‼'),
+                            200.0,
+                        );
                     }
 
                     let damage = i32::max(
