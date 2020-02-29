@@ -498,8 +498,13 @@ fn main() {
         entries: vec!["Good luck...".to_string()],
     });
     // Set the main menu as the initial RunState
+    let main_menu_selection = if saveload_system::save_exists() {
+        gui::MainMenuSelection::LoadGame
+    } else {
+        gui::MainMenuSelection::NewGame
+    };
     gs.ecs.insert(RunState::MainMenu {
-        menu_selection: gui::MainMenuSelection::LoadGame,
+        menu_selection: main_menu_selection,
     });
     rltk::main_loop(context, gs);
 }
