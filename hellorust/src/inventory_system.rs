@@ -338,6 +338,17 @@ impl<'a> System<'a> for ItemUseSystem {
                             );
                         }
                         used_item = true;
+                        let pos = positions.get(*target);
+                        if let Some(pos) = pos {
+                            particle_builder.request(
+                                pos.x,
+                                pos.y,
+                                red(),
+                                black(),
+                                rltk::to_cp437('‼'),
+                                200.0,
+                            );
+                        }
                     }
                 }
             }
@@ -361,6 +372,17 @@ impl<'a> System<'a> for ItemUseSystem {
                                         "You use {} on {}, confusing them.",
                                         item_name.name, mob_name.name
                                     ),
+                                );
+                            }
+                            let pos = positions.get(*mob);
+                            if let Some(pos) = pos {
+                                particle_builder.request(
+                                    pos.x,
+                                    pos.y,
+                                    magenta(),
+                                    black(),
+                                    rltk::to_cp437('?'),
+                                    1000.0,
                                 );
                             }
                         }
