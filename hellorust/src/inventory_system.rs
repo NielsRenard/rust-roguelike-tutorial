@@ -1,9 +1,10 @@
 extern crate specs;
 use super::{
     gamelog::GameLog, AreaOfEffect, CombatStats, Confusion, Consumable, Destructable, Equippable,
-    Equipped, InBackpack, InflictsDamage, Map, Name, Position, ProvidesHealing, SufferDamage,
-    WantsToDropItem, WantsToPickupItem, WantsToRemoveEquipment, WantsToUseItem,
+    Equipped, InBackpack, InflictsDamage, Map, Name, ParticleBuilder, Position, ProvidesHealing,
+    SufferDamage, WantsToDropItem, WantsToPickupItem, WantsToRemoveEquipment, WantsToUseItem,
 };
+use crate::color::*;
 use specs::prelude::*;
 
 pub struct ItemCollectionSystem {}
@@ -145,6 +146,8 @@ impl<'a> System<'a> for ItemUseSystem {
         WriteStorage<'a, Equipped>,
         WriteStorage<'a, InBackpack>,
         WriteStorage<'a, Destructable>,
+        WriteExpect<'a, ParticleBuilder>,
+        ReadStorage<'a, Position>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -166,6 +169,8 @@ impl<'a> System<'a> for ItemUseSystem {
             mut equipped,
             mut in_backpack,
             mut destructable,
+            mut particle_builder,
+            positions,
         ) = data;
 
         for (entity, use_item) in (&entities, &wants_use).join() {
@@ -278,6 +283,17 @@ impl<'a> System<'a> for ItemUseSystem {
                                             names.get(use_item.item).unwrap().name,
                                             healer.heal_amount
                                         ),
+                                    );
+                                }
+                                let pos = positions.get(*player_entity);
+                                if let Some(pos) = pos {
+                                    particle_builder.request(
+                                        pos.x,
+                                        pos.y,
+                                        green(),
+                                        black(),
+                                        rltk::to_cp437('♥'),
+                                        200.0,
                                     );
                                 }
                             }

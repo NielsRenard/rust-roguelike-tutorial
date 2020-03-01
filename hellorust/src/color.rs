@@ -13,6 +13,10 @@ pub fn cyan() -> rltk::RGB {
     rltk::RGB::named(rltk::CYAN)
 }
 
+pub fn green() -> rltk::RGB {
+    rltk::RGB::named(rltk::GREEN)
+}
+
 pub fn grey() -> rltk::RGB {
     rltk::RGB::named(rltk::GREY)
 }
