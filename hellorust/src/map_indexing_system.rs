@@ -30,6 +30,8 @@ impl<'a> System<'a> for MapIndexingSystem {
 
             // Push the player into the tile_content stack. fixes
             // splash damage bug where player took no damage
+            // Update: <2020-03-01 Sun>
+            // causes bug where using item on self triggers twice
             let _p: Option<&Player> = player.get(entity);
             if let Some(_player) = player.get(entity) {
                 map.tile_content[idx].push(entity);
