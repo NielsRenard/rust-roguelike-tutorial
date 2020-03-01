@@ -27,24 +27,10 @@ impl<'a> System<'a> for MapIndexingSystem {
             if let Some(_p) = _b {
                 map.blocked_tiles[idx] = true;
             }
-
-            // Push the player into the tile_content stack. fixes
-            // splash damage bug where player took no damage
-            // Update: <2020-03-01 Sun>
-            // causes bug where using item on self triggers twice
-            let _p: Option<&Player> = player.get(entity);
-            if let Some(_player) = player.get(entity) {
-                map.tile_content[idx].push(entity);
-            }
-
             // Push the entity to the appropriate index slot. It's a Copy
             // type, so we don't need to clone it (we want to avoid moving it out of the ECS!)
             map.tile_content[idx].push(entity);
         }
 
-        //        for (position, _blocks) in (&position, &blockers).join() {
-        //            let idx = map.xy_idx(position.x, position.y);
-        //            map.blocked_tiles[idx] = true;
-        //        }
     }
 }
