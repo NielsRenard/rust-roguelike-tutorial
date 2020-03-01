@@ -16,7 +16,7 @@
 ## Section 2 - Stretch Goals
 * [x] 2.1. [Nice Walls with Bitsets](https://bfnightly.bracketproductions.com/rustbook/chapter_16.html)
 * [x] 2.2. [Bloodstains](https://bfnightly.bracketproductions.com/rustbook/chapter_17.html)
-* [ ] 2.3. [Particle Effects](https://bfnightly.bracketproductions.com/rustbook/chapter_18.html)
+* [x] 2.3. [Particle Effects](https://bfnightly.bracketproductions.com/rustbook/chapter_18.html)
 * [ ] 2.4. [Hunger Clock](https://bfnightly.bracketproductions.com/rustbook/chapter_19.html)
 * [ ] 2.5. [Magic Mapping](https://bfnightly.bracketproductions.com/rustbook/chapter_20.html)
 * [ ] 2.6. [REX Paint Menu](https://bfnightly.bracketproductions.com/rustbook/chapter_21.html)

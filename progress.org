@@ -20,7 +20,7 @@
 * 2. Section 2 - Stretch Goals
 ** DONE 2.1. Nice Walls with Bitsets
 ** DONE 2.2. Bloodstains
-** TODO 2.3. Particle Effects
+** DONE 2.3. Particle Effects
 ** TODO 2.4. Hunger Clock
 ** TODO 2.5. Magic Mapping
 ** TODO 2.6. REX Paint Menu
