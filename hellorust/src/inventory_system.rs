@@ -206,6 +206,14 @@ impl<'a> System<'a> for ItemUseSystem {
                                 for mob in map.tile_content[idx].iter() {
                                     targets.push(*mob);
                                 }
+                                particle_builder.request(
+                                    tile_idx.x,
+                                    tile_idx.y,
+                                    orange(),
+                                    black(),
+                                    rltk::to_cp437('░'),
+                                    250.0,
+                                );
                             }
                         }
                     }
