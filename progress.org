@@ -86,10 +86,11 @@
 ** TODO opening/closing inventory should be same button
 ** DONE maphack mode for debugging
 ** DONE items should be destructable
-* Bugs [3/6]
+* Bugs [4/6]
 ** DONE <2020-03-01 Sun> targeting self with items triggers usage twice in GameLog
    - damages once, prints twice
-** TODO <2020-03-01 Sun> regression: AoE damage as secondary target doesn't hurt player
+** DONE <2020-03-01 Sun> regression: AoE damage as secondary target doesn't hurt player
+   fixed in https://github.com/thebracket/rustrogueliketutorial/issues/103
    - when targeting self, player doesn't take damage, aoe kills monsters
    - ✓ when targeting floor, both player and monsters take aoe damage
    - when targeting monster, player doesn't take damage, monsters take damage
