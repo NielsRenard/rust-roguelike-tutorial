@@ -18,7 +18,8 @@ impl<'a> System<'a> for DamageSystem {
         let (mut stats, mut damage, positions, mut map, entities) = data;
 
         for (entity, mut stats, damage) in (&entities, &mut stats, &damage).join() {
-            stats.hp -= damage.amount;
+            stats.hp -= damage.amount.iter().sum::<i32>();
+
             let pos = positions.get(entity);
 
             // Bloodstains appear where an entity takes damage

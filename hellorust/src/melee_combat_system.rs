@@ -95,9 +95,7 @@ impl<'a> System<'a> for MeleeCombatSystem {
                                 &name.name, &target_name.name, damage
                             ),
                         );
-                        inflict_damage
-                            .insert(wants_melee.target, SufferDamage { amount: damage })
-                            .expect("Unable to do damage");
+                        SufferDamage::new_damage(&mut inflict_damage, wants_melee.target, damage)
                     }
                 }
             }

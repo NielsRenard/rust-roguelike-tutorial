@@ -326,14 +326,8 @@ impl<'a> System<'a> for ItemUseSystem {
                             }
                         }
 
-                        suffer_damage
-                            .insert(
-                                *target,
-                                SufferDamage {
-                                    amount: damage.damage,
-                                },
-                            )
-                            .expect("Unable to insert");
+                        SufferDamage::new_damage(&mut suffer_damage, *target, damage.damage);
+
                         if entity == *player_entity {
                             let target_name = names.get(*target).unwrap();
                             let item_name = names.get(use_item.item).unwrap();
