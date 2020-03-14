@@ -1,7 +1,7 @@
 extern crate specs;
 use super::{
-    gamelog::GameLog, CombatStats, DefenseBonus, Equipped, MeleePowerBonus, Name, ParticleBuilder,
-    Position, SufferDamage, WantsToMelee,
+    gamelog::GameLog, CombatStats, DefenseBonus, Equipped, HungerClock, HungerState,
+    MeleePowerBonus, Name, ParticleBuilder, Position, SufferDamage, WantsToMelee,
 };
 use crate::color::*;
 use specs::prelude::*;
@@ -21,6 +21,7 @@ impl<'a> System<'a> for MeleeCombatSystem {
         ReadStorage<'a, Equipped>,
         WriteExpect<'a, ParticleBuilder>,
         ReadStorage<'a, Position>,
+        ReadStorage<'a, HungerClock>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -36,6 +37,7 @@ impl<'a> System<'a> for MeleeCombatSystem {
             equipped,
             mut particle_builder,
             positions,
+            hunger_clock,
         ) = data;
 
         for (entity, wants_melee, name, stats) in
@@ -48,6 +50,12 @@ impl<'a> System<'a> for MeleeCombatSystem {
                 {
                     if entity == equipped_by.owner {
                         offensive_bonus += power_bonus.power;
+                    }
+                }
+                let hc = hunger_clock.get(entity);
+                if let Some(hc) = hc {
+                    if hc.state == HungerState::WellFed {
+                        offensive_bonus += 1;
                     }
                 }
 
