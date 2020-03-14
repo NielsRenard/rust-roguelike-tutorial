@@ -1,11 +1,12 @@
 extern crate rltk;
+use crate::components::{HungerClock, HungerState::*};
 use rltk::{Console, Rltk, VirtualKeyCode};
 extern crate specs;
 use super::{
     CombatStats, Equipped, InBackpack, Map, Name, Player, Point, Position, RunState, State,
     Viewshed,
 };
-use crate::color::{black, blue, cyan, grey, magenta, red, white, yellow};
+use crate::color::*;
 use crate::gamelog::GameLog;
 use crate::saveload_system::save_exists;
 use specs::prelude::*;
@@ -40,6 +41,7 @@ pub fn draw_ui(ecs: &World, ctx: &mut Rltk) {
 
     let combat_stats = ecs.read_storage::<CombatStats>();
     let players = ecs.read_storage::<Player>();
+    let hunger_clocks = ecs.read_storage::<HungerClock>();
     let log = ecs.fetch::<GameLog>();
 
     //GameLog message printing
@@ -51,11 +53,20 @@ pub fn draw_ui(ecs: &World, ctx: &mut Rltk) {
         y += 1;
     }
 
-    for (_player, stats) in (&players, &combat_stats).join() {
+    for (_player, stats, hunger) in (&players, &combat_stats, &hunger_clocks).join() {
         let health = format!(" HP: {}/{} ", stats.hp, stats.max_hp);
         ctx.print_color(12, 43, white(), black(), &health);
-        ctx.draw_bar_horizontal(28, 43, 51, stats.hp, stats.max_hp, red(), black())
+        ctx.draw_bar_horizontal(28, 43, 51, stats.hp, stats.max_hp, red(), black());
+
+        let (hunger_text, text_color) = match hunger.state {
+            WellFed => ("Well fed", green()),
+            Normal => ("Normal", yellow()),
+            Hungry => ("Hungry", orange()),
+            Starving => ("Starving", red()),
+        };
+        ctx.print_color(71, 42, text_color, black(), hunger_text);
     }
+
     let mouse_pos = ctx.mouse_pos();
     ctx.set_bg(mouse_pos.0, mouse_pos.1, magenta());
     draw_tooltips(ecs, ctx);
