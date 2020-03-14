@@ -1,8 +1,9 @@
 extern crate specs;
 use super::{
     gamelog::GameLog, AreaOfEffect, CombatStats, Confusion, Consumable, Destructable, Equippable,
-    Equipped, InBackpack, InflictsDamage, Map, Name, ParticleBuilder, Position, ProvidesHealing,
-    SufferDamage, WantsToDropItem, WantsToPickupItem, WantsToRemoveEquipment, WantsToUseItem,
+    Equipped, HungerClock, HungerState, InBackpack, InflictsDamage, Map, Name, ParticleBuilder,
+    Position, ProvidesFood, ProvidesHealing, SufferDamage, WantsToDropItem, WantsToPickupItem,
+    WantsToRemoveEquipment, WantsToUseItem,
 };
 use crate::color::*;
 use specs::prelude::*;
@@ -148,6 +149,8 @@ impl<'a> System<'a> for ItemUseSystem {
         WriteStorage<'a, Destructable>,
         WriteExpect<'a, ParticleBuilder>,
         ReadStorage<'a, Position>,
+        ReadStorage<'a, ProvidesFood>,
+        WriteStorage<'a, HungerClock>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -171,6 +174,8 @@ impl<'a> System<'a> for ItemUseSystem {
             mut destructable,
             mut particle_builder,
             positions,
+            provides_food,
+            mut hunger_clocks,
         ) = data;
 
         for (entity, use_item) in (&entities, &wants_use).join() {
@@ -267,6 +272,25 @@ impl<'a> System<'a> for ItemUseSystem {
                         gamelog.entries.insert(
                             0,
                             format!("You equip the {}.", names.get(use_item.item).unwrap().name),
+                        );
+                    }
+                }
+            }
+
+            // Edibles reset hungerclock
+            let item_edible = provides_food.get(use_item.item);
+            match item_edible {
+                None => {}
+                Some(_edible) => {
+                    used_item = true;
+                    let target = targets[0]; // the player
+                    let hunger_clock = hunger_clocks.get_mut(target);
+                    if let Some(hc) = hunger_clock {
+                        hc.state = HungerState::WellFed;
+                        hc.duration = 20;
+                        gamelog.entries.insert(
+                            0,
+                            format!("You eat the {}.", names.get(use_item.item).unwrap().name),
                         );
                     }
                 }
