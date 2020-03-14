@@ -83,18 +83,15 @@ impl<'a> System<'a> for MeleeCombatSystem {
                             - (target_stats.defense + defensive_bonus),
                     );
                     if damage == 0 {
-                        log.entries.insert(
-                            0,
-                            format!("{} is unable to hurt {}", &name.name, &target_name.name),
-                        );
+                        log.entries.push(format!(
+                            "{} is unable to hurt {}",
+                            &name.name, &target_name.name
+                        ));
                     } else {
-                        log.entries.insert(
-                            0,
-                            format!(
-                                "{} hits {} for {} hp.",
-                                &name.name, &target_name.name, damage
-                            ),
-                        );
+                        log.entries.push(format!(
+                            "{} hits {} for {} hp.",
+                            &name.name, &target_name.name, damage
+                        ));
                         SufferDamage::new_damage(&mut inflict_damage, wants_melee.target, damage)
                     }
                 }

@@ -46,33 +46,29 @@ impl<'a> System<'a> for HungerSystem {
                             clock.state = Normal;
                             clock.duration = 100;
                             if entity == *player_entity {
-                                log.entries
-                                    .insert(0, "You no longer feel well fed.".to_string());
+                                log.entries.push("You no longer feel well fed.".to_string());
                             }
                         }
                         Normal => {
                             clock.state = Hungry;
                             clock.duration = 100;
                             if entity == *player_entity {
-                                log.entries.insert(0, "You feel hungry.".to_string());
+                                log.entries.push("You feel hungry.".to_string());
                             }
                         }
                         Hungry => {
                             clock.state = Starving;
                             clock.duration = 100;
                             if entity == *player_entity {
-                                log.entries.insert(0, "You are starving.".to_string());
+                                log.entries.push("You are starving.".to_string());
                             }
                         }
                         Starving => {
                             if entity == *player_entity {
-                                log.entries.insert(
-                                    0,
-                                    format!(
-                                        "You lose {} health from starvation.",
-                                        STARVATION_DAMAGE
-                                    ),
-                                );
+                                log.entries.push(format!(
+                                    "You lose {} health from starvation.",
+                                    STARVATION_DAMAGE
+                                ));
                                 SufferDamage::new_damage(
                                     &mut inflict_damage,
                                     entity,

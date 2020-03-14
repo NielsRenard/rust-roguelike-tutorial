@@ -47,7 +47,7 @@ pub fn delete_the_dead(ecs: &mut World) {
             if destructable.broken {
                 dead.push(entity);
                 log.entries
-                    .insert(0, format!("{} broke", names.get(entity).unwrap().name));
+                    .push(format!("{} broke", names.get(entity).unwrap().name));
             }
         }
 
@@ -62,13 +62,13 @@ pub fn delete_the_dead(ecs: &mut World) {
                     None => {
                         // TODO: not too stoked on this nested match expression
                         match names.get(entity) {
-                            Some(victim_name) => log
-                                .entries
-                                .insert(0, format!("{} was slain", victim_name.name)),
+                            Some(victim_name) => {
+                                log.entries.push(format!("{} was slain", victim_name.name))
+                            }
                             None => {
                                 // TODO: leaving this in for now but
                                 // entities with no name probably shouldn't happen
-                                log.entries.insert(0, format!("unknown entity was slain"))
+                                log.entries.push(format!("unknown entity was slain"))
                             }
                         }
                         dead.push(entity)

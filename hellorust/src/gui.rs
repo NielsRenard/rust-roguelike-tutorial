@@ -46,7 +46,7 @@ pub fn draw_ui(ecs: &World, ctx: &mut Rltk) {
 
     //GameLog message printing
     let mut y = 44;
-    for message in log.entries.iter() {
+    for message in log.entries.iter().rev() {
         if y < 49 {
             ctx.print(2, y, &message.to_string());
         }
