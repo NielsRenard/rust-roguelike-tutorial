@@ -4,9 +4,9 @@ use super::color::*;
 use super::map::MAP_WIDTH;
 use super::{
     AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, DefenseBonus, Destructable,
-    EquipmentSlot, Equippable, InflictsDamage, Item, MeleePowerBonus, Monster, Name, Player,
-    Position, ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged, Rect, Renderable,
-    SerializeMe, Viewshed,
+    EquipmentSlot, Equippable, HungerClock, HungerState::*, InflictsDamage, Item, MeleePowerBonus,
+    Monster, Name, Player, Position, ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged,
+    Rect, Renderable, SerializeMe, Viewshed,
 };
 use specs::prelude::*;
 use specs::saveload::{MarkedBuilder, SimpleMarker};
@@ -41,6 +41,10 @@ pub fn player(ecs: &mut World, player_x: i32, player_y: i32) -> Entity {
             hp: 30,
             defense: 2,
             strength: 5,
+        })
+        .with(HungerClock {
+            state: WellFed,
+            duration: 20,
         })
         .marked::<SimpleMarker<SerializeMe>>()
         .build()
@@ -317,7 +321,7 @@ fn tower_shield(ecs: &mut World, x: i32, y: i32) {
         .with(Equippable {
             slot: EquipmentSlot::Shield,
         })
-        .with(DefenseBonus { defense: 3 })
+        .with(DefenseBonus { defense: 2 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }

@@ -157,6 +157,7 @@ pub struct AreaOfEffect {
 pub struct Confusion {
     pub turns: i32,
 }
+
 #[derive(PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum EquipmentSlot {
     Melee,
@@ -187,6 +188,19 @@ pub struct DefenseBonus {
 #[derive(Component, Serialize, Deserialize, Clone)]
 pub struct ParticleLifetime {
     pub lifetime_ms: f32,
+}
+
+#[derive(Serialize, Deserialize, Copy, Clone, PartialEq)]
+pub enum HungerState {
+    WellFed,
+    Normal,
+    Hungry,
+    Starving,
+}
+#[derive(Component, Serialize, Deserialize, Clone)]
+pub struct HungerClock {
+    pub state: HungerState,
+    pub duration: i32,
 }
 
 // "Serialization helper code. We need to implement ConvertSaveload for each type that contains an
