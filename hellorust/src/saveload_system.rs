@@ -113,7 +113,8 @@ pub fn save_game(ecs: &mut World) {
             WantsToRemoveEquipment,
             Destructable,
             ParticleLifetime,
-            HungerClock
+            HungerClock,
+            ProvidesFood
         );
     }
 
@@ -182,7 +183,8 @@ pub fn load_game(ecs: &mut World) {
             WantsToRemoveEquipment,
             Destructable,
             ParticleLifetime,
-            HungerClock
+            HungerClock,
+            ProvidesFood
         );
     }
 

@@ -203,6 +203,9 @@ pub struct HungerClock {
     pub duration: i32,
 }
 
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct ProvidesFood {}
+
 // "Serialization helper code. We need to implement ConvertSaveload for each type that contains an
 // Entity."
 
