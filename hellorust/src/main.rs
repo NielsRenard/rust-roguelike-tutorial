@@ -36,6 +36,8 @@ mod saveload_system;
 use random_table::RandomTable;
 mod particle_system;
 use particle_system::{ParticleBuilder, ParticleSpawnSystem};
+mod hunger_system;
+use hunger_system::HungerSystem;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -289,6 +291,8 @@ impl State {
         remove_equipment.run_now(&self.ecs);
         let mut particle_system = ParticleSpawnSystem {};
         particle_system.run_now(&self.ecs);
+        let mut hunger_system = HungerSystem {};
+        hunger_system.run_now(&self.ecs);
         // "We've made the particle system depend upon likely particle
         // spawners. We'll have to be a little careful to avoid
         // accidentally making it concurrent with anything that might
