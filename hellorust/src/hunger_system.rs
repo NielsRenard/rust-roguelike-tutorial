@@ -44,21 +44,21 @@ impl<'a> System<'a> for HungerSystem {
                     match clock.state {
                         WellFed => {
                             clock.state = Normal;
-                            clock.duration = 100;
+                            clock.duration = 200;
                             if entity == *player_entity {
                                 log.entries.push("You no longer feel well fed.".to_string());
                             }
                         }
                         Normal => {
                             clock.state = Hungry;
-                            clock.duration = 100;
+                            clock.duration = 200;
                             if entity == *player_entity {
                                 log.entries.push("You feel hungry.".to_string());
                             }
                         }
                         Hungry => {
                             clock.state = Starving;
-                            clock.duration = 100;
+                            clock.duration = 200;
                             if entity == *player_entity {
                                 log.entries.push("You are starving.".to_string());
                             }
