@@ -64,7 +64,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Shield", 3)
         .add("Longsword", map_depth - 1)
         .add("Tower Shield", map_depth - 1)
-        .add("Pancake", 10)
+        .add("Waffle", 10)
 }
 
 pub fn orc(ecs: &mut World, x: i32, y: i32) {
@@ -148,23 +148,23 @@ pub fn spawn_room(ecs: &mut World, room: &Rect, map_depth: i32) {
             "Shield" => shield(ecs, x, y),
             "Longsword" => longsword(ecs, x, y),
             "Tower Shield" => tower_shield(ecs, x, y),
-            "Pancake" => pancake(ecs, x, y),
+            "Waffle" => waffle(ecs, x, y),
             _ => {}
         }
     }
 }
 
-fn pancake(ecs: &mut World, x: i32, y: i32) {
+fn waffle(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
         .with(Position { x, y })
         .with(Renderable {
-            glyph: rltk::to_cp437('○'),
+            glyph: rltk::to_cp437('#'),
             fg: yellow(),
             bg: black(),
             render_order: 2,
         })
         .with(Name {
-            name: "Pancake".to_string(),
+            name: "Waffle".to_string(),
         })
         .with(Item {})
         .with(ProvidesFood {})
