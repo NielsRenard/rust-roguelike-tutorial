@@ -480,6 +480,7 @@ fn main() {
     gs.ecs.register::<ParticleLifetime>();
     gs.ecs.register::<HungerClock>();
     gs.ecs.register::<ProvidesFood>();
+    gs.ecs.register::<MagicMapper>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     let map: Map = Map::new_map_rooms_and_corridors(1);
