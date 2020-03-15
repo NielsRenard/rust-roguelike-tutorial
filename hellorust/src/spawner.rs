@@ -4,9 +4,9 @@ use super::color::*;
 use super::map::MAP_WIDTH;
 use super::{
     AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, DefenseBonus, Destructable,
-    EquipmentSlot, Equippable, HungerClock, HungerState::*, InflictsDamage, Item, MeleePowerBonus,
-    Monster, Name, Player, Position, ProvidesFood, ProvidesHealing, RandomNumberGenerator,
-    RandomTable, Ranged, Rect, Renderable, SerializeMe, Viewshed,
+    EquipmentSlot, Equippable, HungerClock, HungerState::*, InflictsDamage, Item, MagicMapper,
+    MeleePowerBonus, Monster, Name, Player, Position, ProvidesFood, ProvidesHealing,
+    RandomNumberGenerator, RandomTable, Ranged, Rect, Renderable, SerializeMe, Viewshed,
 };
 use specs::prelude::*;
 use specs::saveload::{MarkedBuilder, SimpleMarker};
@@ -65,6 +65,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Longsword", map_depth - 1)
         .add("Tower Shield", map_depth - 1)
         .add("Waffle", 10)
+        .add("Magic Mapping Scroll", 400)
 }
 
 pub fn orc(ecs: &mut World, x: i32, y: i32) {
@@ -149,6 +150,7 @@ pub fn spawn_room(ecs: &mut World, room: &Rect, map_depth: i32) {
             "Longsword" => longsword(ecs, x, y),
             "Tower Shield" => tower_shield(ecs, x, y),
             "Waffle" => waffle(ecs, x, y),
+            "Magic Mapping Scroll" => magic_mapping_scroll(ecs, x, y),
             _ => {}
         }
     }
@@ -343,6 +345,24 @@ fn tower_shield(ecs: &mut World, x: i32, y: i32) {
             slot: EquipmentSlot::Shield,
         })
         .with(DefenseBonus { defense: 2 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn magic_mapping_scroll(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position { x, y })
+        .with(Renderable {
+            glyph: rltk::to_cp437('('),
+            fg: rltk::RGB::named(rltk::CYAN3),
+            bg: black(),
+            render_order: 2,
+        })
+        .with(Name {
+            name: "Scroll of Magic Mapping".to_string(),
+        })
+        .with(Item {})
+        .with(MagicMapper {})
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }

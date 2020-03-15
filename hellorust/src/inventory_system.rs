@@ -1,9 +1,9 @@
 extern crate specs;
 use super::{
     gamelog::GameLog, AreaOfEffect, CombatStats, Confusion, Consumable, Destructable, Equippable,
-    Equipped, HungerClock, HungerState, InBackpack, InflictsDamage, Map, Name, ParticleBuilder,
-    Position, ProvidesFood, ProvidesHealing, SufferDamage, WantsToDropItem, WantsToPickupItem,
-    WantsToRemoveEquipment, WantsToUseItem,
+    Equipped, HungerClock, HungerState, InBackpack, InflictsDamage, MagicMapper, Map, Name,
+    ParticleBuilder, Position, ProvidesFood, ProvidesHealing, SufferDamage, WantsToDropItem,
+    WantsToPickupItem, WantsToRemoveEquipment, WantsToUseItem,
 };
 use crate::color::*;
 use specs::prelude::*;
@@ -132,7 +132,7 @@ impl<'a> System<'a> for ItemUseSystem {
     type SystemData = (
         ReadExpect<'a, Entity>,
         WriteExpect<'a, GameLog>,
-        ReadExpect<'a, Map>,
+        WriteExpect<'a, Map>,
         Entities<'a>,
         WriteStorage<'a, WantsToUseItem>,
         ReadStorage<'a, Name>,
@@ -151,13 +151,14 @@ impl<'a> System<'a> for ItemUseSystem {
         ReadStorage<'a, Position>,
         ReadStorage<'a, ProvidesFood>,
         WriteStorage<'a, HungerClock>,
+        ReadStorage<'a, MagicMapper>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
         let (
             player_entity,
             mut gamelog,
-            map,
+            mut map,
             entities,
             mut wants_use,
             names,
@@ -176,6 +177,7 @@ impl<'a> System<'a> for ItemUseSystem {
             positions,
             provides_food,
             mut hunger_clocks,
+            magic_mapper,
         ) = data;
 
         for (entity, use_item) in (&entities, &wants_use).join() {
@@ -293,6 +295,19 @@ impl<'a> System<'a> for ItemUseSystem {
                             names.get(use_item.item).unwrap().name
                         ));
                     }
+                }
+            }
+
+            // If its a Magic Mapper
+            let is_magic_mapper = magic_mapper.get(use_item.item);
+            match is_magic_mapper {
+                None => {}
+                Some(_) => {
+                    used_item = true;
+                    for revealed_tile in map.revealed_tiles.iter_mut() {
+                        *revealed_tile = true;
+                    }
+                    gamelog.entries.push("All is revealed to you!".to_string());
                 }
             }
 
