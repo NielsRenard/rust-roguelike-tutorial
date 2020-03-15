@@ -2,8 +2,8 @@ extern crate specs;
 use super::{
     gamelog::GameLog, AreaOfEffect, CombatStats, Confusion, Consumable, Destructable, Equippable,
     Equipped, HungerClock, HungerState, InBackpack, InflictsDamage, MagicMapper, Map, Name,
-    ParticleBuilder, Position, ProvidesFood, ProvidesHealing, SufferDamage, WantsToDropItem,
-    WantsToPickupItem, WantsToRemoveEquipment, WantsToUseItem,
+    ParticleBuilder, Position, ProvidesFood, ProvidesHealing, RunState, SufferDamage,
+    WantsToDropItem, WantsToPickupItem, WantsToRemoveEquipment, WantsToUseItem,
 };
 use crate::color::*;
 use specs::prelude::*;
@@ -152,13 +152,14 @@ impl<'a> System<'a> for ItemUseSystem {
         ReadStorage<'a, ProvidesFood>,
         WriteStorage<'a, HungerClock>,
         ReadStorage<'a, MagicMapper>,
+        WriteExpect<'a, RunState>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
         let (
             player_entity,
             mut gamelog,
-            mut map,
+            map,
             entities,
             mut wants_use,
             names,
@@ -178,6 +179,7 @@ impl<'a> System<'a> for ItemUseSystem {
             provides_food,
             mut hunger_clocks,
             magic_mapper,
+            mut runstate,
         ) = data;
 
         for (entity, use_item) in (&entities, &wants_use).join() {
@@ -304,10 +306,8 @@ impl<'a> System<'a> for ItemUseSystem {
                 None => {}
                 Some(_) => {
                     used_item = true;
-                    for revealed_tile in map.revealed_tiles.iter_mut() {
-                        *revealed_tile = true;
-                    }
                     gamelog.entries.push("All is revealed to you!".to_string());
+                    *runstate = RunState::MagicMapReveal { row: 0 };
                 }
             }
 

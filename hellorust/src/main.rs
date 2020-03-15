@@ -56,6 +56,9 @@ pub enum RunState {
     },
     SaveGame,
     NextLevel,
+    MagicMapReveal {
+        row: i32,
+    },
     ShowRemoveItem,
     GameOver,
 }
@@ -113,7 +116,12 @@ impl GameState for State {
             RunState::PlayerTurn => {
                 self.run_systems();
                 self.ecs.maintain();
-                new_runstate = RunState::MonsterTurn;
+                match *self.ecs.fetch::<RunState>() {
+                    RunState::MagicMapReveal { .. } => {
+                        new_runstate = RunState::MagicMapReveal { row: 0 }
+                    }
+                    _ => new_runstate = RunState::MonsterTurn,
+                }
             }
             RunState::MonsterTurn => {
                 self.run_systems();
@@ -243,6 +251,18 @@ impl GameState for State {
                             .expect("Unable to insert intent");
                         new_runstate = RunState::PlayerTurn;
                     }
+                }
+            }
+            RunState::MagicMapReveal { row } => {
+                let mut map = self.ecs.fetch_mut::<Map>();
+                for x in 0..MAP_WIDTH {
+                    let idx = map.xy_idx(x as i32, row);
+                    map.revealed_tiles[idx] = true;
+                }
+                if row as usize == MAP_HEIGHT - 1 {
+                    new_runstate = RunState::MonsterTurn;
+                } else {
+                    new_runstate = RunState::MagicMapReveal { row: row + 1 };
                 }
             }
             RunState::GameOver => {
