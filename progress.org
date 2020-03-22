@@ -86,7 +86,10 @@
 ** TODO opening/closing inventory should be same button
 ** DONE maphack mode for debugging
 ** DONE items should be destructable
-* Bugs [4/6]
+* Bugs [4/7]
+** TODO [#A] When in range of multiple monsters, only one at a time engages in battle.
+** TODO [#B] Monsters +don't+ move strangely in maphack mode
+** TODO [#B] GameLog doesn't flush on "new game" after dying
 ** DONE <2020-03-01 Sun> targeting self with items triggers usage twice in GameLog
    - damages once, prints twice
 ** DONE <2020-03-01 Sun> regression: AoE damage as secondary target doesn't hurt player
@@ -94,8 +97,6 @@
    - when targeting self, player doesn't take damage, aoe kills monsters
    - ✓ when targeting floor, both player and monsters take aoe damage
    - when targeting monster, player doesn't take damage, monsters take damage
-** TODO [#B] Monsters don't move in maphack mode
-** TODO [#B] GameLog doesn't flush on "new game" after dying
 ** DONE GameLog shows Player taking AOE damage when secondary target, but HP doesn't go down
    - when targeting self, player doesn't take damage, aoe kills monsters
    - when targeting floor, both player and monsters take aoe damage
