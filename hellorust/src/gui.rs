@@ -470,10 +470,13 @@ pub fn game_over(ctx: &mut Rltk) -> GameOverResult {
         43,
         magenta(),
         black(),
-        "Press any key to return to the Main Menu.",
+        "Press Enter key to return to the Main Menu.",
     );
     match ctx.key {
         None => GameOverResult::NoSelection,
-        Some(_) => GameOverResult::QuitToMenu,
+        Some(key) => match key {
+            VirtualKeyCode::Return => GameOverResult::QuitToMenu,
+            _ => GameOverResult::NoSelection,
+        },
     }
 }
