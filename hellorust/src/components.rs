@@ -212,6 +212,12 @@ pub struct MagicMapper {}
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct Hidden {}
 
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct EntryTrigger {}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct EntityMoved {}
+
 // "Serialization helper code. We need to implement ConvertSaveload for each type that contains an
 // Entity."
 

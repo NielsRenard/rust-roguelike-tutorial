@@ -38,6 +38,8 @@ mod particle_system;
 use particle_system::{ParticleBuilder, ParticleSpawnSystem};
 mod hunger_system;
 use hunger_system::HungerSystem;
+mod trigger_system;
+use trigger_system::TriggerSystem;
 mod rex_assets;
 
 #[derive(PartialEq, Copy, Clone)]
@@ -299,6 +301,8 @@ impl State {
         vis.run_now(&self.ecs);
         let mut mob = MonsterAI {};
         mob.run_now(&self.ecs);
+        let mut trigger_system = TriggerSystem {};
+        trigger_system.run_now(&self.ecs);
         let mut mapindex = MapIndexingSystem {};
         mapindex.run_now(&self.ecs);
         let mut melee = MeleeCombatSystem {};
@@ -506,6 +510,8 @@ fn main() {
     gs.ecs.register::<ProvidesFood>();
     gs.ecs.register::<MagicMapper>();
     gs.ecs.register::<Hidden>();
+    gs.ecs.register::<EntryTrigger>();
+    gs.ecs.register::<EntityMoved>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 

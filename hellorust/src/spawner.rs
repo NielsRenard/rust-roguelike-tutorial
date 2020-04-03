@@ -4,9 +4,10 @@ use super::color::*;
 use super::map::MAP_WIDTH;
 use super::{
     AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, DefenseBonus, Destructable,
-    EquipmentSlot, Equippable, Hidden, HungerClock, HungerState::*, InflictsDamage, Item,
-    MagicMapper, MeleePowerBonus, Monster, Name, Player, Position, ProvidesFood, ProvidesHealing,
-    RandomNumberGenerator, RandomTable, Ranged, Rect, Renderable, SerializeMe, Viewshed,
+    EntryTrigger, EquipmentSlot, Equippable, Hidden, HungerClock, HungerState::*, InflictsDamage,
+    Item, MagicMapper, MeleePowerBonus, Monster, Name, Player, Position, ProvidesFood,
+    ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged, Rect, Renderable, SerializeMe,
+    Viewshed,
 };
 use specs::prelude::*;
 use specs::saveload::{MarkedBuilder, SimpleMarker};
@@ -382,6 +383,8 @@ fn bear_trap(ecs: &mut World, x: i32, y: i32) {
             name: "Bear Trap".to_string(),
         })
         .with(Hidden {})
+        .with(EntryTrigger {})
+        .with(InflictsDamage { damage: 6 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
