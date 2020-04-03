@@ -303,34 +303,35 @@ pub fn ranged_target(
 
 pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
     let runstate = gs.ecs.fetch::<RunState>();
-    ctx.print_color_centered(15, yellow(), black(), "Hello Rust World");
     let assets = gs.ecs.fetch::<RexAssets>();
     ctx.render_xp_sprite(&assets.menu, 0, 0);
-
+    ctx.draw_box_double(24, 16, 31, 12, grey(), black());
+    ctx.print_color_centered(17, yellow(), black(), "Hello Rust World");
+    ctx.print_color_centered(19, grey(), black(), "Use arrows or WASD to move");
     if let RunState::MainMenu {
         menu_selection: selection,
     } = *runstate
     {
         if selection == MainMenuSelection::NewGame {
-            ctx.print_color_centered(20, magenta(), black(), "New Game");
+            ctx.print_color_centered(22, magenta(), black(), "New Game");
         } else {
-            ctx.print_color_centered(20, white(), black(), "New Game");
+            ctx.print_color_centered(22, white(), black(), "New Game");
         }
 
         if selection == MainMenuSelection::LoadGame {
-            ctx.print_color_centered(22, magenta(), black(), "Continue Game");
+            ctx.print_color_centered(24, magenta(), black(), "Continue Game");
         } else {
             if save_exists() {
-                ctx.print_color_centered(22, white(), black(), "Continue Game");
+                ctx.print_color_centered(24, white(), black(), "Continue Game");
             } else {
-                ctx.print_color_centered(22, grey(), black(), "Continue Game");
+                ctx.print_color_centered(24, grey(), black(), "Continue Game");
             }
         }
 
         if selection == MainMenuSelection::Quit {
-            ctx.print_color_centered(24, magenta(), black(), "Quit");
+            ctx.print_color_centered(26, magenta(), black(), "Quit");
         } else {
-            ctx.print_color_centered(24, white(), black(), "Quit");
+            ctx.print_color_centered(26, white(), black(), "Quit");
         }
 
         match ctx.key {
