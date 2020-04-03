@@ -4,7 +4,7 @@ use rltk::{Console, Rltk, VirtualKeyCode};
 extern crate specs;
 use super::rex_assets::RexAssets;
 use super::{
-    CombatStats, Equipped, InBackpack, Map, Name, Player, Point, Position, RunState, State,
+    CombatStats, Equipped, Hidden, InBackpack, Map, Name, Player, Point, Position, RunState, State,
     Viewshed,
 };
 use crate::color::*;
@@ -77,6 +77,7 @@ fn draw_tooltips(ecs: &World, ctx: &mut Rltk) {
     let map = ecs.fetch::<Map>();
     let names = ecs.read_storage::<Name>();
     let positions = ecs.read_storage::<Position>();
+    let hidden = ecs.read_storage::<Hidden>();
 
     let mouse_pos = ctx.mouse_pos();
     if mouse_pos.0 >= map.width || mouse_pos.1 >= map.height {
@@ -84,7 +85,7 @@ fn draw_tooltips(ecs: &World, ctx: &mut Rltk) {
     }
 
     let mut tooltip: Vec<String> = Vec::new();
-    for (name, position) in (&names, &positions).join() {
+    for (name, position, _hidden) in (&names, &positions, !&hidden).join() {
         if position.x == mouse_pos.0 && position.y == mouse_pos.1 {
             tooltip.push(name.name.to_string());
         }

@@ -4,8 +4,8 @@ use super::color::*;
 use super::map::MAP_WIDTH;
 use super::{
     AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, DefenseBonus, Destructable,
-    EquipmentSlot, Equippable, HungerClock, HungerState::*, InflictsDamage, Item, MagicMapper,
-    MeleePowerBonus, Monster, Name, Player, Position, ProvidesFood, ProvidesHealing,
+    EquipmentSlot, Equippable, Hidden, HungerClock, HungerState::*, InflictsDamage, Item,
+    MagicMapper, MeleePowerBonus, Monster, Name, Player, Position, ProvidesFood, ProvidesHealing,
     RandomNumberGenerator, RandomTable, Ranged, Rect, Renderable, SerializeMe, Viewshed,
 };
 use specs::prelude::*;
@@ -66,6 +66,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Tower Shield", map_depth - 1)
         .add("Waffle", 10)
         .add("Magic Mapping Scroll", 2)
+        .add("Bear Trap", 200)
 }
 
 pub fn orc(ecs: &mut World, x: i32, y: i32) {
@@ -151,6 +152,7 @@ pub fn spawn_room(ecs: &mut World, room: &Rect, map_depth: i32) {
             "Tower Shield" => tower_shield(ecs, x, y),
             "Waffle" => waffle(ecs, x, y),
             "Magic Mapping Scroll" => magic_mapping_scroll(ecs, x, y),
+            "Bear Trap" => bear_trap(ecs, x, y),
             _ => {}
         }
     }
@@ -363,6 +365,23 @@ fn magic_mapping_scroll(ecs: &mut World, x: i32, y: i32) {
         })
         .with(Item {})
         .with(MagicMapper {})
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn bear_trap(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position { x, y })
+        .with(Renderable {
+            glyph: rltk::to_cp437('^'),
+            fg: red(),
+            bg: black(),
+            render_order: 2,
+        })
+        .with(Name {
+            name: "Bear Trap".to_string(),
+        })
+        .with(Hidden {})
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }

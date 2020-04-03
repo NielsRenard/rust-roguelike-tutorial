@@ -209,6 +209,9 @@ pub struct ProvidesFood {}
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct MagicMapper {}
 
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Hidden {}
+
 // "Serialization helper code. We need to implement ConvertSaveload for each type that contains an
 // Entity."
 
