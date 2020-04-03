@@ -19,7 +19,7 @@
 * [x] 2.3. [Particle Effects](https://bfnightly.bracketproductions.com/rustbook/chapter_18.html)
 * [x] 2.4. [Hunger Clock](https://bfnightly.bracketproductions.com/rustbook/chapter_19.html)
 * [x] 2.5. [Magic Mapping](https://bfnightly.bracketproductions.com/rustbook/chapter_20.html)
-* [ ] 2.6. [REX Paint Menu](https://bfnightly.bracketproductions.com/rustbook/chapter_21.html)
+* [x] 2.6. [REX Paint Menu](https://bfnightly.bracketproductions.com/rustbook/chapter_21.html)
 * [ ] 2.7. [Simple Traps](https://bfnightly.bracketproductions.com/rustbook/chapter_22.html)
 ## Section 3 - Generating Maps
 * [ ] 3.1. [Refactor Map Building](https://bfnightly.bracketproductions.com/rustbook/chapter_23.html)

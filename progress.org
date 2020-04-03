@@ -23,7 +23,7 @@
 ** DONE 2.3. Particle Effects
 ** DONE 2.4. Hunger Clock
 ** DONE 2.5. Magic Mapping
-** TODO 2.6. REX Paint Menu
+** DONE 2.6. REX Paint Menu
 ** TODO 2.7. Simple Traps
 * 3. Section 3 - Generating Maps
 ** 3.1. Refactor Map Building
