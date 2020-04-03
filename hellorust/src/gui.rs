@@ -2,6 +2,7 @@ extern crate rltk;
 use crate::components::{HungerClock, HungerState::*};
 use rltk::{Console, Rltk, VirtualKeyCode};
 extern crate specs;
+use super::rex_assets::RexAssets;
 use super::{
     CombatStats, Equipped, InBackpack, Map, Name, Player, Point, Position, RunState, State,
     Viewshed,
@@ -303,6 +304,8 @@ pub fn ranged_target(
 pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
     let runstate = gs.ecs.fetch::<RunState>();
     ctx.print_color_centered(15, yellow(), black(), "Hello Rust World");
+    let assets = gs.ecs.fetch::<RexAssets>();
+    ctx.render_xp_sprite(&assets.menu, 0, 0);
 
     if let RunState::MainMenu {
         menu_selection: selection,

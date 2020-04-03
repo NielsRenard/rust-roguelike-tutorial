@@ -38,6 +38,7 @@ mod particle_system;
 use particle_system::{ParticleBuilder, ParticleSpawnSystem};
 mod hunger_system;
 use hunger_system::HungerSystem;
+mod rex_assets;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -502,6 +503,7 @@ fn main() {
     gs.ecs.register::<ProvidesFood>();
     gs.ecs.register::<MagicMapper>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
+    gs.ecs.insert(rex_assets::RexAssets::new());
 
     let map: Map = Map::new_map_rooms_and_corridors(1);
 
