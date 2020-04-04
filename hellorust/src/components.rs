@@ -218,6 +218,9 @@ pub struct EntryTrigger {}
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct EntityMoved {}
 
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct SingleActivation {}
+
 // "Serialization helper code. We need to implement ConvertSaveload for each type that contains an
 // Entity."
 

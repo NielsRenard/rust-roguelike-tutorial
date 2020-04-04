@@ -512,6 +512,7 @@ fn main() {
     gs.ecs.register::<Hidden>();
     gs.ecs.register::<EntryTrigger>();
     gs.ecs.register::<EntityMoved>();
+    gs.ecs.register::<SingleActivation>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 

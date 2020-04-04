@@ -1,7 +1,7 @@
 extern crate specs;
 use super::{
     EntityMoved, EntryTrigger, Hidden, InflictsDamage, Map, Name, ParticleBuilder, Position,
-    SufferDamage,
+    SingleActivation, SufferDamage,
 };
 use crate::color::*;
 use crate::gamelog::GameLog;
@@ -22,6 +22,7 @@ impl<'a> System<'a> for TriggerSystem {
         ReadStorage<'a, Name>,
         Entities<'a>,
         WriteExpect<'a, GameLog>,
+        ReadStorage<'a, SingleActivation>,
     );
     // Iterate the entities that moved and their final position
     fn run(&mut self, data: Self::SystemData) {
@@ -37,8 +38,11 @@ impl<'a> System<'a> for TriggerSystem {
             names,
             entities,
             mut log,
+            single_activation,
         ) = data;
 
+        let mut remove_entities: Vec<Entity> = Vec::new();
+        // Iterate the entities that moved and their final position
         for (entity, mut _entity_moved, position) in
             (&entities, &mut entity_moved, &position).join()
         {
@@ -68,10 +72,19 @@ impl<'a> System<'a> for TriggerSystem {
                                 );
                                 SufferDamage::new_damage(&mut inflict_damage, entity, damage.damage)
                             }
+                            let single = single_activation.get(*entity_id);
+                            if let Some(_single) = single {
+                                remove_entities.push(*entity_id);
+                            }
                         }
                     }
                 }
             }
+            for trap in remove_entities.iter() {
+                entities.delete(*trap).expect("Unable to delete trap");
+            }
         }
+        // this clear() is on the EntityMoved "storage" from systemdata
+        entity_moved.clear();
     }
 }
