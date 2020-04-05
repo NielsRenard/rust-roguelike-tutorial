@@ -17,14 +17,14 @@
 ** DONE 1.11. Delving Deeper
 ** DONE 1.12. Difficulty
 ** DONE 1.13. Equipment
-* 2. Section 2 - Stretch Goals
+* DONE 2. Section 2 - Stretch Goals
 ** DONE 2.1. Nice Walls with Bitsets
 ** DONE 2.2. Bloodstains
 ** DONE 2.3. Particle Effects
 ** DONE 2.4. Hunger Clock
 ** DONE 2.5. Magic Mapping
 ** DONE 2.6. REX Paint Menu
-** TODO 2.7. Simple Traps
+** DONE 2.7. Simple Traps
 * 3. Section 3 - Generating Maps
 ** 3.1. Refactor Map Building
 ** TODO 3.2. Map Building Test Harness
