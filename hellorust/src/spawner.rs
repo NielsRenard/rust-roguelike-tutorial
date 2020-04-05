@@ -66,8 +66,8 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Longsword", map_depth - 1)
         .add("Tower Shield", map_depth - 1)
         .add("Waffle", 10)
-        .add("Magic Mapping Scroll", 2)
-        .add("Hidden Spike", 200)
+        .add("Magic Mapping Scroll", 3)
+        .add("Hidden Spike", 2)
 }
 
 pub fn orc(ecs: &mut World, x: i32, y: i32) {

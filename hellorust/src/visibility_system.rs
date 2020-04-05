@@ -1,5 +1,6 @@
 extern crate specs;
-use super::{Map, Player, Position, Viewshed};
+use super::{Hidden, Map, Name, Player, Position, Viewshed};
+use crate::gamelog::GameLog;
 use specs::prelude::*;
 extern crate rltk;
 use rltk::{field_of_view, Point};
@@ -14,10 +15,15 @@ impl<'a> System<'a> for VisibilitySystem {
         WriteStorage<'a, Viewshed>,
         WriteStorage<'a, Position>,
         ReadStorage<'a, Player>,
+        WriteStorage<'a, Hidden>,
+        WriteExpect<'a, rltk::RandomNumberGenerator>,
+        WriteExpect<'a, GameLog>,
+        ReadStorage<'a, Name>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut map, entities, mut viewshed, pos, player) = data;
+        let (mut map, entities, mut viewshed, pos, player, mut hidden, mut rng, mut log, name) =
+            data;
 
         // set all tiles visible and revealed and return early
         if env::var("MAP_HACK").is_ok() {
@@ -46,6 +52,19 @@ impl<'a> System<'a> for VisibilitySystem {
                             let idx = map.xy_idx(tile.x, tile.y);
                             map.revealed_tiles[idx] = true;
                             map.visible_tiles[idx] = true;
+                            for entity in map.tile_content[idx].iter() {
+                                let maybe_hidden = hidden.get(*entity);
+                                if let Some(_maybe_hidden) = maybe_hidden {
+                                    if rng.roll_dice(1, 24) == 1 {
+                                        let maybe_name = name.get(*entity);
+                                        if let Some(name) = maybe_name {
+                                            log.entries
+                                                .push(format!("You spotted a {}.", &name.name));
+                                        }
+                                        hidden.remove(*entity);
+                                    }
+                                }
+                            }
                         }
                     }
                     None => (),
