@@ -40,6 +40,7 @@ mod hunger_system;
 use hunger_system::HungerSystem;
 mod trigger_system;
 use trigger_system::TriggerSystem;
+pub mod map_builders;
 mod rex_assets;
 
 #[derive(PartialEq, Copy, Clone)]
@@ -383,7 +384,7 @@ impl State {
         {
             let mut worldmap_resource = self.ecs.write_resource::<Map>();
             current_depth = worldmap_resource.depth;
-            *worldmap_resource = Map::new_map_rooms_and_corridors(current_depth + 1);
+            *worldmap_resource = map_builders::build_random_map(current_depth + 1);
             // store a clone of the map in the outer variable
             worldmap = worldmap_resource.clone();
             // and exit scope (to avoid any borrowing/lifetime issues).
@@ -440,7 +441,7 @@ impl State {
         let worldmap;
         {
             let mut worldmap_resource = self.ecs.write_resource::<Map>();
-            *worldmap_resource = Map::new_map_rooms_and_corridors(1);
+            *worldmap_resource = map_builders::build_random_map(1);
             worldmap = worldmap_resource.clone();
         }
 
@@ -516,7 +517,7 @@ fn main() {
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
-    let map: Map = Map::new_map_rooms_and_corridors(1);
+    let map: Map = map_builders::build_random_map(1);
 
     // make our 'guy'
     let (player_x, player_y) = map.rooms[0].center();
