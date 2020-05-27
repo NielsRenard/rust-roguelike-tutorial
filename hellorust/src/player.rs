@@ -1,6 +1,6 @@
 use super::{
-    gamelog::GameLog, CombatStats, Item, Map, Monster, Player, Point, Position, RunState, State,
-    TileType, Viewshed, WantsToMelee, WantsToPickupItem,
+    gamelog::GameLog, CombatStats, EntityMoved, HungerClock, HungerState, Item, Map, Monster,
+    Player, Point, Position, RunState, State, TileType, Viewshed, WantsToMelee, WantsToPickupItem,
 };
 use rltk::{Rltk, VirtualKeyCode};
 use specs::prelude::*;
@@ -14,6 +14,7 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
     let combat_stats = ecs.read_storage::<CombatStats>();
     let _map = ecs.fetch::<Map>();
     let mut wants_to_melee = ecs.write_storage::<WantsToMelee>();
+    let mut entity_moved = ecs.write_storage::<EntityMoved>();
 
     let map = ecs.fetch::<Map>();
 
@@ -45,6 +46,10 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
         if !map.blocked_tiles[destination_idx] {
             pos.x = min(79, max(0, pos.x + delta_x));
             pos.y = min(49, max(0, pos.y + delta_y));
+            entity_moved
+                .insert(entity, EntityMoved {})
+                .expect("Unable to insert marker");
+
             viewshed.dirty = true;
 
             //update player position resource
@@ -71,9 +76,7 @@ fn get_item(ecs: &mut World) {
     }
 
     match target_item {
-        None => gamelog
-            .entries
-            .insert(0, String::from("Nothing to pick up")),
+        None => gamelog.entries.push(String::from("Nothing to pick up")),
         Some(item) => {
             let mut pickup = ecs.write_storage::<WantsToPickupItem>();
             pickup
@@ -143,6 +146,17 @@ fn skip_turn(ecs: &mut World) -> RunState {
     let mut can_heal = true;
     let viewshed = viewshed_components.get(*player_entity).unwrap();
 
+    // Don't let resting heal when hungry
+    let hunger_clocks = ecs.read_storage::<HungerClock>();
+    let hunger_clock = hunger_clocks.get(*player_entity);
+    if let Some(hunger_clock) = hunger_clock {
+        match hunger_clock.state {
+            HungerState::Hungry => can_heal = false,
+            HungerState::Starving => can_heal = false,
+            _ => {}
+        }
+    }
+
     for tile in viewshed.visible_tiles.iter() {
         let idx = worldmap_resource.xy_idx(tile.x, tile.y);
         for entity_id in worldmap_resource.tile_content[idx].iter() {
@@ -177,7 +191,7 @@ pub fn try_next_level(ecs: &mut World) -> bool {
         let mut gamelog = ecs.fetch_mut::<GameLog>();
         gamelog
             .entries
-            .insert(0, "There is no way down from here.".to_string());
+            .push("There is no way down from here.".to_string());
         false
     }
 }

@@ -46,7 +46,20 @@ pub struct WantsToMelee {
 
 #[derive(Component, Debug, ConvertSaveload, Clone)]
 pub struct SufferDamage {
-    pub amount: i32,
+    pub amount: Vec<i32>,
+}
+
+impl SufferDamage {
+    pub fn new_damage(store: &mut WriteStorage<SufferDamage>, victim: Entity, amount: i32) {
+        if let Some(suffering) = store.get_mut(victim) {
+            suffering.amount.push(amount);
+        } else {
+            let dmg = SufferDamage {
+                amount: vec![amount],
+            };
+            store.insert(victim, dmg).expect("Unable to insert damage");
+        }
+    }
 }
 
 #[derive(Component, Debug, ConvertSaveload, Clone)]
@@ -144,6 +157,7 @@ pub struct AreaOfEffect {
 pub struct Confusion {
     pub turns: i32,
 }
+
 #[derive(PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum EquipmentSlot {
     Melee,
@@ -170,6 +184,42 @@ pub struct MeleePowerBonus {
 pub struct DefenseBonus {
     pub defense: i32,
 }
+
+#[derive(Component, Serialize, Deserialize, Clone)]
+pub struct ParticleLifetime {
+    pub lifetime_ms: f32,
+}
+
+#[derive(Serialize, Deserialize, Copy, Clone, PartialEq)]
+pub enum HungerState {
+    WellFed,
+    Normal,
+    Hungry,
+    Starving,
+}
+#[derive(Component, Serialize, Deserialize, Clone)]
+pub struct HungerClock {
+    pub state: HungerState,
+    pub duration: i32,
+}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct ProvidesFood {}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct MagicMapper {}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Hidden {}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct EntryTrigger {}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct EntityMoved {}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct SingleActivation {}
 
 // "Serialization helper code. We need to implement ConvertSaveload for each type that contains an
 // Entity."

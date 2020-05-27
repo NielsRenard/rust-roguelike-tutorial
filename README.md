@@ -16,11 +16,11 @@
 ## Section 2 - Stretch Goals
 * [x] 2.1. [Nice Walls with Bitsets](https://bfnightly.bracketproductions.com/rustbook/chapter_16.html)
 * [x] 2.2. [Bloodstains](https://bfnightly.bracketproductions.com/rustbook/chapter_17.html)
-* [ ] 2.3. [Particle Effects](https://bfnightly.bracketproductions.com/rustbook/chapter_18.html)
-* [ ] 2.4. [Hunger Clock](https://bfnightly.bracketproductions.com/rustbook/chapter_19.html)
-* [ ] 2.5. [Magic Mapping](https://bfnightly.bracketproductions.com/rustbook/chapter_20.html)
-* [ ] 2.6. [REX Paint Menu](https://bfnightly.bracketproductions.com/rustbook/chapter_21.html)
-* [ ] 2.7. [Simple Traps](https://bfnightly.bracketproductions.com/rustbook/chapter_22.html)
+* [x] 2.3. [Particle Effects](https://bfnightly.bracketproductions.com/rustbook/chapter_18.html)
+* [x] 2.4. [Hunger Clock](https://bfnightly.bracketproductions.com/rustbook/chapter_19.html)
+* [x] 2.5. [Magic Mapping](https://bfnightly.bracketproductions.com/rustbook/chapter_20.html)
+* [x] 2.6. [REX Paint Menu](https://bfnightly.bracketproductions.com/rustbook/chapter_21.html)
+* [x] 2.7. [Simple Traps](https://bfnightly.bracketproductions.com/rustbook/chapter_22.html)
 ## Section 3 - Generating Maps
 * [ ] 3.1. [Refactor Map Building](https://bfnightly.bracketproductions.com/rustbook/chapter_23.html)
 * [ ] 3.2. [Map Building Test Harness](https://bfnightly.bracketproductions.com/rustbook/chapter_24.html)
@@ -70,8 +70,13 @@
 * [ ] 4.25. [Mushrooms](https://bfnightly.bracketproductions.com/rustbook/chapter_68.html)
 * [ ] 4.26. [More Shrooms](https://bfnightly.bracketproductions.com/rustbook/chapter_69.html)
 * [ ] 4.27. [Ranged Combat](https://bfnightly.bracketproductions.com/rustbook/chapter_70.html)
+* [ ] 4.28. [Logging](http://bfnightly.bracketproductions.com/rustbook/chapter_71.html)
+* [ ] 4.29. [Text Layers](http://bfnightly.bracketproductions.com/rustbook/chapter_72.html)
+* [ ] 4.30. [Systems/Dispatch](http://bfnightly.bracketproductions.com/rustbook/chapter_73.html)
+# Links and info
 
 [Link to supported glyphs (for fn to_cp437)](https://docs.rs/rltk/0.5.15/src/rltk/codepage437.rs.html#2-276)
 
-["Use usize and isize when it’s related to memory size – the size of an object, or indexing a vector, for instance. [It will be a 32-bit number on 32-bit platforms, as that’s the limit of memory they can address, and likewise for 64-bit.]((https://bfnightly.bracketproductions.com/rustbook/chapter_61.html)
-Use u32 and i32 when you just want numbers."](https://users.rust-lang.org/t/i32-vs-isize-u32-vs-usize/22657/3)
+[REXPaint manual](https://steveasleep.com/rexpaint_manual.html)
+
+["Use usize and isize when it’s related to memory size – the size of an object, or indexing a vector, for instance\(It will be a 32-bit number on 32-bit platforms, as that’s the limit of memory they can address, and likewise for 64-bit.\) Use u32 and i32 when you just want numbers."](https://users.rust-lang.org/t/i32-vs-isize-u32-vs-usize/22657/3)

@@ -4,9 +4,10 @@ use super::color::*;
 use super::map::MAP_WIDTH;
 use super::{
     AreaOfEffect, BlocksTile, CombatStats, Confusion, Consumable, DefenseBonus, Destructable,
-    EquipmentSlot, Equippable, InflictsDamage, Item, MeleePowerBonus, Monster, Name, Player,
-    Position, ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged, Rect, Renderable,
-    SerializeMe, Viewshed,
+    EntryTrigger, EquipmentSlot, Equippable, Hidden, HungerClock, HungerState::*, InflictsDamage,
+    Item, MagicMapper, MeleePowerBonus, Monster, Name, Player, Position, ProvidesFood,
+    ProvidesHealing, RandomNumberGenerator, RandomTable, Ranged, Rect, Renderable, SerializeMe,
+    SingleActivation, Viewshed,
 };
 use specs::prelude::*;
 use specs::saveload::{MarkedBuilder, SimpleMarker};
@@ -42,6 +43,10 @@ pub fn player(ecs: &mut World, player_x: i32, player_y: i32) -> Entity {
             defense: 2,
             strength: 5,
         })
+        .with(HungerClock {
+            state: WellFed,
+            duration: 20,
+        })
         .marked::<SimpleMarker<SerializeMe>>()
         .build()
 }
@@ -60,6 +65,9 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Shield", 3)
         .add("Longsword", map_depth - 1)
         .add("Tower Shield", map_depth - 1)
+        .add("Waffle", 10)
+        .add("Magic Mapping Scroll", 3)
+        .add("Hidden Spike", 2)
 }
 
 pub fn orc(ecs: &mut World, x: i32, y: i32) {
@@ -143,9 +151,31 @@ pub fn spawn_room(ecs: &mut World, room: &Rect, map_depth: i32) {
             "Shield" => shield(ecs, x, y),
             "Longsword" => longsword(ecs, x, y),
             "Tower Shield" => tower_shield(ecs, x, y),
+            "Waffle" => waffle(ecs, x, y),
+            "Magic Mapping Scroll" => magic_mapping_scroll(ecs, x, y),
+            "Hidden Spike" => hidden_spike(ecs, x, y),
             _ => {}
         }
     }
+}
+
+fn waffle(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position { x, y })
+        .with(Renderable {
+            glyph: rltk::to_cp437('#'),
+            fg: yellow(),
+            bg: black(),
+            render_order: 2,
+        })
+        .with(Name {
+            name: "Waffle".to_string(),
+        })
+        .with(Item {})
+        .with(ProvidesFood {})
+        .with(Consumable {})
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
 }
 
 pub fn health_potion(ecs: &mut World, x: i32, y: i32) {
@@ -317,7 +347,45 @@ fn tower_shield(ecs: &mut World, x: i32, y: i32) {
         .with(Equippable {
             slot: EquipmentSlot::Shield,
         })
-        .with(DefenseBonus { defense: 3 })
+        .with(DefenseBonus { defense: 2 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn magic_mapping_scroll(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position { x, y })
+        .with(Renderable {
+            glyph: rltk::to_cp437('('),
+            fg: rltk::RGB::named(rltk::CYAN3),
+            bg: black(),
+            render_order: 2,
+        })
+        .with(Name {
+            name: "Scroll of Magic Mapping".to_string(),
+        })
+        .with(Item {})
+        .with(MagicMapper {})
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn hidden_spike(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position { x, y })
+        .with(Renderable {
+            glyph: rltk::to_cp437('^'),
+            fg: red(),
+            bg: black(),
+            render_order: 2,
+        })
+        .with(Name {
+            name: "Hidden Spike".to_string(),
+        })
+        .with(Hidden {})
+        .with(EntryTrigger {})
+        .with(InflictsDamage { damage: 6 })
+        .with(SingleActivation {})
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }

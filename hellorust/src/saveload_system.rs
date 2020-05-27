@@ -111,7 +111,15 @@ pub fn save_game(ecs: &mut World) {
             MeleePowerBonus,
             DefenseBonus,
             WantsToRemoveEquipment,
-            Destructable
+            Destructable,
+            ParticleLifetime,
+            HungerClock,
+            ProvidesFood,
+            MagicMapper,
+            Hidden,
+            EntryTrigger,
+            EntityMoved,
+            SingleActivation
         );
     }
 
@@ -178,7 +186,15 @@ pub fn load_game(ecs: &mut World) {
             MeleePowerBonus,
             DefenseBonus,
             WantsToRemoveEquipment,
-            Destructable
+            Destructable,
+            ParticleLifetime,
+            HungerClock,
+            ProvidesFood,
+            MagicMapper,
+            Hidden,
+            EntryTrigger,
+            EntityMoved,
+            SingleActivation
         );
     }
 

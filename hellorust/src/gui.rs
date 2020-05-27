@@ -1,11 +1,13 @@
 extern crate rltk;
+use crate::components::{HungerClock, HungerState::*};
 use rltk::{Console, Rltk, VirtualKeyCode};
 extern crate specs;
+use super::rex_assets::RexAssets;
 use super::{
-    CombatStats, Equipped, InBackpack, Map, Name, Player, Point, Position, RunState, State,
+    CombatStats, Equipped, Hidden, InBackpack, Map, Name, Player, Point, Position, RunState, State,
     Viewshed,
 };
-use crate::color::{black, blue, cyan, grey, magenta, red, white, yellow};
+use crate::color::*;
 use crate::gamelog::GameLog;
 use crate::saveload_system::save_exists;
 use specs::prelude::*;
@@ -40,22 +42,32 @@ pub fn draw_ui(ecs: &World, ctx: &mut Rltk) {
 
     let combat_stats = ecs.read_storage::<CombatStats>();
     let players = ecs.read_storage::<Player>();
+    let hunger_clocks = ecs.read_storage::<HungerClock>();
     let log = ecs.fetch::<GameLog>();
 
     //GameLog message printing
     let mut y = 44;
-    for message in log.entries.iter() {
+    for message in log.entries.iter().rev() {
         if y < 49 {
             ctx.print(2, y, &message.to_string());
         }
         y += 1;
     }
 
-    for (_player, stats) in (&players, &combat_stats).join() {
+    for (_player, stats, hunger) in (&players, &combat_stats, &hunger_clocks).join() {
         let health = format!(" HP: {}/{} ", stats.hp, stats.max_hp);
         ctx.print_color(12, 43, white(), black(), &health);
-        ctx.draw_bar_horizontal(28, 43, 51, stats.hp, stats.max_hp, red(), black())
+        ctx.draw_bar_horizontal(28, 43, 51, stats.hp, stats.max_hp, red(), black());
+
+        let (hunger_text, text_color) = match hunger.state {
+            WellFed => ("Well fed", green()),
+            Normal => ("Normal", yellow()),
+            Hungry => ("Hungry", orange()),
+            Starving => ("Starving", red()),
+        };
+        ctx.print_color(71, 42, text_color, black(), hunger_text);
     }
+
     let mouse_pos = ctx.mouse_pos();
     ctx.set_bg(mouse_pos.0, mouse_pos.1, magenta());
     draw_tooltips(ecs, ctx);
@@ -65,6 +77,7 @@ fn draw_tooltips(ecs: &World, ctx: &mut Rltk) {
     let map = ecs.fetch::<Map>();
     let names = ecs.read_storage::<Name>();
     let positions = ecs.read_storage::<Position>();
+    let hidden = ecs.read_storage::<Hidden>();
 
     let mouse_pos = ctx.mouse_pos();
     if mouse_pos.0 >= map.width || mouse_pos.1 >= map.height {
@@ -72,7 +85,7 @@ fn draw_tooltips(ecs: &World, ctx: &mut Rltk) {
     }
 
     let mut tooltip: Vec<String> = Vec::new();
-    for (name, position) in (&names, &positions).join() {
+    for (name, position, _hidden) in (&names, &positions, !&hidden).join() {
         if position.x == mouse_pos.0 && position.y == mouse_pos.1 {
             tooltip.push(name.name.to_string());
         }
@@ -291,32 +304,35 @@ pub fn ranged_target(
 
 pub fn main_menu(gs: &mut State, ctx: &mut Rltk) -> MainMenuResult {
     let runstate = gs.ecs.fetch::<RunState>();
-    ctx.print_color_centered(15, yellow(), black(), "Hello Rust World");
-
+    let assets = gs.ecs.fetch::<RexAssets>();
+    ctx.render_xp_sprite(&assets.menu, 0, 0);
+    ctx.draw_box_double(24, 16, 31, 12, grey(), black());
+    ctx.print_color_centered(17, yellow(), black(), "Hello Rust World");
+    ctx.print_color_centered(19, grey(), black(), "Use arrows or WASD to move");
     if let RunState::MainMenu {
         menu_selection: selection,
     } = *runstate
     {
         if selection == MainMenuSelection::NewGame {
-            ctx.print_color_centered(20, magenta(), black(), "New Game");
+            ctx.print_color_centered(22, magenta(), black(), "New Game");
         } else {
-            ctx.print_color_centered(20, white(), black(), "New Game");
+            ctx.print_color_centered(22, white(), black(), "New Game");
         }
 
         if selection == MainMenuSelection::LoadGame {
-            ctx.print_color_centered(22, magenta(), black(), "Continue Game");
+            ctx.print_color_centered(24, magenta(), black(), "Continue Game");
         } else {
             if save_exists() {
-                ctx.print_color_centered(22, white(), black(), "Continue Game");
+                ctx.print_color_centered(24, white(), black(), "Continue Game");
             } else {
-                ctx.print_color_centered(22, grey(), black(), "Continue Game");
+                ctx.print_color_centered(24, grey(), black(), "Continue Game");
             }
         }
 
         if selection == MainMenuSelection::Quit {
-            ctx.print_color_centered(24, magenta(), black(), "Quit");
+            ctx.print_color_centered(26, magenta(), black(), "Quit");
         } else {
-            ctx.print_color_centered(24, white(), black(), "Quit");
+            ctx.print_color_centered(26, white(), black(), "Quit");
         }
 
         match ctx.key {
@@ -454,10 +470,13 @@ pub fn game_over(ctx: &mut Rltk) -> GameOverResult {
         43,
         magenta(),
         black(),
-        "Press any key to return to the Main Menu.",
+        "Press Enter key to return to the Main Menu.",
     );
     match ctx.key {
         None => GameOverResult::NoSelection,
-        Some(_) => GameOverResult::QuitToMenu,
+        Some(key) => match key {
+            VirtualKeyCode::Return => GameOverResult::QuitToMenu,
+            _ => GameOverResult::NoSelection,
+        },
     }
 }

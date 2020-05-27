@@ -34,6 +34,14 @@ use damage_system::DamageSystem;
 mod random_table;
 mod saveload_system;
 use random_table::RandomTable;
+mod particle_system;
+use particle_system::{ParticleBuilder, ParticleSpawnSystem};
+mod hunger_system;
+use hunger_system::HungerSystem;
+mod trigger_system;
+use trigger_system::TriggerSystem;
+pub mod map_builders;
+mod rex_assets;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
@@ -52,6 +60,9 @@ pub enum RunState {
     },
     SaveGame,
     NextLevel,
+    MagicMapReveal {
+        row: i32,
+    },
     ShowRemoveItem,
     GameOver,
 }
@@ -68,6 +79,7 @@ impl GameState for State {
             new_runstate = *runstate;
         }
         ctx.cls();
+        particle_system::cull_dead_particles(&mut self.ecs, ctx);
 
         match new_runstate {
             RunState::MainMenu { .. } => {}
@@ -77,14 +89,17 @@ impl GameState for State {
                 {
                     let positions = self.ecs.read_storage::<Position>();
                     let renderables = self.ecs.read_storage::<Renderable>();
+                    let hidden = self.ecs.read_storage::<Hidden>();
                     let map = self.ecs.fetch::<Map>();
 
                     // https://specs.amethyst.rs/docs/tutorials/11_advanced_component.html#sorting-entities-based-on-component-value
                     // sort the components by render order
                     // player and monster visible when standing on potion
-                    let mut data = (&positions, &renderables).join().collect::<Vec<_>>();
+                    let mut data = (&positions, &renderables, !&hidden)
+                        .join()
+                        .collect::<Vec<_>>();
                     data.sort_by(|&a, &b| b.1.render_order.cmp(&a.1.render_order));
-                    for (pos, render) in data.iter() {
+                    for (pos, render, _hidden) in data.iter() {
                         let idx = map.xy_idx(pos.x, pos.y);
                         if map.visible_tiles[idx] {
                             ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
@@ -108,7 +123,12 @@ impl GameState for State {
             RunState::PlayerTurn => {
                 self.run_systems();
                 self.ecs.maintain();
-                new_runstate = RunState::MonsterTurn;
+                match *self.ecs.fetch::<RunState>() {
+                    RunState::MagicMapReveal { .. } => {
+                        new_runstate = RunState::MagicMapReveal { row: 0 }
+                    }
+                    _ => new_runstate = RunState::MonsterTurn,
+                }
             }
             RunState::MonsterTurn => {
                 self.run_systems();
@@ -240,6 +260,18 @@ impl GameState for State {
                     }
                 }
             }
+            RunState::MagicMapReveal { row } => {
+                let mut map = self.ecs.fetch_mut::<Map>();
+                for x in 0..MAP_WIDTH {
+                    let idx = map.xy_idx(x as i32, row);
+                    map.revealed_tiles[idx] = true;
+                }
+                if row as usize == MAP_HEIGHT - 1 {
+                    new_runstate = RunState::MonsterTurn;
+                } else {
+                    new_runstate = RunState::MagicMapReveal { row: row + 1 };
+                }
+            }
             RunState::GameOver => {
                 let result = gui::game_over(ctx);
                 match result {
@@ -270,6 +302,8 @@ impl State {
         vis.run_now(&self.ecs);
         let mut mob = MonsterAI {};
         mob.run_now(&self.ecs);
+        let mut trigger_system = TriggerSystem {};
+        trigger_system.run_now(&self.ecs);
         let mut mapindex = MapIndexingSystem {};
         mapindex.run_now(&self.ecs);
         let mut melee = MeleeCombatSystem {};
@@ -284,6 +318,14 @@ impl State {
         use_items.run_now(&self.ecs);
         let mut remove_equipment = EquipmentRemoveSystem {};
         remove_equipment.run_now(&self.ecs);
+        let mut particle_system = ParticleSpawnSystem {};
+        particle_system.run_now(&self.ecs);
+        let mut hunger_system = HungerSystem {};
+        hunger_system.run_now(&self.ecs);
+        // "We've made the particle system depend upon likely particle
+        // spawners. We'll have to be a little careful to avoid
+        // accidentally making it concurrent with anything that might
+        // add to it."
         self.ecs.maintain();
     }
 
@@ -342,7 +384,7 @@ impl State {
         {
             let mut worldmap_resource = self.ecs.write_resource::<Map>();
             current_depth = worldmap_resource.depth;
-            *worldmap_resource = Map::new_map_rooms_and_corridors(current_depth + 1);
+            *worldmap_resource = map_builders::build_random_map(current_depth + 1);
             // store a clone of the map in the outer variable
             worldmap = worldmap_resource.clone();
             // and exit scope (to avoid any borrowing/lifetime issues).
@@ -373,10 +415,9 @@ impl State {
 
         // Notify the player and give them some health
         let mut gamelog = self.ecs.fetch_mut::<gamelog::GameLog>();
-        gamelog.entries.insert(
-            0,
-            "You descend to the next level, and take a moment to heal.".to_string(),
-        );
+        gamelog
+            .entries
+            .push("You descend to the next level, and take a moment to heal.".to_string());
         let mut player_health_store = self.ecs.write_storage::<CombatStats>();
         let player_health = player_health_store.get_mut(*player_entity);
         if let Some(player_health) = player_health {
@@ -400,7 +441,7 @@ impl State {
         let worldmap;
         {
             let mut worldmap_resource = self.ecs.write_resource::<Map>();
-            *worldmap_resource = Map::new_map_rooms_and_corridors(1);
+            *worldmap_resource = map_builders::build_random_map(1);
             worldmap = worldmap_resource.clone();
         }
 
@@ -465,10 +506,18 @@ fn main() {
     gs.ecs.register::<DefenseBonus>();
     gs.ecs.register::<WantsToRemoveEquipment>();
     gs.ecs.register::<Destructable>();
-
+    gs.ecs.register::<ParticleLifetime>();
+    gs.ecs.register::<HungerClock>();
+    gs.ecs.register::<ProvidesFood>();
+    gs.ecs.register::<MagicMapper>();
+    gs.ecs.register::<Hidden>();
+    gs.ecs.register::<EntryTrigger>();
+    gs.ecs.register::<EntityMoved>();
+    gs.ecs.register::<SingleActivation>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
+    gs.ecs.insert(rex_assets::RexAssets::new());
 
-    let map: Map = Map::new_map_rooms_and_corridors(1);
+    let map: Map = map_builders::build_random_map(1);
 
     // make our 'guy'
     let (player_x, player_y) = map.rooms[0].center();
@@ -484,12 +533,18 @@ fn main() {
     gs.ecs.insert(map);
     gs.ecs.insert(Point::new(player_x, player_y));
     gs.ecs.insert(player_entity);
+    gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(gamelog::GameLog {
         entries: vec!["Good luck...".to_string()],
     });
     // Set the main menu as the initial RunState
+    let main_menu_selection = if saveload_system::save_exists() {
+        gui::MainMenuSelection::LoadGame
+    } else {
+        gui::MainMenuSelection::NewGame
+    };
     gs.ecs.insert(RunState::MainMenu {
-        menu_selection: gui::MainMenuSelection::NewGame,
+        menu_selection: main_menu_selection,
     });
     rltk::main_loop(context, gs);
 }

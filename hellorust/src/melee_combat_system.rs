@@ -1,8 +1,9 @@
 extern crate specs;
 use super::{
-    gamelog::GameLog, CombatStats, DefenseBonus, Equipped, MeleePowerBonus, Name, SufferDamage,
-    WantsToMelee,
+    gamelog::GameLog, CombatStats, DefenseBonus, Equipped, HungerClock, HungerState,
+    MeleePowerBonus, Name, ParticleBuilder, Position, SufferDamage, WantsToMelee,
 };
+use crate::color::*;
 use specs::prelude::*;
 
 pub struct MeleeCombatSystem {}
@@ -18,6 +19,9 @@ impl<'a> System<'a> for MeleeCombatSystem {
         ReadStorage<'a, MeleePowerBonus>,
         ReadStorage<'a, DefenseBonus>,
         ReadStorage<'a, Equipped>,
+        WriteExpect<'a, ParticleBuilder>,
+        ReadStorage<'a, Position>,
+        ReadStorage<'a, HungerClock>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -31,6 +35,9 @@ impl<'a> System<'a> for MeleeCombatSystem {
             melee_power_bonuses,
             defense_bonuses,
             equipped,
+            mut particle_builder,
+            positions,
+            hunger_clock,
         ) = data;
 
         for (entity, wants_melee, name, stats) in
@@ -43,6 +50,12 @@ impl<'a> System<'a> for MeleeCombatSystem {
                 {
                     if entity == equipped_by.owner {
                         offensive_bonus += power_bonus.power;
+                    }
+                }
+                let hc = hunger_clock.get(entity);
+                if let Some(hc) = hc {
+                    if hc.state == HungerState::WellFed {
+                        offensive_bonus += 1;
                     }
                 }
 
@@ -59,27 +72,35 @@ impl<'a> System<'a> for MeleeCombatSystem {
                         }
                     }
 
+                    // spawn 'fighting' particle
+                    let pos = positions.get(wants_melee.target);
+                    if let Some(pos) = pos {
+                        particle_builder.request(
+                            pos.x,
+                            pos.y,
+                            orange(),
+                            black(),
+                            rltk::to_cp437('‼'),
+                            200.0,
+                        );
+                    }
+
                     let damage = i32::max(
                         0,
                         (stats.strength + offensive_bonus)
                             - (target_stats.defense + defensive_bonus),
                     );
                     if damage == 0 {
-                        log.entries.insert(
-                            0,
-                            format!("{} is unable to hurt {}", &name.name, &target_name.name),
-                        );
+                        log.entries.push(format!(
+                            "{} is unable to hurt {}",
+                            &name.name, &target_name.name
+                        ));
                     } else {
-                        log.entries.insert(
-                            0,
-                            format!(
-                                "{} hits {} for {} hp.",
-                                &name.name, &target_name.name, damage
-                            ),
-                        );
-                        inflict_damage
-                            .insert(wants_melee.target, SufferDamage { amount: damage })
-                            .expect("Unable to do damage");
+                        log.entries.push(format!(
+                            "{} hits {} for {} hp.",
+                            &name.name, &target_name.name, damage
+                        ));
+                        SufferDamage::new_damage(&mut inflict_damage, wants_melee.target, damage)
                     }
                 }
             }

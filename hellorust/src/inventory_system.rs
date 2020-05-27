@@ -1,9 +1,11 @@
 extern crate specs;
 use super::{
     gamelog::GameLog, AreaOfEffect, CombatStats, Confusion, Consumable, Destructable, Equippable,
-    Equipped, InBackpack, InflictsDamage, Map, Name, Position, ProvidesHealing, SufferDamage,
+    Equipped, HungerClock, HungerState, InBackpack, InflictsDamage, MagicMapper, Map, Name,
+    ParticleBuilder, Position, ProvidesFood, ProvidesHealing, RunState, SufferDamage,
     WantsToDropItem, WantsToPickupItem, WantsToRemoveEquipment, WantsToUseItem,
 };
+use crate::color::*;
 use specs::prelude::*;
 
 pub struct ItemCollectionSystem {}
@@ -34,10 +36,10 @@ impl<'a> System<'a> for ItemCollectionSystem {
                 .expect("Unable to insert backpack entry");
 
             if pickup.collected_by == *player_entity {
-                gamelog.entries.insert(
-                    0,
-                    format!("You pick up the {}.", names.get(pickup.item).unwrap().name),
-                );
+                gamelog.entries.push(format!(
+                    "You pick up the {}.",
+                    names.get(pickup.item).unwrap().name
+                ));
             }
         }
         wants_pickup.clear();
@@ -112,10 +114,10 @@ impl<'a> System<'a> for ItemDropSystem {
             backpack.remove(to_drop.item);
 
             if entity == *player_entity {
-                gamelog.entries.insert(
-                    0,
-                    format!("You drop the {}.", names.get(to_drop.item).unwrap().name),
-                );
+                gamelog.entries.push(format!(
+                    "You drop the {}.",
+                    names.get(to_drop.item).unwrap().name
+                ));
             }
         }
 
@@ -130,7 +132,7 @@ impl<'a> System<'a> for ItemUseSystem {
     type SystemData = (
         ReadExpect<'a, Entity>,
         WriteExpect<'a, GameLog>,
-        ReadExpect<'a, Map>,
+        WriteExpect<'a, Map>,
         Entities<'a>,
         WriteStorage<'a, WantsToUseItem>,
         ReadStorage<'a, Name>,
@@ -145,6 +147,12 @@ impl<'a> System<'a> for ItemUseSystem {
         WriteStorage<'a, Equipped>,
         WriteStorage<'a, InBackpack>,
         WriteStorage<'a, Destructable>,
+        WriteExpect<'a, ParticleBuilder>,
+        ReadStorage<'a, Position>,
+        ReadStorage<'a, ProvidesFood>,
+        WriteStorage<'a, HungerClock>,
+        ReadStorage<'a, MagicMapper>,
+        WriteExpect<'a, RunState>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -166,6 +174,12 @@ impl<'a> System<'a> for ItemUseSystem {
             mut equipped,
             mut in_backpack,
             mut destructable,
+            mut particle_builder,
+            positions,
+            provides_food,
+            mut hunger_clocks,
+            magic_mapper,
+            mut runstate,
         ) = data;
 
         for (entity, use_item) in (&entities, &wants_use).join() {
@@ -201,6 +215,14 @@ impl<'a> System<'a> for ItemUseSystem {
                                 for mob in map.tile_content[idx].iter() {
                                     targets.push(*mob);
                                 }
+                                particle_builder.request(
+                                    tile_idx.x,
+                                    tile_idx.y,
+                                    orange(),
+                                    black(),
+                                    rltk::to_cp437('░'),
+                                    250.0,
+                                );
                             }
                         }
                     }
@@ -227,7 +249,7 @@ impl<'a> System<'a> for ItemUseSystem {
                             if target == *player_entity {
                                 gamelog
                                     .entries
-                                    .insert(0, format!("You unequip the {}.", name.name));
+                                    .push(format!("You unequip the {}.", name.name));
                             }
                         }
                     }
@@ -251,11 +273,41 @@ impl<'a> System<'a> for ItemUseSystem {
                         .expect("Unable to insert equipped component");
                     in_backpack.remove(use_item.item);
                     if target == *player_entity {
-                        gamelog.entries.insert(
-                            0,
-                            format!("You equip the {}.", names.get(use_item.item).unwrap().name),
-                        );
+                        gamelog.entries.push(format!(
+                            "You equip the {}.",
+                            names.get(use_item.item).unwrap().name
+                        ));
                     }
+                }
+            }
+
+            // Edibles reset hungerclock
+            let item_edible = provides_food.get(use_item.item);
+            match item_edible {
+                None => {}
+                Some(_edible) => {
+                    used_item = true;
+                    let target = targets[0]; // the player
+                    let hunger_clock = hunger_clocks.get_mut(target);
+                    if let Some(hc) = hunger_clock {
+                        hc.state = HungerState::WellFed;
+                        hc.duration = 20;
+                        gamelog.entries.push(format!(
+                            "You eat the {}.",
+                            names.get(use_item.item).unwrap().name
+                        ));
+                    }
+                }
+            }
+
+            // If its a Magic Mapper
+            let is_magic_mapper = magic_mapper.get(use_item.item);
+            match is_magic_mapper {
+                None => {}
+                Some(_) => {
+                    used_item = true;
+                    gamelog.entries.push("All is revealed to you!".to_string());
+                    *runstate = RunState::MagicMapReveal { row: 0 };
                 }
             }
 
@@ -271,13 +323,21 @@ impl<'a> System<'a> for ItemUseSystem {
                             Some(stats) => {
                                 stats.hp = i32::min(stats.max_hp, stats.hp + healer.heal_amount);
                                 if entity == *player_entity {
-                                    gamelog.entries.insert(
-                                        0,
-                                        format!(
-                                            "You use the {}, healing {} hp.",
-                                            names.get(use_item.item).unwrap().name,
-                                            healer.heal_amount
-                                        ),
+                                    gamelog.entries.push(format!(
+                                        "You use the {}, healing {} hp.",
+                                        names.get(use_item.item).unwrap().name,
+                                        healer.heal_amount
+                                    ));
+                                }
+                                let pos = positions.get(*player_entity);
+                                if let Some(pos) = pos {
+                                    particle_builder.request(
+                                        pos.x,
+                                        pos.y,
+                                        green(),
+                                        black(),
+                                        rltk::to_cp437('♥'),
+                                        200.0,
                                     );
                                 }
                             }
@@ -302,26 +362,28 @@ impl<'a> System<'a> for ItemUseSystem {
                             }
                         }
 
-                        suffer_damage
-                            .insert(
-                                *target,
-                                SufferDamage {
-                                    amount: damage.damage,
-                                },
-                            )
-                            .expect("Unable to insert");
+                        SufferDamage::new_damage(&mut suffer_damage, *target, damage.damage);
+
                         if entity == *player_entity {
                             let target_name = names.get(*target).unwrap();
                             let item_name = names.get(use_item.item).unwrap();
-                            gamelog.entries.insert(
-                                0,
-                                format!(
-                                    "You use {} on {}, inflicting {} damage.",
-                                    item_name.name, target_name.name, damage.damage
-                                ),
-                            );
+                            gamelog.entries.push(format!(
+                                "You use {} on {}, inflicting {} damage.",
+                                item_name.name, target_name.name, damage.damage
+                            ));
                         }
                         used_item = true;
+                        let pos = positions.get(*target);
+                        if let Some(pos) = pos {
+                            particle_builder.request(
+                                pos.x,
+                                pos.y,
+                                red(),
+                                black(),
+                                rltk::to_cp437('‼'),
+                                200.0,
+                            );
+                        }
                     }
                 }
             }
@@ -339,12 +401,20 @@ impl<'a> System<'a> for ItemUseSystem {
                             if entity == *player_entity {
                                 let mob_name = names.get(*mob).unwrap();
                                 let item_name = names.get(use_item.item).unwrap();
-                                gamelog.entries.insert(
-                                    0,
-                                    format!(
-                                        "You use {} on {}, confusing them.",
-                                        item_name.name, mob_name.name
-                                    ),
+                                gamelog.entries.push(format!(
+                                    "You use {} on {}, confusing them.",
+                                    item_name.name, mob_name.name
+                                ));
+                            }
+                            let pos = positions.get(*mob);
+                            if let Some(pos) = pos {
+                                particle_builder.request(
+                                    pos.x,
+                                    pos.y,
+                                    magenta(),
+                                    black(),
+                                    rltk::to_cp437('?'),
+                                    1000.0,
                                 );
                             }
                         }
