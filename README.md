@@ -22,7 +22,7 @@
 * [x] 2.6. [REX Paint Menu](https://bfnightly.bracketproductions.com/rustbook/chapter_21.html)
 * [x] 2.7. [Simple Traps](https://bfnightly.bracketproductions.com/rustbook/chapter_22.html)
 ## Section 3 - Generating Maps
-* [ ] 3.1. [Refactor Map Building](https://bfnightly.bracketproductions.com/rustbook/chapter_23.html)
+* [x] 3.1. [Refactor Map Building](https://bfnightly.bracketproductions.com/rustbook/chapter_23.html)
 * [ ] 3.2. [Map Building Test Harness](https://bfnightly.bracketproductions.com/rustbook/chapter_24.html)
 * [ ] 3.3. [BSP Room Dungeons](https://bfnightly.bracketproductions.com/rustbook/chapter_25.html)
 * [ ] 3.4. [BSP Interior Design](https://bfnightly.bracketproductions.com/rustbook/chapter_26.html)

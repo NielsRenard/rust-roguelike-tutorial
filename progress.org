@@ -26,7 +26,7 @@
 ** DONE 2.6. REX Paint Menu
 ** DONE 2.7. Simple Traps
 * 3. Section 3 - Generating Maps
-** 3.1. Refactor Map Building
+** DONE 3.1. Refactor Map Building
 ** TODO 3.2. Map Building Test Harness
 ** TODO 3.3. BSP Room Dungeons
 ** TODO 3.4. BSP Interior Design
