@@ -1,12 +1,12 @@
 use super::{
-    apply_horizontal_tunnel, apply_room_to_map, apply_vertical_tunnel, Map, MapBuilder, Rect,
-    TileType,
+    apply_horizontal_tunnel, apply_room_to_map, apply_vertical_tunnel, Map, MapBuilder, Position,
+    Rect, TileType,
 };
 use rltk::RandomNumberGenerator;
 pub struct SimpleMapBuilder {}
 
 impl SimpleMapBuilder {
-    fn rooms_and_corridors(map: &mut Map) {
+    fn rooms_and_corridors(map: &mut Map) -> Position {
         const MAX_ROOMS: i32 = 30;
         const MIN_SIZE: i32 = 6;
         const MAX_SIZE: i32 = 10;
@@ -46,14 +46,19 @@ impl SimpleMapBuilder {
         }
         let stairs_position = map.rooms[map.rooms.len() - 1].center();
         let stairs_idx = map.xy_idx(stairs_position.0, stairs_position.1);
+        let start_position = map.rooms[0].center();
         map.tiles[stairs_idx] = TileType::DownStairs;
+        Position {
+            x: start_position.0,
+            y: start_position.1,
+        }
     }
 }
 
 impl MapBuilder for SimpleMapBuilder {
-    fn build(new_depth: i32) -> Map {
+    fn build(new_depth: i32) -> (Map, Position) {
         let mut map = Map::new(new_depth);
-        SimpleMapBuilder::rooms_and_corridors(&mut map);
-        return map;
+        let pos = SimpleMapBuilder::rooms_and_corridors(&mut map);
+        return (map, pos);
     }
 }
