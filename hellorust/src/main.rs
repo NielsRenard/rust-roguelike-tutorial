@@ -379,23 +379,22 @@ impl State {
         }
 
         // Build a new map
-        let worldmap;
+        let mut builder;
         let current_depth;
         let player_start;
         {
             let mut worldmap_resource = self.ecs.write_resource::<Map>();
             current_depth = worldmap_resource.depth;
-            let (newmap, player_position) = map_builders::build_random_map(current_depth + 1);
-            *worldmap_resource = newmap;
-            player_start = player_position;
+            builder = map_builders::random_builder(current_depth + 1);
+            builder.build_map();
+            *worldmap_resource = builder.get_map();
+            player_start = builder.get_starting_position();
             // store a clone of the map in the outer variable
-            worldmap = worldmap_resource.clone();
+            // worldmap = worldmap_resource.clone();
             // and exit scope (to avoid any borrowing/lifetime issues).
         }
-        // spawn enemies and items
-        for room in worldmap.rooms.iter().skip(1) {
-            spawner::spawn_room(&mut self.ecs, room, current_depth);
-        }
+
+        builder.spawn_entities(&mut self.ecs);
 
         // Place the player and update resources
         let (player_x, player_y) = (player_start.x, player_start.y);
@@ -441,17 +440,17 @@ impl State {
         }
 
         // "Build a new map and place the player"
-        let worldmap;
+        let mut builder = map_builders::random_builder(1);
         let player_start;
         {
-            let (newmap, player_position) = map_builders::build_random_map(1);
-            worldmap = newmap;
-            player_start = player_position;
+            let mut worldmap_resource = self.ecs.write_resource::<Map>();
+            builder.build_map();
+            player_start = builder.get_starting_position();
+            *worldmap_resource = builder.get_map();
         }
 
-        for room in worldmap.rooms.iter().skip(1) {
-            spawner::spawn_room(&mut self.ecs, room, 1);
-        }
+        builder.spawn_entities(&mut self.ecs);
+
         // "Place the player and update resources"
         let (player_x, player_y) = (player_start.x, player_start.y);
         let player_entity = spawner::player(&mut self.ecs, player_x, player_y);
@@ -521,18 +520,18 @@ fn main() -> rltk::BError {
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
-    let (map, player_start): (Map, Position) = map_builders::build_random_map(1);
+    // build map
+    let mut builder = map_builders::random_builder(1);
+    builder.build_map();
+    let map = builder.get_map();
 
     // make our 'guy'
+    let player_start = builder.get_starting_position();
     let (player_x, player_y) = (player_start.x, player_start.y);
     let player_entity = spawner::player(&mut gs.ecs, player_x, player_y);
 
     gs.ecs.insert(RandomNumberGenerator::new());
-
-    // every room -except the first one- might get monsters and potions
-    for room in map.rooms.iter().skip(1) {
-        spawner::spawn_room(&mut gs.ecs, room, 1)
-    }
+    builder.spawn_entities(&mut gs.ecs);
 
     gs.ecs.insert(map);
     gs.ecs.insert(Point::new(player_x, player_y));
