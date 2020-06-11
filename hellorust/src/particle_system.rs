@@ -55,7 +55,7 @@ struct ParticleRequest {
     y: i32,
     fg: rltk::RGB,
     bg: rltk::RGB,
-    glyph: u8,
+    glyph: u16,
     lifetime: f32,
 }
 
@@ -76,7 +76,7 @@ impl ParticleBuilder {
         y: i32,
         fg: rltk::RGB,
         bg: rltk::RGB,
-        glyph: u8,
+        glyph: u16,
         lifetime: f32,
     ) {
         self.requests.push(ParticleRequest {

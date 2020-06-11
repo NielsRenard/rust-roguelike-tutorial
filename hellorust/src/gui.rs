@@ -1,6 +1,6 @@
 extern crate rltk;
 use crate::components::{HungerClock, HungerState::*};
-use rltk::{Console, Rltk, VirtualKeyCode};
+use rltk::{Rltk, VirtualKeyCode};
 extern crate specs;
 use super::rex_assets::RexAssets;
 use super::{

@@ -94,7 +94,7 @@ pub struct Viewshed {
 
 #[derive(Component, ConvertSaveload, Clone)]
 pub struct Renderable {
-    pub glyph: u8,
+    pub glyph: u16,
     pub fg: RGB,
     pub bg: RGB,
     pub render_order: i32,

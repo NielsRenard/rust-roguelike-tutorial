@@ -1,5 +1,5 @@
 rltk::add_wasm_support!();
-use rltk::{Console, GameState, Point, RandomNumberGenerator, Rltk, RltkBuilder};
+use rltk::{GameState, Point, RandomNumberGenerator, Rltk, RltkBuilder};
 use specs::prelude::*;
 use specs::saveload::{SimpleMarker, SimpleMarkerAllocator};
 #[macro_use]
@@ -471,11 +471,11 @@ impl State {
     }
 }
 
-fn main() {
+fn main() -> rltk::BError {
     let context = RltkBuilder::simple80x50()
         .with_title("Hello Rust World")
         .with_fullscreen(true)
-        .build();
+        .build()?;
     let mut gs = State { ecs: World::new() };
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
@@ -546,5 +546,5 @@ fn main() {
     gs.ecs.insert(RunState::MainMenu {
         menu_selection: main_menu_selection,
     });
-    rltk::main_loop(context, gs);
+    rltk::main_loop(context, gs)
 }

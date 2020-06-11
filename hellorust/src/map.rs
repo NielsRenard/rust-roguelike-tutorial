@@ -1,7 +1,7 @@
 extern crate rltk;
 use super::color::*;
 use super::Rect;
-use rltk::{Algorithm2D, BaseMap, Console, Point, Rltk, RGB};
+use rltk::{Algorithm2D, BaseMap, Point, Rltk, RGB};
 extern crate specs;
 use serde::{Deserialize, Serialize};
 use specs::prelude::*;
@@ -97,8 +97,8 @@ impl BaseMap for Map {
         self.tiles[idx] == TileType::Wall
     }
 
-    fn get_available_exits(&self, idx: usize) -> Vec<(usize, f32)> {
-        let mut exits: Vec<(usize, f32)> = Vec::new();
+    fn get_available_exits(&self, idx: usize) -> rltk::SmallVec<[(usize, f32); 10]> {
+        let mut exits = rltk::SmallVec::new();
         let x = idx as i32 % self.width;
         let y = idx as i32 / self.width;
         let w = self.width as usize;
@@ -188,7 +188,7 @@ pub fn draw_map(ecs: &World, ctx: &mut Rltk) {
 // whether or not we have each of the four possible neighbors. For
 // example, a value of 3 means that we have neighbors to the north and
 // south."
-pub fn wall_glyph(map: &Map, x: i32, y: i32) -> u8 {
+pub fn wall_glyph(map: &Map, x: i32, y: i32) -> u16 {
     if x < 1 || x > map.width - 2 || y < 1 || y > map.height - 2 as i32 {
         return 35;
     }
