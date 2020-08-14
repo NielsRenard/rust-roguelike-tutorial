@@ -27,7 +27,7 @@
 ** DONE 2.7. Simple Traps
 * 3. Section 3 - Generating Maps
 ** DONE 3.1. Refactor Map Building
-** TODO 3.2. Map Building Test Harness
+** DONE 3.2. Map Building Test Harness
 ** TODO 3.3. BSP Room Dungeons
 ** TODO 3.4. BSP Interior Design
 ** TODO 3.5. Cellular Automata Maps
@@ -86,10 +86,10 @@
 ** TODO opening/closing inventory should be same button
 ** DONE maphack mode for debugging
 ** DONE items should be destructable
-* Bugs [4/7]
+* Bugs [5/7]
 ** TODO [#A] When in range of multiple monsters, only one at a time engages in battle.
 ** TODO [#B] Monsters +don't+ move strangely in maphack mode
-** TODO [#B] GameLog doesn't flush on "new game" after dying
+** DONE [#B] GameLog doesn't flush on "new game" after dying
 ** DONE <2020-03-01 Sun> targeting self with items triggers usage twice in GameLog
    - damages once, prints twice
 ** DONE <2020-03-01 Sun> regression: AoE damage as secondary target doesn't hurt player

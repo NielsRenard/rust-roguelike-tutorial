@@ -43,6 +43,8 @@ use trigger_system::TriggerSystem;
 pub mod map_builders;
 mod rex_assets;
 
+const SHOW_MAPGEN_VISUALIZER: bool = true;
+
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {
     AwaitingInput,
@@ -63,12 +65,17 @@ pub enum RunState {
     MagicMapReveal {
         row: i32,
     },
+    MapGeneration,
     ShowRemoveItem,
     GameOver,
 }
 
 pub struct State {
     pub ecs: World,
+    mapgen_next_state: Option<RunState>,
+    mapgen_history: Vec<Map>,
+    mapgen_index: usize,
+    mapgen_timer: f32,
 }
 
 impl GameState for State {
@@ -85,7 +92,7 @@ impl GameState for State {
             RunState::MainMenu { .. } => {}
             RunState::GameOver { .. } => {}
             _ => {
-                draw_map(&self.ecs, ctx);
+                draw_map(&self.ecs.fetch::<Map>(), ctx);
                 {
                     let positions = self.ecs.read_storage::<Position>();
                     let renderables = self.ecs.read_storage::<Renderable>();
@@ -112,6 +119,25 @@ impl GameState for State {
         }
 
         match new_runstate {
+            RunState::MapGeneration => {
+                if !SHOW_MAPGEN_VISUALIZER {
+                    new_runstate = self.mapgen_next_state.unwrap();
+                }
+                ctx.cls();
+                draw_map(&self.mapgen_history[self.mapgen_index], ctx);
+
+                // "Add the frame duration to the mapgen_timer..."
+                self.mapgen_timer += ctx.frame_time_ms;
+                if self.mapgen_timer > 300.0 {
+                    self.mapgen_timer = 0.0;
+                    self.mapgen_index += 1;
+                    // if the frame counter has reached the end of our history...
+                    if self.mapgen_index >= self.mapgen_history.len() {
+                        // ...transition to the next game state.
+                        new_runstate = self.mapgen_next_state.unwrap();
+                    }
+                }
+            }
             RunState::PreRun => {
                 self.run_systems();
                 self.ecs.maintain();
@@ -330,9 +356,15 @@ impl State {
     }
 
     fn generate_world_map(&mut self, new_depth: i32) {
+        self.mapgen_index = 0;
+        self.mapgen_timer = 0.0;
+        self.mapgen_history.clear();
+
         let mut builder = map_builders::random_builder(new_depth);
         builder.build_map();
-        let player_start; // = builder.get_starting_position();
+        self.mapgen_history = builder.get_snapshot_history();
+
+        let player_start;
 
         {
             let mut worldmap_resource = self.ecs.write_resource::<Map>();
@@ -451,9 +483,7 @@ impl State {
         }
 
         // Flush the gamelog
-        self.ecs.insert(gamelog::GameLog {
-            entries: vec![],
-        });
+        self.ecs.insert(gamelog::GameLog { entries: vec![] });
         self.generate_world_map(1);
     }
 }
@@ -463,7 +493,22 @@ fn main() -> rltk::BError {
         .with_title("Hello Rust World")
         .with_fullscreen(true)
         .build()?;
-    let mut gs = State { ecs: World::new() };
+
+    let main_menu_selection = if saveload_system::save_exists() {
+        gui::MainMenuSelection::LoadGame
+    } else {
+        gui::MainMenuSelection::NewGame
+    };
+
+    let mut gs = State {
+        ecs: World::new(),
+        mapgen_next_state: Some(RunState::MainMenu {
+            menu_selection: main_menu_selection,
+        }),
+        mapgen_history: Vec::new(),
+        mapgen_index: 0,
+        mapgen_timer: 0.0,
+    };
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<Player>();
@@ -515,15 +560,8 @@ fn main() -> rltk::BError {
         entries: vec!["Good luck...".to_string()],
     });
 
-    // Set the main menu as the initial RunState
-    let main_menu_selection = if saveload_system::save_exists() {
-        gui::MainMenuSelection::LoadGame
-    } else {
-        gui::MainMenuSelection::NewGame
-    };
-    gs.ecs.insert(RunState::MainMenu {
-        menu_selection: main_menu_selection,
-    });
+    // initial RunState
+    gs.ecs.insert(RunState::MapGeneration {});
     gs.generate_world_map(1);
 
     rltk::main_loop(context, gs)
